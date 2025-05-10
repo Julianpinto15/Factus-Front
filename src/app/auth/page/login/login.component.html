@@ -1,0 +1,12 @@
+<section class="body">
+  <div class="container" [ngClass]="{ 'active': isActive() }">
+    <login-inicio />
+    <login-registration />
+    <div class="toggle-box">
+      <!-- Boton de registrar -->
+      <button-registration (registerClick)="onRegisterClick()" />
+      <!-- Boton de login -->
+      <button-login (LoginClick)="onLoginClick()" />
+    </div>
+  </div>
+</section>
