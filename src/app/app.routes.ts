@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
-import { DashboardComponent } from './page/dashboard-home/components/dashboard/dashboard.component';
 import { LoginComponent } from './auth/page/login/login.component';
+import { DashboardComponent } from './page/dashboard/page/dashboard-main/dashboard.component';
 
 export const routes: Routes = [
   {
@@ -14,6 +14,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'login',
+    redirectTo: 'dashboard',
   },
 ];

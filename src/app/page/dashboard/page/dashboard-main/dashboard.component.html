@@ -1,76 +1,48 @@
 <section class="html">
 
-  <body>
+  <body [ngClass]="{ dark: isDarkMode() }">
     <!-- SIDEBAR -->
-    <section id="sidebar">
+    <section id="sidebar" [ngClass]="{ hide: isSidebarHidden() }">
       <a href="#" class="brand">
-        <i class='bx bxs-smile  bx-lg'></i>
+        <i class="bx bxs-smile bx-lg"></i>
         <span class="text">AdminHub</span>
       </a>
       <ul class="side-menu top">
-        <li class="active">
-          <a href="#">
-            <i class='bx bxs-dashboard bx-sm'></i>
-            <span class="text">Dashboard</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class='bx bxs-shopping-bag-alt bx-sm'></i>
-            <span class="text">My Store</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class='bx bxs-doughnut-chart bx-sm'></i>
-            <span class="text">Analytics</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class='bx bxs-message-dots bx-sm'></i>
-            <span class="text">Message</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class='bx bxs-group bx-sm'></i>
-            <span class="text">Team</span>
+        <li *ngFor="let menu of menuItems" [ngClass]="{ active: activeMenuItem() === menu.id }">
+          <a href="#" (click)="setActiveMenu(menu.id)">
+            <i class="bx {{ menu.icon }} bx-sm"></i>
+            <span class="text">{{ menu.text }}</span>
           </a>
         </li>
       </ul>
       <ul class="side-menu bottom">
-        <li>
-          <a href="#">
-            <i class='bx bxs-cog bx-sm bx-spin-hover'></i>
-            <span class="text">Settings</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="logout">
-            <i class='bx bx-power-off bx-sm bx-burst-hover'></i>
-            <span class="text">Logout</span>
+        <li *ngFor="let menu of bottomMenuItems" [ngClass]="menu.class">
+          <a href="#" (click)="setActiveMenu(menu.id)">
+            <i class="bx {{ menu.icon }} bx-sm"
+              [ngClass]="menu.class === 'logout' ? 'bx-burst-hover' : 'bx-spin-hover'"></i>
+            <span class="text">{{ menu.text }}</span>
           </a>
         </li>
       </ul>
     </section>
     <!-- SIDEBAR -->
 
-
-
     <!-- CONTENT -->
-    <section id="content">
+    <section id="content" [ngClass]="{ 'sidebar-hidden': isSidebarHidden() }">
       <!-- NAVBAR -->
       <nav>
-        <i class='bx bx-menu bx-sm'></i>
+        <i class="bx bx-menu bx-sm" (click)="toggleSidebar()"></i>
         <a href="#" class="nav-link">Categories</a>
-        <form action="#">
+        <form action="#" [ngClass]="{ show: isSearchFormShown() }">
           <div class="form-input">
-            <input type="search" placeholder="Search...">
-            <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+            <input type="search" placeholder="Search..." />
+            <button type="submit" class="search-btn" (click)="toggleSearchForm($event)">
+              <i class="bx" [ngClass]="isSearchFormShown() ? 'bx-x' : 'bx-search'"></i>
+            </button>
           </div>
         </form>
-        <input type="checkbox" class="checkbox" id="switch-mode" hidden />
+        <input type="checkbox" class="checkbox" id="switch-mode" [checked]="isDarkMode()" (change)="toggleDarkMode()"
+          hidden />
         <label class="swith-lm" for="switch-mode">
           <i class="bx bxs-moon"></i>
           <i class="bx bx-sun"></i>
@@ -78,11 +50,11 @@
         </label>
 
         <!-- Notification Bell -->
-        <a href="#" class="notification" id="notificationIcon">
-          <i class='bx bxs-bell bx-tada-hover'></i>
+        <a href="#" class="notification" (click)="toggleNotificationMenu()">
+          <i class="bx bxs-bell bx-tada-hover"></i>
           <span class="num">8</span>
         </a>
-        <div class="notification-menu" id="notificationMenu">
+        <div class="notification-menu" [ngClass]="{ show: isNotificationMenuShown() }">
           <ul>
             <li>New message from John</li>
             <li>Your order has been shipped</li>
@@ -93,10 +65,10 @@
         </div>
 
         <!-- Profile Menu -->
-        <a href="#" class="profile" id="profileIcon">
-          <img src="https://placehold.co/600x400/png" alt="Profile">
+        <a href="#" class="profile" (click)="toggleProfileMenu()">
+          <img src="https://placehold.co/600x400/png" alt="Profile" />
         </a>
-        <div class="profile-menu" id="profileMenu">
+        <div class="profile-menu" [ngClass]="{ show: isProfileMenuShown() }">
           <ul>
             <li><a href="#">My Profile</a></li>
             <li><a href="#">Settings</a></li>
@@ -106,45 +78,40 @@
       </nav>
       <!-- NAVBAR -->
 
-
       <!-- MAIN -->
       <main>
         <div class="head-title">
           <div class="left">
             <h1>Dashboard</h1>
             <ul class="breadcrumb">
-              <li>
-                <a href="#">Dashboard</a>
-              </li>
-              <li><i class='bx bx-chevron-right'></i></li>
-              <li>
-                <a class="active" href="#">Home</a>
-              </li>
+              <li><a href="#">Dashboard</a></li>
+              <li><i class="bx bx-chevron-right"></i></li>
+              <li><a class="active" href="#">Home</a></li>
             </ul>
           </div>
           <a href="#" class="btn-download">
-            <i class='bx bxs-cloud-download bx-fade-down-hover'></i>
+            <i class="bx bxs-cloud-download bx-fade-down-hover"></i>
             <span class="text">Get PDF</span>
           </a>
         </div>
 
         <ul class="box-info">
           <li>
-            <i class='bx bxs-calendar-check'></i>
+            <i class="bx bxs-calendar-check"></i>
             <span class="text">
               <h3>1020</h3>
               <p>New Order</p>
             </span>
           </li>
           <li>
-            <i class='bx bxs-group'></i>
+            <i class="bx bxs-group"></i>
             <span class="text">
               <h3>2834</h3>
               <p>Visitors</p>
             </span>
           </li>
           <li>
-            <i class='bx bxs-dollar-circle'></i>
+            <i class="bx bxs-dollar-circle"></i>
             <span class="text">
               <h3>N$2543.00</h3>
               <p>Total Sales</p>
@@ -152,13 +119,12 @@
           </li>
         </ul>
 
-
         <div class="table-data">
           <div class="order">
             <div class="head">
               <h3>Recent Orders</h3>
-              <i class='bx bx-search'></i>
-              <i class='bx bx-filter'></i>
+              <i class="bx bx-search"></i>
+              <i class="bx bx-filter"></i>
             </div>
             <table>
               <thead>
@@ -171,7 +137,7 @@
               <tbody>
                 <tr>
                   <td>
-                    <img src="https://placehold.co/600x400/png">
+                    <img src="https://placehold.co/600x400/png" />
                     <p>Micheal John</p>
                   </td>
                   <td>18-10-2021</td>
@@ -179,7 +145,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <img src="https://placehold.co/600x400/png">
+                    <img src="https://placehold.co/600x400/png" />
                     <p>Ryan Doe</p>
                   </td>
                   <td>01-06-2022</td>
@@ -187,7 +153,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <img src="https://placehold.co/600x400/png">
+                    <img src="https://placehold.co/600x400/png" />
                     <p>Tarry White</p>
                   </td>
                   <td>14-10-2021</td>
@@ -195,7 +161,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <img src="https://placehold.co/600x400/png">
+                    <img src="https://placehold.co/600x400/png" />
                     <p>Selma</p>
                   </td>
                   <td>01-02-2023</td>
@@ -203,7 +169,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <img src="https://placehold.co/600x400/png">
+                    <img src="https://placehold.co/600x400/png" />
                     <p>Andreas Doe</p>
                   </td>
                   <td>31-10-2021</td>
@@ -215,30 +181,29 @@
           <div class="todo">
             <div class="head">
               <h3>Todos</h3>
-              <i class='bx bx-plus icon'></i>
-              <i class='bx bx-filter'></i>
-
+              <i class="bx bx-plus icon"></i>
+              <i class="bx bx-filter"></i>
             </div>
             <ul class="todo-list">
               <li class="completed">
                 <p>Check Inventory</p>
-                <i class='bx bx-dots-vertical-rounded'></i>
+                <i class="bx bx-dots-vertical-rounded"></i>
               </li>
               <li class="completed">
                 <p>Manage Delivery Team</p>
-                <i class='bx bx-dots-vertical-rounded'></i>
+                <i class="bx bx-dots-vertical-rounded"></i>
               </li>
               <li class="not-completed">
                 <p>Contact Selma: Confirm Delivery</p>
-                <i class='bx bx-dots-vertical-rounded'></i>
+                <i class="bx bx-dots-vertical-rounded"></i>
               </li>
               <li class="completed">
                 <p>Update Shop Catalogue</p>
-                <i class='bx bx-dots-vertical-rounded'></i>
+                <i class="bx bx-dots-vertical-rounded"></i>
               </li>
               <li class="not-completed">
                 <p>Count Profit Analytics</p>
-                <i class='bx bx-dots-vertical-rounded'></i>
+                <i class="bx bx-dots-vertical-rounded"></i>
               </li>
             </ul>
           </div>
@@ -247,7 +212,5 @@
       <!-- MAIN -->
     </section>
     <!-- CONTENT -->
-
   </body>
-
 </section>

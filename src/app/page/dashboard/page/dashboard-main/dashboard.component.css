@@ -172,6 +172,12 @@ body {
   border-radius: 50%;
   box-shadow: -20px -20px 0 var(--light);
 }
+
+#content.sidebar-hidden {
+  width: calc(100% - 60px);
+  left: 60px;
+}
+
 #content nav a {
   color: var(--dark);
 }
@@ -714,4 +720,11 @@ body.dark #content nav .profile-menu li a {
   #content main .table-data .todo .todo-list {
     min-width: 420px;
   }
+}
+
+.menu {
+  display: none;
+}
+.menu.show {
+  display: block;
 }

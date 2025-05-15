@@ -29,3 +29,18 @@ li {
   --orange: #fd7238;
   --light-orange: #ffe0d3;
 }
+
+.swal2-confirm {
+  background-color: #7494ec !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+}
+
+.swal2-cancel {
+  background-color: #ccc !important;
+  border-radius: 8px !important;
+}
+
+.swal2-popup {
+  border-radius: 12px !important;
+}

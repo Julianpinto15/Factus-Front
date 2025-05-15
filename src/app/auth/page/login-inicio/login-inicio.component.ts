@@ -1,11 +1,10 @@
+import { Component, inject, WritableSignal, signal } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  Signal,
-  WritableSignal,
-} from '@angular/core';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { AuthService } from '../../service/auth.service';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import {
   FormBuilder,
   FormGroup,
@@ -13,93 +12,98 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../../service/auth.service';
-
 @Component({
   selector: 'login-inicio',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SweetAlert2Module],
   templateUrl: './login-inicio.component.html',
   styleUrls: ['./login-inicio.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginInicioComponent {
   loginForm: FormGroup;
-  registerForm: FormGroup;
   error: WritableSignal<string | null> = signal(null);
-  successMessage: WritableSignal<string | null> = signal(null);
-  isRegisterActive: WritableSignal<boolean> = signal(false);
 
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
   constructor() {
-    // Formulario de login
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-    });
-
-    // Formulario de registro
-    this.registerForm = this.fb.group({
-      username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   onLoginSubmit(): void {
     if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe({
-        next: () => this.router.navigate(['/dashboard']),
-        error: (err) =>
-          this.error.set(err.message || 'Error al iniciar sesión'),
+      Swal.fire({
+        title: 'Iniciando sesión...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
       });
-    } else {
-      this.error.set('Por favor, completa todos los campos correctamente.');
-    }
-  }
-
-  onRegisterSubmit(): void {
-    if (this.registerForm.valid) {
-      this.authService.register(this.registerForm.value).subscribe({
+      this.authService.login(this.loginForm.value).subscribe({
         next: () => {
-          this.successMessage.set(
-            'Registro exitoso. Ahora puedes iniciar sesión.'
-          );
-          this.isRegisterActive.set(false); // Volver a la vista de login
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Inicio de sesión exitoso.',
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            this.router.navigate(['/dashboard']);
+          });
         },
         error: (err) => {
-          const errorMessage =
-            err.status === 400
-              ? 'Error en el registro: usuario ya existe'
-              : err.message ||
-                'Registro exitoso localmente, usa las credenciales por defecto de Factus.';
-          this.error.set(errorMessage);
+          this.error.set(err.message || 'Error al iniciar sesión');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: this.error() ?? 'Error al iniciar sesión.', // Use nullish coalescing
+            confirmButtonColor: '#7494ec',
+          });
         },
       });
     } else {
       this.error.set('Por favor, completa todos los campos correctamente.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Advertencia',
+        text:
+          this.error() ?? 'Por favor, completa todos los campos correctamente.', // Use nullish coalescing
+        confirmButtonColor: '#7494ec',
+      });
     }
   }
 
-  loginWithGoogle(): void {
-    this.authService
-      .loginWithGoogle()
-      .then(() => {
-        this.router.navigate(['/dashboard']);
-      })
-      .catch((err) => {
-        this.error.set(err.message || 'Error al iniciar sesión con Google');
+  async loginWithGoogle() {
+    try {
+      Swal.fire({
+        title: 'Iniciando sesión...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
       });
-  }
-
-  toggleForm(): void {
-    this.isRegisterActive.set(!this.isRegisterActive());
-    this.error.set(null);
-    this.successMessage.set(null);
+      await this.authService.loginWithGoogle();
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Inicio de sesión con Google exitoso.',
+        timer: 2000,
+        showConfirmButton: false,
+      }).then(() => {
+        this.router.navigate(['/dashboard']);
+      });
+    } catch (err: any) {
+      this.error.set(err.message || 'Error al iniciar sesión con Google');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: this.error() ?? 'Error al iniciar sesión con Google.', // Use nullish coalescing
+        confirmButtonColor: '#7494ec',
+      });
+    }
   }
 }

@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "^19.2.16",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",
@@ -18,8 +19,10 @@
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
+    "@sweetalert2/ngx-sweetalert2": "^13.0.0",
     "firebase": "^11.7.1",
     "rxjs": "~7.8.0",
+    "sweetalert2": "^11.21.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },

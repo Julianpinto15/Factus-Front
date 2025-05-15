@@ -14,19 +14,14 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { LoginRegistrationComponent } from '../login-registration/login-registration.component';
 import { AuthService } from '../../service/auth.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    CommonModule,
-    LoginInicioComponent,
-    ReactiveFormsModule,
-    // LoginRegistrationComponent,
-  ],
+  imports: [CommonModule, LoginInicioComponent, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +29,6 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   registerForm: FormGroup;
   error: WritableSignal<string | null> = signal(null);
-  successMessage: WritableSignal<string | null> = signal(null);
 
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -48,26 +42,81 @@ export class LoginComponent {
     });
   }
 
-  onSubmit(): void {
+  onRegisterSubmit(): void {
     if (this.registerForm.valid) {
+      Swal.fire({
+        title: 'Registrando...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
       this.authService.register(this.registerForm.value).subscribe({
         next: () => {
-          this.successMessage.set(
-            'Registro exitoso. Ahora puedes iniciar sesión.'
-          );
-          this.router.navigate(['/login']);
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Registro exitoso. Ahora puedes iniciar sesión.',
+            confirmButtonColor: '#7494ec',
+          }).then(() => {
+            this.router.navigate(['/dashboard']);
+            this.registerForm.reset();
+          });
         },
         error: (err) => {
           const errorMessage =
             err.status === 400
               ? 'Error en el registro: usuario ya existe'
               : err.message ||
-                'Error en el registro. Contacta al administrador para activar tu cuenta.';
+                'Error en el registro. Por favor, intenta de nuevo.';
           this.error.set(errorMessage);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: this.error() ?? 'Error en el registro.',
+            confirmButtonColor: '#7494ec',
+          });
         },
       });
     } else {
       this.error.set('Por favor, completa todos los campos correctamente.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Advertencia',
+        text:
+          this.error() ?? 'Por favor, completa todos los campos correctamente.',
+        confirmButtonColor: '#7494ec',
+      });
+    }
+  }
+
+  async loginWithGoogle() {
+    try {
+      Swal.fire({
+        title: 'Iniciando sesión...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      await this.authService.loginWithGoogle();
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Inicio de sesión con Google exitoso.',
+        timer: 2000,
+        showConfirmButton: false,
+      }).then(() => {
+        this.router.navigate(['/dashboard']);
+      });
+    } catch (err: any) {
+      this.error.set(err.message || 'Error al iniciar sesión con Google');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: this.error() ?? 'Error al iniciar sesión con Google.',
+        confirmButtonColor: '#7494ec',
+      });
     }
   }
 
