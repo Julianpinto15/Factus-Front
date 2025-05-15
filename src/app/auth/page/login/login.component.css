@@ -250,3 +250,19 @@ form {
     font-size: 30px;
   }
 }
+
+.success {
+  color: green;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.input-box input.invalid {
+  border: 2px solid red;
+}

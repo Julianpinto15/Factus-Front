@@ -1,4 +1,4 @@
-<div class="form-box login">
+<!-- <div class="form-box login">
   <form action="#">
     <h1>Login</h1>
     <div class="input-box">
@@ -19,6 +19,62 @@
       <a href="#"><i class="bx bxl-facebook"></i></a>
       <a href="#"><i class="bx bxl-github"></i></a>
       <a href="#"><i class="bx bxl-linkedin"></i></a>
+    </div>
+  </form>
+</div> -->
+
+<!-- <div class="form-box login">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <h1>Login</h1>
+    <div class="input-box">
+      <input type="text" placeholder="Username" formControlName="username"
+        [class.invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" />
+      <i class="bx bxs-user"></i>
+    </div>
+    <div class="input-box">
+      <input type="password" placeholder="Password" formControlName="password"
+        [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
+      <i class="bx bxs-lock-alt"></i>
+    </div>
+    <div class="forgot-link">
+      <a href="#">Forgot Password?</a>
+    </div>
+    <button type="submit" class="btn" [disabled]="loginForm.invalid">Login</button>
+    <p *ngIf="error()" class="error">{{ error() }}</p>
+    <p>or login with social platforms</p>
+    <div class="social-icons">
+      <a href="#"><i class="bx bxl-google"></i></a>
+      <a href="#"><i class="bx bxl-facebook"></i></a>
+      <a href="#"><i class="bx bxl-github"></i></a>
+      <a href="#"><i class="bx bxl-linkedin"></i></a>
+    </div>
+  </form>
+</div> -->
+
+<div class="form-box login">
+  <form *ngIf="!isRegisterActive()" [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+    <h1>Login</h1>
+    <div class="input-box">
+      <input type="email" placeholder="Email" formControlName="username"
+        [class.invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" />
+      <i class="bx bxs-envelope"></i>
+    </div>
+    <div class="input-box">
+      <input type="password" placeholder="Password" formControlName="password"
+        [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
+      <i class="bx bxs-lock-alt"></i>
+    </div>
+    <button type="submit" class="btn" [disabled]="loginForm.invalid">Login</button>
+    <p *ngIf="error()" class="error">{{ error() }}</p>
+    <p>or login with social platforms</p>
+    <div class="social-icons">
+      <a href="#" (click)="loginWithGoogle(); $event.preventDefault()"><i class="bx bxl-google"></i></a>
+      <a href="#"><i class="bx bxl-facebook"></i></a>
+      <a href="#"><i class="bx bxl-github"></i></a>
+      <a href="#"><i class="bx bxl-linkedin"></i></a>
+    </div>
+    <div class="register-link">
+      <p>Don't have an account? <a href="#" (click)="toggleForm()">Register</a></p>
     </div>
   </form>
 </div>
