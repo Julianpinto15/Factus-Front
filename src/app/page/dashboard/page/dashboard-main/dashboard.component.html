@@ -9,7 +9,7 @@
       </a>
       <ul class="side-menu top">
         <li *ngFor="let menu of menuItems" [ngClass]="{ active: activeMenuItem() === menu.id }">
-          <a href="#" (click)="setActiveMenu(menu.id)">
+          <a (click)="setActiveMenu(menu.id)">
             <i class="bx {{ menu.icon }} bx-sm"></i>
             <span class="text">{{ menu.text }}</span>
           </a>
@@ -17,7 +17,7 @@
       </ul>
       <ul class="side-menu bottom">
         <li *ngFor="let menu of bottomMenuItems" [ngClass]="menu.class">
-          <a href="#" (click)="setActiveMenu(menu.id)">
+          <a (click)="setActiveMenu(menu.id)">
             <i class="bx {{ menu.icon }} bx-sm"
               [ngClass]="menu.class === 'logout' ? 'bx-burst-hover' : 'bx-spin-hover'"></i>
             <span class="text">{{ menu.text }}</span>
@@ -50,7 +50,7 @@
         </label>
 
         <!-- Notification Bell -->
-        <a href="#" class="notification" (click)="toggleNotificationMenu()">
+        <a class="notification" (click)="toggleNotificationMenu()">
           <i class="bx bxs-bell bx-tada-hover"></i>
           <span class="num">8</span>
         </a>
@@ -65,7 +65,7 @@
         </div>
 
         <!-- Profile Menu -->
-        <a href="#" class="profile" (click)="toggleProfileMenu()">
+        <a class="profile" (click)="toggleProfileMenu()">
           <img src="https://placehold.co/600x400/png" alt="Profile" />
         </a>
         <div class="profile-menu" [ngClass]="{ show: isProfileMenuShown() }">
