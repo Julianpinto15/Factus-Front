@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { DashboardService } from '../../service/dashboard.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,10 +11,11 @@ import { DashboardService } from '../../service/dashboard.service';
 })
 export class SidebarComponent {
   dashboardService = inject(DashboardService);
+  router = inject(Router);
 
   menuItems = [
-    { id: 'dashboard', icon: 'bxs-dashboard', text: 'Dashboard' },
-    { id: 'store', icon: 'bxs-shopping-bag-alt', text: 'My Store' },
+    { id: 'home', icon: 'bxs-dashboard', text: 'Dashboard' },
+    { id: 'customer', icon: 'bxs-shopping-bag-alt', text: 'Cliente' },
     { id: 'analytics', icon: 'bxs-doughnut-chart', text: 'Analytics' },
     { id: 'message', icon: 'bxs-message-dots', text: 'Message' },
     { id: 'team', icon: 'bxs-group', text: 'Team' },
@@ -23,4 +25,9 @@ export class SidebarComponent {
     { id: 'settings', icon: 'bxs-cog', text: 'Settings' },
     { id: 'logout', icon: 'bx-power-off', text: 'Logout', class: 'logout' },
   ];
+
+  navigate(menuId: string) {
+    this.dashboardService.setActiveMenu(menuId);
+    this.router.navigate(['/dashboard', menuId]);
+  }
 }

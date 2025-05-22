@@ -48,6 +48,7 @@
   margin-left: 6px;
   border-radius: 48px 0 0 48px;
   padding: 4px;
+  cursor: pointer;
 }
 #sidebar .side-menu li.active {
   background: var(--grey);

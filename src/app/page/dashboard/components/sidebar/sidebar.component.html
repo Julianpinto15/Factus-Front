@@ -4,22 +4,25 @@
     <i class="bx bxs-smile bx-lg"></i>
     <span class="text">AdminHub</span>
   </a>
+
   <ul class="side-menu top">
     <li *ngFor="let menu of menuItems" [ngClass]="{ active: dashboardService.activeMenuItem() === menu.id }">
-      <a (click)="dashboardService.setActiveMenu(menu.id)">
+      <a (click)="navigate(menu.id)">
         <i class="bx {{ menu.icon }} bx-sm"></i>
         <span class="text">{{ menu.text }}</span>
       </a>
     </li>
   </ul>
+
   <ul class="side-menu bottom">
     <li *ngFor="let menu of bottomMenuItems" [ngClass]="menu.class">
-      <a (click)="dashboardService.setActiveMenu(menu.id)">
+      <a (click)="navigate(menu.id)">
         <i class="bx {{ menu.icon }} bx-sm"
           [ngClass]="menu.class === 'logout' ? 'bx-burst-hover' : 'bx-spin-hover'"></i>
         <span class="text">{{ menu.text }}</span>
       </a>
     </li>
   </ul>
+
 </section>
 <!-- SIDEBAR -->

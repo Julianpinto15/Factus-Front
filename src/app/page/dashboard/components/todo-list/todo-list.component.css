@@ -23,8 +23,6 @@ div {
 }
 
 .todo {
-  flex-grow: 1;
-  flex-basis: 400px;
   height: 100%;
 }
 

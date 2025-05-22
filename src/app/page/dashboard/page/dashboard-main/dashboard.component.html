@@ -1,27 +1,12 @@
+<!-- dashboard.component.html -->
 <section class="html">
-
-  <body [ngClass]="{ dark: dashboardService.isDarkMode() }">
-    <!-- SIDEBAR -->
+  <div [ngClass]="{ dark: dashboardService.isDarkMode() }">
     <app-sidebar />
-
-    <!-- CONTENT -->
     <section id="content" [ngClass]="{ 'sidebar-hidden': dashboardService.isSidebarHidden() }">
-      <!-- NAVBAR -->
       <app-navbar />
-      <!-- MAIN -->
       <main>
-        <!-- HEADER -->
-        <app-header />
-        <!-- Cards -->
-        <app-stats-card />
-
-        <div class="table-data">
-          <app-recent-orders />
-          <app-todo-list />
-        </div>
+        <router-outlet></router-outlet>
       </main>
     </section>
-    <!-- CONTENT -->
-
-  </body>
+  </div>
 </section>

@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { delay } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
+import { delay, filter } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
   private http = inject(HttpClient);
+  private router = inject(Router);
 
   isSidebarHidden = signal(true);
   isDarkMode = signal(false);
@@ -23,10 +25,29 @@ export class DashboardService {
   todos = signal<{ task: string; completed: boolean }[]>([]);
 
   constructor() {
+    // Al iniciar, determinar el menú activo desde la URL actual
+    this.setActiveMenuFromUrl(this.router.url);
+
+    // Escuchar cambios de ruta para actualizar el menú activo
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event) => {
+        const navEnd = event as NavigationEnd;
+        this.setActiveMenuFromUrl(navEnd.urlAfterRedirects);
+      });
+
     // Simulate initial data fetch on service initialization
     this.fetchStats();
     this.fetchOrders();
     this.fetchTodos();
+  }
+
+  private setActiveMenuFromUrl(url: string) {
+    const parts = url.split('/');
+    const menuId = parts[2]?.split('?')[0]?.split('#')[0]; // más robusto
+    if (menuId) {
+      this.activeMenuItem.set(menuId);
+    }
   }
 
   // Simulated API calls (replace with real endpoints)

@@ -22,6 +22,7 @@ import { StatsCardComponent } from '../../components/StatsCard/StatsCard.compone
 import { RecentOrdersComponent } from '../../components/recent-orders/recent-orders.component';
 import { TodoListComponent } from '../../components/todo-list/todo-list.component';
 import { DashboardService } from '../../service/dashboard.service';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,6 +35,7 @@ import { DashboardService } from '../../service/dashboard.service';
     StatsCardComponent,
     RecentOrdersComponent,
     TodoListComponent,
+    RouterOutlet,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
