@@ -178,236 +178,6 @@ body {
   left: 60px;
 }
 
-#content nav a {
-  color: var(--dark);
-}
-#content nav .bx.bx-menu {
-  cursor: pointer;
-  color: var(--dark);
-}
-#content nav .nav-link {
-  font-size: 16px;
-  transition: 0.3s ease;
-}
-#content nav .nav-link:hover {
-  color: var(--blue);
-}
-#content nav form {
-  max-width: 400px;
-  width: 100%;
-  margin-right: auto;
-}
-#content nav form .form-input {
-  display: flex;
-  align-items: center;
-  height: 36px;
-}
-#content nav form .form-input input {
-  flex-grow: 1;
-  padding: 0 16px;
-  height: 100%;
-  border: none;
-  background: var(--grey);
-  border-radius: 36px 0 0 36px;
-  outline: none;
-  width: 100%;
-  color: var(--dark);
-}
-#content nav form .form-input button {
-  width: 36px;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--blue);
-  color: var(--light);
-  font-size: 18px;
-  border: none;
-  outline: none;
-  border-radius: 0 36px 36px 0;
-  cursor: pointer;
-}
-#content nav .notification {
-  font-size: 20px;
-  position: relative;
-}
-#content nav .notification .num {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid var(--light);
-  background: var(--red);
-  color: var(--light);
-  font-weight: 700;
-  font-size: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-/* Notification Dropdown */
-#content nav .notification-menu {
-  display: none;
-  position: absolute;
-  top: 56px;
-  right: 0;
-  background: var(--light);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-  width: 250px;
-  max-height: 300px;
-  overflow-y: auto;
-  z-index: 9999;
-  font-family: var(--lato);
-}
-
-#content nav .notification-menu ul {
-  list-style: none;
-  padding: 10px;
-  margin: 0;
-}
-
-#content nav .notification-menu li {
-  padding: 10px;
-  border-bottom: 1px solid var(--grey);
-  color: var(--dark);
-}
-
-#content nav .notification-menu li:hover {
-  background-color: var(--light-blue);
-  color: var(--dark);
-}
-#content nav .notification-menu li:hover a {
-  background-color: var(--dark-grey);
-  color: var(--light);
-}
-body.dark #content nav .notification-menu li:hover {
-  background-color: var(--light-blue);
-  color: var(--light);
-}
-body.dark #content nav .notification-menu li a {
-  background-color: var(--dark-grey);
-  color: var(--light);
-}
-#content nav .profile img {
-  width: 36px;
-  height: 36px;
-  object-fit: cover;
-  border-radius: 50%;
-}
-#content nav .profile-menu {
-  display: none;
-  position: absolute;
-  top: 56px;
-  right: 0;
-  background: var(--light);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-  width: 200px;
-  z-index: 9999;
-  font-family: var(--lato);
-}
-
-#content nav .profile-menu ul {
-  list-style: none;
-  padding: 10px;
-  margin: 0;
-}
-
-#content nav .profile-menu li {
-  padding: 10px;
-  border-bottom: 1px solid var(--grey);
-}
-
-#content nav .profile-menu li:hover {
-  background-color: var(--light-blue);
-  color: var(--dark);
-}
-#content nav .profile-menu li a {
-  color: var(--dark);
-  font-size: 16px;
-}
-body.dark #content nav .profile-menu li:hover a {
-  color: var(--light);
-}
-body.dark #content nav .profile-menu li a {
-  color: var(--dark);
-}
-#content nav .profile-menu li:hover a {
-  color: var(--dark);
-}
-/* Active State for Menus */
-#content nav .notification-menu.show,
-#content nav .profile-menu.show {
-  display: block;
-}
-
-#content nav .switch-mode {
-  display: block;
-  min-width: 50px;
-  height: 25px;
-  border-radius: 25px;
-  background: var(--grey);
-  cursor: pointer;
-  position: relative;
-}
-#content nav .switch-mode::before {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  bottom: 2px;
-  width: calc(25px - 4px);
-  background: var(--blue);
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-#content nav #switch-mode:checked + .switch-mode::before {
-  left: calc(100% - (25px - 4px) - 2px);
-}
-
-#content nav .swith-lm {
-  background-color: var(--grey);
-  border-radius: 50px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 3px;
-  position: relative;
-  height: 21px;
-  width: 45px;
-  transform: scale(1.5);
-}
-
-#content nav .swith-lm .ball {
-  background-color: var(--blue);
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  height: 20px;
-  width: 20px;
-  transform: translateX(0px);
-  transition: transform 0.2s linear;
-}
-
-#content nav .checkbox:checked + .swith-lm .ball {
-  transform: translateX(22px);
-}
-.bxs-moon {
-  color: var(--yellow);
-}
-
-.bx-sun {
-  color: var(--orange);
-  animation: shakeOn 0.7s;
-}
-
-/* NAVBAR */
-
 /* MAIN */
 #content main {
   width: 100%;
@@ -416,7 +186,7 @@ body.dark #content nav .profile-menu li a {
   max-height: calc(100vh - 56px);
   overflow-y: auto;
 }
-#content main .head-title {
+/*#content main .head-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -456,9 +226,9 @@ body.dark #content nav .profile-menu li a {
   align-items: center;
   grid-gap: 10px;
   font-weight: 500;
-}
+} */
 
-#content main .box-info {
+/* #content main .box-info {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   grid-gap: 24px;
@@ -500,17 +270,17 @@ body.dark #content nav .profile-menu li a {
 }
 #content main .box-info li .text p {
   color: var(--dark);
-}
+} */
 
 #content main .table-data {
   display: flex;
-  flex-wrap: wrap;
   grid-gap: 24px;
   margin-top: 24px;
   width: 100%;
   color: var(--dark);
 }
-#content main .table-data > div {
+
+/* #content main .table-data > div {
   border-radius: 20px;
   background: var(--light);
   padding: 24px;
@@ -522,6 +292,7 @@ body.dark #content nav .profile-menu li a {
   grid-gap: 16px;
   margin-bottom: 24px;
 }
+
 #content main .table-data .head h3 {
   margin-right: auto;
   font-size: 24px;
@@ -578,9 +349,9 @@ body.dark #content nav .profile-menu li a {
 }
 #content main .table-data .order table tr td .status.pending {
   background: var(--orange);
-}
+} */
 
-#content main .table-data .todo {
+/* #content main .table-data .todo {
   flex-grow: 1;
   flex-basis: 300px;
 }
@@ -608,7 +379,7 @@ body.dark #content nav .profile-menu li a {
 }
 #content main .table-data .todo .todo-list li:last-child {
   margin-bottom: 0;
-}
+} */
 /* MAIN */
 /* CONTENT */
 #content main .menu,

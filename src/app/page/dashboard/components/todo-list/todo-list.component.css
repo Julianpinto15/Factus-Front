@@ -1,0 +1,60 @@
+div {
+  border-radius: 20px;
+  background: var(--light);
+  padding: 24px;
+  overflow-x: auto;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  grid-gap: 16px;
+  margin-bottom: 10px;
+}
+
+.head h3 {
+  margin-right: auto;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.head .bx {
+  cursor: pointer;
+}
+
+.todo {
+  flex-grow: 1;
+  flex-basis: 400px;
+  height: 100%;
+}
+
+.todo .todo-list {
+  width: 100%;
+}
+
+.todo .todo-list li {
+  width: 100%;
+  margin-bottom: 16px;
+  background: var(--grey);
+  border-radius: 10px;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.todo .todo-list li .bx {
+  cursor: pointer;
+}
+
+.todo .todo-list li.completed {
+  border-left: 10px solid var(--blue);
+}
+
+.todo .todo-list li.not-completed {
+  border-left: 10px solid var(--orange);
+}
+
+.todo .todo-list li:last-child {
+  margin-bottom: 0;
+}

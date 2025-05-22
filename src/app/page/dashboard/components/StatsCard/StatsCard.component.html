@@ -1,0 +1,11 @@
+<ul class="box-info">
+  @for (stat of stats; track stat.icon) {
+  <li>
+    <i class="bx {{ stat.icon }}"></i>
+    <span class="text">
+      <h3>{{ stat.value }}</h3>
+      <p>{{ stat.label }}</p>
+    </span>
+  </li>
+  }
+</ul>

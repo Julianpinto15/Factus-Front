@@ -1,0 +1,42 @@
+<nav>
+  <i class="bx bx-menu bx-sm" (click)="dashboardService.toggleSidebar()"></i>
+  <a href="#" class="nav-link">Categories</a>
+  <form action="#" [ngClass]="{ show: dashboardService.isSearchFormShown() }">
+    <div class="form-input">
+      <input type="search" placeholder="Search..." />
+      <button type="submit" class="search-btn" (click)="onToggleSearchForm($event)">
+        <i class="bx" [ngClass]="dashboardService.isSearchFormShown() ? 'bx-x' : 'bx-search'"></i>
+      </button>
+    </div>
+  </form>
+  <input type="checkbox" class="checkbox" id="switch-mode" [checked]="dashboardService.isDarkMode()"
+    (change)="dashboardService.toggleDarkMode()" hidden />
+  <label class="swith-lm" for="switch-mode">
+    <i class="bx bxs-moon"></i>
+    <i class="bx bx-sun"></i>
+    <div class="ball"></div>
+  </label>
+  <a class="notification" (click)="dashboardService.toggleNotificationMenu()">
+    <i class="bx bxs-bell bx-tada-hover"></i>
+    <span class="num">8</span>
+  </a>
+  <div class="notification-menu" [ngClass]="{ show: dashboardService.isNotificationMenuShown() }">
+    <ul>
+      <li>New message from John</li>
+      <li>Your order has been shipped</li>
+      <li>New comment on your post</li>
+      <li>Update available for your app</li>
+      <li>Reminder: Meeting at 3PM</li>
+    </ul>
+  </div>
+  <a class="profile" (click)="dashboardService.toggleProfileMenu()">
+    <img src="https://placehold.co/600x400/png" alt="Profile" />
+  </a>
+  <div class="profile-menu" [ngClass]="{ show: dashboardService.isProfileMenuShown() }">
+    <ul>
+      <li><a href="#">My Profile</a></li>
+      <li><a href="#">Settings</a></li>
+      <li><a href="#">Log Out</a></li>
+    </ul>
+  </div>
+</nav>

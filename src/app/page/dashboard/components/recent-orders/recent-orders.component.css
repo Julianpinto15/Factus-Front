@@ -1,0 +1,85 @@
+div {
+  border-radius: 20px;
+  background: var(--light);
+  padding: 24px;
+  overflow-x: auto;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.head h3 {
+  margin-right: auto;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.head .bx {
+  cursor: pointer;
+}
+
+.order {
+  flex-grow: 1;
+  flex-basis: 500px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th {
+  padding-bottom: 12px;
+  padding-left: 20px;
+  font-size: 13px;
+  text-align: left;
+  border-bottom: 1px solid var(--grey);
+}
+
+table td {
+  width: 100%;
+  margin-right: 40px;
+  padding: 16px 20px;
+}
+
+table tr td:first-child {
+  display: flex;
+  align-items: center;
+  grid-gap: 12px;
+  padding-left: 6px;
+}
+
+table td img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.order table tbody tr:hover {
+  background: var(--grey);
+}
+
+.order table tr td .status {
+  font-size: 10px;
+  padding: 6px 16px;
+  color: var(--light);
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+.order table tr td .status.completed {
+  background: var(--blue);
+}
+
+.order table tr td .status.process {
+  background: var(--yellow);
+}
+
+.order table tr td .status.pending {
+  background: var(--orange);
+}
