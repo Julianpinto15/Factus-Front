@@ -1,0 +1,60 @@
+<div class="customer-create">
+  <h2>Create Customer</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div>
+      <label>Name:</label>
+      <input [(ngModel)]="customer().names" name="names" required>
+    </div>
+    <div>
+      <label>Identification:</label>
+      <input [(ngModel)]="customer().identification" name="identification" required>
+    </div>
+    <div>
+      <label>Identification Document ID:</label>
+      <input [(ngModel)]="customer().identification_document_id" name="identification_document_id" type="number"
+        required>
+    </div>
+    <div>
+      <label>DV:</label>
+      <input [(ngModel)]="customer().dv" name="dv" type="number">
+    </div>
+    <div>
+      <label>Graphic Representation Name:</label>
+      <input [(ngModel)]="customer().graphic_representation_name" name="graphic_representation_name">
+    </div>
+    <div>
+      <label>Company:</label>
+      <input [(ngModel)]="customer().company" name="company">
+    </div>
+    <div>
+      <label>Trade Name:</label>
+      <input [(ngModel)]="customer().trade_name" name="trade_name">
+    </div>
+    <div>
+      <label>Email:</label>
+      <input [(ngModel)]="customer().email" name="email" type="email" required>
+    </div>
+    <div>
+      <label>Phone:</label>
+      <input [(ngModel)]="customer().phone" name="phone">
+    </div>
+    <div>
+      <label>Address:</label>
+      <input [(ngModel)]="customer().address" name="address">
+    </div>
+    <div>
+      <label>Legal Organization ID:</label>
+      <input [(ngModel)]="customer().legal_organization_id" name="legal_organization_id" required>
+    </div>
+    <div>
+      <label>Tribute ID:</label>
+      <input [(ngModel)]="customer().tribute_id" name="tribute_id" required>
+    </div>
+    <div>
+      <label>Municipality ID:</label>
+      <input [(ngModel)]="customer().municipality_id" name="municipality_id" required>
+    </div>
+    <button type="submit">Create</button>
+    <a routerLink="/dashboard/customer/list">Cancel</a>
+  </form>
+</div>

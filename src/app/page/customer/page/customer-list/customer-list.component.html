@@ -1,0 +1,31 @@
+<div class="customer-list">
+  <h2>Customers</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Identification</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (customer of customers(); track customer.identification) {
+      <tr>
+        <td>{{ customer.names }}</td>
+        <td>{{ customer.identification }}</td>
+        <td>{{ customer.email }}</td>
+        <td>{{ customer.phone }}</td>
+        <td>
+          <a [routerLink]="['/dashboard/customer/edit', customer.identification]">Edit</a>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="5">No customers found</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
