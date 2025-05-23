@@ -9,7 +9,7 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root',
 })
 export class CustomerService {
-  private apiUrl = `${environment.apiUrl}/api/customers`; // Matches CustomerController
+  private apiUrl = `${environment.apiUrl}/api/customers`;
   private customers = signal<Customer[]>([]);
 
   constructor(private http: HttpClient, private authService: AuthService) {}
@@ -38,9 +38,26 @@ export class CustomerService {
     return this.http
       .post<Customer>(this.apiUrl, customer, { headers: this.getHeaders() })
       .pipe(
+        tap((newCustomer) => {
+          // Actualizar el signal con el nuevo cliente
+          this.customers.update((customers) => [...customers, newCustomer]);
+        }),
         catchError((error) => {
           console.error('Error creating customer:', error);
           return throwError(() => new Error('Failed to create customer'));
+        })
+      );
+  }
+
+  getCustomerByIdentification(identification: string): Observable<Customer> {
+    return this.http
+      .get<Customer>(`${this.apiUrl}/${identification}`, {
+        headers: this.getHeaders(),
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error fetching customer:', error);
+          return throwError(() => new Error('Failed to fetch customer'));
         })
       );
   }

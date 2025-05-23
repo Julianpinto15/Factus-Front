@@ -8,16 +8,23 @@ import { Customer } from '../../interface/Customer';
 import { CustomerService } from '../../service/Customer.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { MunicipalityService } from '../../service/municipality.service';
+import { TributeService } from '../../service/Tribute.service';
+import { LegalOrganizatioService } from '../../service/legal-organization.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-customer-create',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './customer-create.component.html',
   styleUrl: './customer-create.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomerCreateComponent {
   private readonly customerService = inject(CustomerService);
+  private readonly municipalityService = inject(MunicipalityService);
+  private readonly legalOrganizationService = inject(LegalOrganizatioService);
+  private readonly tributeService = inject(TributeService);
   private readonly router = inject(Router);
 
   readonly customer = signal<Customer>({
@@ -36,10 +43,35 @@ export class CustomerCreateComponent {
     municipality_id: '',
   });
 
+  readonly municipalities = this.municipalityService.getMunicipalitiesSignal();
+  readonly legalOrganizations =
+    this.legalOrganizationService.getLegalOrganizationsSignal();
+  readonly tributes = this.tributeService.getTributesSignal();
+  readonly error = signal<string | null>(null);
+
+  constructor() {
+    // Cargar datos iniciales para los dropdowns
+    this.municipalityService.getMunicipalities().subscribe({
+      error: (err) =>
+        this.error.set('Error al cargar municipios: ' + err.message),
+    });
+    this.legalOrganizationService.getLegalOrganizations().subscribe({
+      error: (err) =>
+        this.error.set(
+          'Error al cargar organizaciones legales: ' + err.message
+        ),
+    });
+    this.tributeService.getTributes().subscribe({
+      error: (err) =>
+        this.error.set('Error al cargar tributos: ' + err.message),
+    });
+  }
+
   onSubmit() {
+    this.error.set(null);
     this.customerService.createCustomer(this.customer()).subscribe({
       next: () => this.router.navigate(['/dashboard/customer/list']),
-      error: (err) => console.error('Error creating customer:', err),
+      error: (err) => this.error.set('Error al crear cliente: ' + err.message),
     });
   }
 }

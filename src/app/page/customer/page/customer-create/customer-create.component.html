@@ -1,33 +1,35 @@
 <div class="customer-create">
-  <h2>Create Customer</h2>
+  <h2>Crear Cliente</h2>
+  <div *ngIf="error()" class="error">{{ error() }}</div>
   <form (ngSubmit)="onSubmit()">
     <div>
-      <label>Name:</label>
+      <label>Nombre:</label>
       <input [(ngModel)]="customer().names" name="names" required>
     </div>
     <div>
-      <label>Identification:</label>
-      <input [(ngModel)]="customer().identification" name="identification" required>
+      <label>Identificación:</label>
+      <input [(ngModel)]="customer().identification" name="identification" required pattern="[0-9]+"
+        title="Solo números">
     </div>
     <div>
-      <label>Identification Document ID:</label>
+      <label>Tipo de Documento:</label>
       <input [(ngModel)]="customer().identification_document_id" name="identification_document_id" type="number"
-        required>
+        required min="1">
     </div>
     <div>
       <label>DV:</label>
-      <input [(ngModel)]="customer().dv" name="dv" type="number">
+      <input [(ngModel)]="customer().dv" name="dv" type="number" min="0">
     </div>
     <div>
-      <label>Graphic Representation Name:</label>
+      <label>Nombre de Representación Gráfica:</label>
       <input [(ngModel)]="customer().graphic_representation_name" name="graphic_representation_name">
     </div>
     <div>
-      <label>Company:</label>
+      <label>Compañía:</label>
       <input [(ngModel)]="customer().company" name="company">
     </div>
     <div>
-      <label>Trade Name:</label>
+      <label>Nombre Comercial:</label>
       <input [(ngModel)]="customer().trade_name" name="trade_name">
     </div>
     <div>
@@ -35,26 +37,36 @@
       <input [(ngModel)]="customer().email" name="email" type="email" required>
     </div>
     <div>
-      <label>Phone:</label>
-      <input [(ngModel)]="customer().phone" name="phone">
+      <label>Teléfono:</label>
+      <input [(ngModel)]="customer().phone" name="phone" pattern="[0-9]+" title="Solo números">
     </div>
     <div>
-      <label>Address:</label>
-      <input [(ngModel)]="customer().address" name="address">
+      <label>Dirección:</label>
+      <input [(ngModel)]="customer().address" name="address" required>
     </div>
     <div>
-      <label>Legal Organization ID:</label>
-      <input [(ngModel)]="customer().legal_organization_id" name="legal_organization_id" required>
+      <label>Organización Legal:</label>
+      <select [(ngModel)]="customer().legal_organization_id" name="legal_organization_id" required>
+        <option value="" disabled>Seleccione una organización legal</option>
+        <option *ngFor="let org of legalOrganizations()" [value]="org.id">{{ org.name }}</option>
+      </select>
     </div>
     <div>
-      <label>Tribute ID:</label>
-      <input [(ngModel)]="customer().tribute_id" name="tribute_id" required>
+      <label>Tributo:</label>
+      <select [(ngModel)]="customer().tribute_id" name="tribute_id" required>
+        <option value="" disabled>Seleccione un tributo</option>
+        <option *ngFor="let tribute of tributes()" [value]="tribute.id">{{ tribute.name }}</option>
+      </select>
     </div>
     <div>
-      <label>Municipality ID:</label>
-      <input [(ngModel)]="customer().municipality_id" name="municipality_id" required>
+      <label>Municipio:</label>
+      <select [(ngModel)]="customer().municipality_id" name="municipality_id" required>
+        <option value="" disabled>Seleccione un municipio</option>
+        <option *ngFor="let municipality of municipalities()" [value]="municipality.id">{{ municipality.name }}</option>
+      </select>
     </div>
-    <button type="submit">Create</button>
-    <a routerLink="/dashboard/customer/list">Cancel</a>
+    <button type="submit"
+      [disabled]="!customer().names || !customer().identification || !customer().identification_document_id || !customer().email || !customer().address || !customer().legal_organization_id || !customer().tribute_id || !customer().municipality_id">Crear</button>
+    <a routerLink="/dashboard/customer/list">Cancelar</a>
   </form>
 </div>

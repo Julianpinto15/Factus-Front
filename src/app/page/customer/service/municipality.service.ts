@@ -9,7 +9,7 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root',
 })
 export class MunicipalityService {
-  private apiUrl = `${environment.apiUrl}/v1/municipalities?name=`; // Adjust based on backend
+  private apiUrl = `${environment.apiUrl}/api/municipalities`; // Endpoint del backend
   private municipalities = signal<Municipality[]>([]);
 
   constructor(private http: HttpClient, private authService: AuthService) {}
