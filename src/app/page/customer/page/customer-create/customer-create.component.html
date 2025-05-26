@@ -1,51 +1,81 @@
 <div class="customer-create">
   <h2>Crear Cliente</h2>
-  @if (error()) {
-  <div class="error">{{ error() }}</div>
-  }
-  <form [formGroup]="customerForm" (ngSubmit)="onSubmit()" class="horizontal-form">
+  <form [formGroup]="customerForm" (ngSubmit)="onSubmit($event)" class="horizontal-form">
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Nombre</mat-label>
-        <input matInput id="names" formControlName="names" required>
-        @if (customerForm.get('names')?.touched && customerForm.get('names')?.invalid) {
-        <mat-error>El nombre es requerido</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Identificación</mat-label>
-        <input matInput id="identification" formControlName="identification" required pattern="[0-9]+">
-        @if (customerForm.get('identification')?.touched && customerForm.get('identification')?.invalid) {
-        <mat-error>La identificación debe contener solo números</mat-error>
+        <mat-label>Tipo de Persona</mat-label>
+        <mat-select id="person_type" formControlName="person_type" required
+          (selectionChange)="onPersonTypeChange($event)">
+          <mat-option value="" disabled>Seleccione tipo de persona</mat-option>
+          <mat-option value="natural">Natural</mat-option>
+          <mat-option value="juridica">Jurídica</mat-option>
+        </mat-select>
+        @if (customerForm.get('person_type')?.touched && customerForm.get('person_type')?.invalid) {
+        <mat-error>El tipo de persona es requerido</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Tipo de Documento</mat-label>
-        <input matInput id="identification_document_id" formControlName="identification_document_id" type="number"
-          required>
+        <mat-select id="identification_document_id" formControlName="identification_document_id" required
+          (selectionChange)="onDocumentTypeChange($event)">
+          <mat-option value="" disabled>Seleccione tipo de documento</mat-option>
+          @for (doc of documentTypes(); track doc.id) {
+          <mat-option [value]="doc.id">{{ doc.name }}</mat-option>
+          }
+        </mat-select>
         @if (customerForm.get('identification_document_id')?.touched &&
         customerForm.get('identification_document_id')?.invalid) {
         <mat-error>El tipo de documento es requerido</mat-error>
         }
       </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Identificación</mat-label>
+        <input matInput id="identification" formControlName="identification" required>
+        @if (customerForm.get('identification')?.touched && customerForm.get('identification')?.invalid) {
+        <mat-error>
+          @if (customerForm.get('identification')?.errors?.['required']) {
+          La identificación es requerida
+          } @else if (customerForm.get('identification')?.errors?.['pattern']) {
+          La identificación debe contener solo números
+          } @else if (customerForm.get('identification')?.errors?.['minlength']) {
+          La identificación es demasiado corta
+          }
+        </mat-error>
+        }
+      </mat-form-field>
     </div>
 
     <div class="form-row">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" [class.hidden]="!isNaturalPerson()">
+        <mat-label>Nombre</mat-label>
+        <input matInput id="names" formControlName="names" [required]="isNaturalPerson()">
+        @if (customerForm.get('names')?.touched && customerForm.get('names')?.invalid && isNaturalPerson()) {
+        <mat-error>El nombre es requerido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" [class.hidden]="isNaturalPerson()">
+        <mat-label>Razón Social</mat-label>
+        <input matInput id="company" formControlName="company" [required]="!isNaturalPerson()">
+        @if (customerForm.get('company')?.touched && customerForm.get('company')?.invalid && !isNaturalPerson()) {
+        <mat-error>La razón social es requerida</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" [class.hidden]="!isNitDocument()">
         <mat-label>DV</mat-label>
-        <input matInput id="dv" formControlName="dv" type="number">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Nombre de Representación Gráfica</mat-label>
-        <input matInput id="graphic_representation_name" formControlName="graphic_representation_name">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Compañía</mat-label>
-        <input matInput id="company" formControlName="company">
+        <input matInput id="dv" formControlName="dv" type="number" [required]="isNitDocument()">
+        @if (customerForm.get('dv')?.touched && customerForm.get('dv')?.invalid && isNitDocument()) {
+        <mat-error>
+          @if (customerForm.get('dv')?.errors?.['required']) {
+          El dígito de verificación es requerido
+          } @else if (customerForm.get('dv')?.errors?.['dvInvalid']) {
+          El DV debe ser un solo dígito (0-9)
+          }
+        </mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -56,39 +86,50 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput id="email" formControlName="email" type="email" required>
-        @if (customerForm.get('email')?.touched && customerForm.get('email')?.invalid) {
-        <mat-error>El email no es válido</mat-error>
-        }
+        <mat-label>Nombre de Representación Gráfica</mat-label>
+        <input matInput id="graphic_representation_name" formControlName="graphic_representation_name">
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Teléfono</mat-label>
-        <input matInput id="phone" formControlName="phone" pattern="[0-9]+">
-        @if (customerForm.get('phone')?.touched && customerForm.get('phone')?.invalid) {
-        <mat-error>El teléfono debe contener solo números</mat-error>
+        <mat-label>Email</mat-label>
+        <input matInput id="email" formControlName="email" type="email">
+        @if (customerForm.get('email')?.touched && customerForm.get('email')?.invalid) {
+        <mat-error>El email no es válido</mat-error>
         }
       </mat-form-field>
     </div>
 
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Dirección</mat-label>
-        <input matInput id="address" formControlName="address" required>
-        @if (customerForm.get('address')?.touched && customerForm.get('address')?.invalid) {
-        <mat-error>La dirección es requerida</mat-error>
+        <mat-label>Teléfono</mat-label>
+        <input matInput id="phone" formControlName="phone">
+        @if (customerForm.get('phone')?.touched && customerForm.get('phone')?.invalid) {
+        <mat-error>
+          @if (customerForm.get('phone')?.errors?.['pattern']) {
+          El teléfono debe contener solo números
+          } @else if (customerForm.get('phone')?.errors?.['minlength']) {
+          El teléfono debe tener al menos 7 dígitos
+          } @else if (customerForm.get('phone')?.errors?.['maxlength']) {
+          El teléfono no puede tener más de 15 dígitos
+          }
+        </mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
+        <mat-label>Dirección</mat-label>
+        <input matInput id="address" formControlName="address">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
         <mat-label>Organización Legal</mat-label>
-        <mat-select id="legal_organization_id" formControlName="legal_organization_id" required>
-          <mat-option value="" disabled>Seleccione una organización legal</mat-option>
-          @for (org of legalOrganizations(); track org.id) {
+        <input matInput [matAutocomplete]="legalOrgAuto" formControlName="legal_organization_id" required
+          (input)="filterLegalOrganizations($event)">
+        <mat-autocomplete #legalOrgAuto="matAutocomplete" [displayWith]="displayLegalOrg.bind(this)">
+          @for (org of filteredLegalOrganizations(); track org.id) {
           <mat-option [value]="org.id">{{ org.name }}</mat-option>
           }
-        </mat-select>
+        </mat-autocomplete>
         @if (customerForm.get('legal_organization_id')?.touched && customerForm.get('legal_organization_id')?.invalid) {
         <mat-error>La organización legal es requerida</mat-error>
         }
@@ -98,12 +139,13 @@
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Tributo</mat-label>
-        <mat-select id="tribute_id" formControlName="tribute_id" required>
-          <mat-option value="" disabled>Seleccione un tributo</mat-option>
-          @for (tribute of tributes(); track tribute.id) {
+        <input matInput [matAutocomplete]="tributeAuto" formControlName="tribute_id" required
+          (input)="filterTributes($event)">
+        <mat-autocomplete #tributeAuto="matAutocomplete" [displayWith]="displayTribute.bind(this)">
+          @for (tribute of filteredTributes(); track tribute.id) {
           <mat-option [value]="tribute.id">{{ tribute.name }}</mat-option>
           }
-        </mat-select>
+        </mat-autocomplete>
         @if (customerForm.get('tribute_id')?.touched && customerForm.get('tribute_id')?.invalid) {
         <mat-error>El tributo es requerido</mat-error>
         }
@@ -111,21 +153,26 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Municipio</mat-label>
-        <mat-select id="municipality_id" formControlName="municipality_id" required>
-          <mat-option value="" disabled>Seleccione un municipio</mat-option>
-          @for (municipality of municipalities(); track municipality.id) {
+        <input matInput [matAutocomplete]="municipalityAuto" formControlName="municipality_id"
+          [required]="isColombian()" (input)="filterMunicipalities($event)">
+        <mat-autocomplete #municipalityAuto="matAutocomplete" [displayWith]="displayMunicipality.bind(this)">
+          @for (municipality of filteredMunicipalities(); track municipality.id) {
           <mat-option [value]="municipality.id">{{ municipality.name }}</mat-option>
           }
-        </mat-select>
-        @if (customerForm.get('municipality_id')?.touched && customerForm.get('municipality_id')?.invalid) {
-        <mat-error>El municipio es requerido</mat-error>
+        </mat-autocomplete>
+        @if (customerForm.get('municipality_id')?.touched && customerForm.get('municipality_id')?.invalid &&
+        isColombian()) {
+        <mat-error>El municipio es requerido para clientes en Colombia</mat-error>
         }
       </mat-form-field>
+
+      <mat-checkbox id="is_colombian" formControlName="is_colombian" (change)="onCountryChange($event)">Cliente en
+        Colombia</mat-checkbox>
     </div>
 
     <div class="form-actions">
       <button mat-raised-button color="primary" type="submit" [disabled]="customerForm.invalid">Crear</button>
-      <a mat-button routerLink="/dashboard/customer/list">Cancelar</a>
+      <a mat-button (click)="onCancel()">Cancelar</a>
     </div>
   </form>
 </div>

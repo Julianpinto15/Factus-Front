@@ -26,6 +26,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
+  align-items: start;
 }
 
 .form-actions {
@@ -42,6 +43,10 @@
   margin-bottom: 1rem;
 }
 
+.hidden {
+  display: none;
+}
+
 button[mat-raised-button] {
   padding: 0.5rem 2rem;
   font-family: var(--poppins);
@@ -54,6 +59,16 @@ a[mat-button] {
   font-weight: 500;
 }
 
+mat-checkbox {
+  margin-top: 1rem;
+  font-family: var(--poppins);
+}
+
+mat-autocomplete {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 @media (max-width: 768px) {
   .form-row {
     grid-template-columns: 1fr;
@@ -63,4 +78,35 @@ a[mat-button] {
     margin: 1rem;
     padding: 1rem;
   }
+}
+
+// SweetAlert2 custom styles
+
+.custom-swal-popup {
+  padding: 1rem !important;
+  width: 280px !important; // Smaller width
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  background-color: var(--light) !important;
+}
+
+.custom-swal-title {
+  font-size: 0.9rem !important; // Smaller font size
+  font-family: var(--poppins) !important;
+  color: var(--dark) !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.swal2-icon.swal2-success {
+  font-size: 1.2rem !important; // Smaller success icon
+  margin: 0.5rem auto !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-ring {
+  border: 0.25em solid var(--success-color, rgba(0, 128, 0, 0.2)) !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-line-tip,
+.swal2-icon.swal2-success .swal2-success-line-long {
+  background-color: var(--success-color, #008000) !important;
 }

@@ -15,7 +15,7 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-      <td mat-cell *matCellDef="let customer">{{ customer.names }}</td>
+      <td mat-cell *matCellDef="let customer">{{ customer.names || customer.graphic_representation_name}}</td>
     </ng-container>
 
     <!-- Identification Column -->
