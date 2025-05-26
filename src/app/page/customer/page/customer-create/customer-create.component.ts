@@ -10,7 +10,6 @@ import { Router, RouterLink } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -18,11 +17,23 @@ import { MunicipalityService } from '../../service/municipality.service';
 import { TributeService } from '../../service/Tribute.service';
 import { LegalOrganizatioService } from '../../service/legal-organization.service';
 import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-customer-create',
-  imports: [ReactiveFormsModule, RouterLink, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+  ],
   templateUrl: './customer-create.component.html',
   styleUrl: './customer-create.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

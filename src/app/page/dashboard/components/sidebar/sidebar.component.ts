@@ -12,11 +12,29 @@ import { Router } from '@angular/router';
 export class SidebarComponent {
   dashboardService = inject(DashboardService);
   router = inject(Router);
+  openDropdowns = new Set<string>();
 
   menuItems = [
     { id: 'home', icon: 'bxs-dashboard', text: 'Dashboard' },
-    { id: 'customer', icon: 'bxs-shopping-bag-alt', text: 'Cliente' },
-    { id: 'analytics', icon: 'bxs-doughnut-chart', text: 'Analytics' },
+    {
+      id: 'customer',
+      icon: 'bxs-shopping-bag-alt',
+      text: 'Cliente',
+      children: [
+        {
+          id: 'create',
+          text: 'Crear Cliente',
+          path: '/dashboard/customer/create',
+        },
+        {
+          id: 'list',
+          text: 'Lista de Clientes',
+          path: '/dashboard/customer/list',
+        },
+        { id: 'trends', text: 'Trends', path: '/dashboard/analytics/trends' },
+      ],
+    },
+    { id: 'product', icon: 'bxs-doughnut-chart', text: 'Inventario' },
     { id: 'message', icon: 'bxs-message-dots', text: 'Message' },
     { id: 'team', icon: 'bxs-group', text: 'Team' },
   ];
@@ -26,8 +44,17 @@ export class SidebarComponent {
     { id: 'logout', icon: 'bx-power-off', text: 'Logout', class: 'logout' },
   ];
 
-  navigate(menuId: string) {
+  toggleDropdown(menuId: string) {
+    if (this.openDropdowns.has(menuId)) {
+      this.openDropdowns.delete(menuId);
+    } else {
+      this.openDropdowns.clear(); // Close other dropdowns
+      this.openDropdowns.add(menuId);
+    }
+  }
+
+  navigate(menuId: string, path?: string) {
     this.dashboardService.setActiveMenu(menuId);
-    this.router.navigate(['/dashboard', menuId]);
+    this.router.navigate([path || `/dashboard/${menuId}`]);
   }
 }

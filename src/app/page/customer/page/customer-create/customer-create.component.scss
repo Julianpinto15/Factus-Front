@@ -1,42 +1,66 @@
+@use "@angular/material" as mat;
+
 .customer-create {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: var(--light);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
 .customer-create h2 {
   text-align: center;
+  color: var(--dark);
+  margin-bottom: 1.5rem;
+  font-family: var(--poppins);
 }
-.customer-create form {
+
+.horizontal-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 1.5rem;
 }
-.customer-create label {
-  font-weight: bold;
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
 }
-.customer-create input,
-.customer-create select {
-  padding: 8px;
-  width: 100%;
-  box-sizing: border-box;
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
 }
-.customer-create button {
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-.customer-create button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-.customer-create a {
-  text-align: center;
-  color: #007bff;
-  text-decoration: none;
-}
+
 .error {
-  color: red;
+  color: var(--red);
   text-align: center;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+button[mat-raised-button] {
+  padding: 0.5rem 2rem;
+  font-family: var(--poppins);
+  font-weight: 500;
+}
+
+a[mat-button] {
+  color: var(--blue);
+  font-family: var(--poppins);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-create {
+    margin: 1rem;
+    padding: 1rem;
+  }
 }

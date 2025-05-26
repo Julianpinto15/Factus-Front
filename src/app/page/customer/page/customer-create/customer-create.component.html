@@ -3,103 +3,129 @@
   @if (error()) {
   <div class="error">{{ error() }}</div>
   }
-  <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
-    <div>
-      <label for="names">Nombre:</label>
-      <input id="names" formControlName="names" required>
-      @if (customerForm.get('names')?.touched && customerForm.get('names')?.invalid) {
-      <div class="error">El nombre es requerido</div>
-      }
-    </div>
-    <div>
-      <label for="identification">Identificación:</label>
-      <input id="identification" formControlName="identification" required pattern="[0-9]+">
-      @if (customerForm.get('identification')?.touched && customerForm.get('identification')?.invalid) {
-      <div class="error">La identificación debe contener solo números</div>
-      }
-    </div>
-    <div>
-      <label for="identification_document_id">Tipo de Documento:</label>
-      <input id="identification_document_id" formControlName="identification_document_id" type="number" required>
-      @if (customerForm.get('identification_document_id')?.touched &&
-      customerForm.get('identification_document_id')?.invalid) {
-      <div class="error">El tipo de documento es requerido</div>
-      }
-    </div>
-    <div>
-      <label for="dv">DV:</label>
-      <input id="dv" formControlName="dv" type="number">
-    </div>
-    <div>
-      <label for="graphic_representation_name">Nombre de Representación Gráfica:</label>
-      <input id="graphic_representation_name" formControlName="graphic_representation_name">
-    </div>
-    <div>
-      <label for="company">Compañía:</label>
-      <input id="company" formControlName="company">
-    </div>
-    <div>
-      <label for="trade_name">Nombre Comercial:</label>
-      <input id="trade_name" formControlName="trade_name">
-    </div>
-    <div>
-      <label for="email">Email:</label>
-      <input id="email" formControlName="email" type="email" required>
-      @if (customerForm.get('email')?.touched && customerForm.get('email')?.invalid) {
-      <div class="error">El email no es válido</div>
-      }
-    </div>
-    <div>
-      <label for="phone">Teléfono:</label>
-      <input id="phone" formControlName="phone" pattern="[0-9]+">
-      @if (customerForm.get('phone')?.touched && customerForm.get('phone')?.invalid) {
-      <div class="error">El teléfono debe contener solo números</div>
-      }
-    </div>
-    <div>
-      <label for="address">Dirección:</label>
-      <input id="address" formControlName="address" required>
-      @if (customerForm.get('address')?.touched && customerForm.get('address')?.invalid) {
-      <div class="error">La dirección es requerida</div>
-      }
-    </div>
-    <div>
-      <label for="legal_organization_id">Organización Legal:</label>
-      <select id="legal_organization_id" formControlName="legal_organization_id" required>
-        <option value="" disabled>Seleccione una organización legal</option>
-        @for (org of legalOrganizations(); track org.id) {
-        <option [value]="org.id">{{ org.name }}</option>
+  <form [formGroup]="customerForm" (ngSubmit)="onSubmit()" class="horizontal-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput id="names" formControlName="names" required>
+        @if (customerForm.get('names')?.touched && customerForm.get('names')?.invalid) {
+        <mat-error>El nombre es requerido</mat-error>
         }
-      </select>
-      @if (customerForm.get('legal_organization_id')?.touched && customerForm.get('legal_organization_id')?.invalid) {
-      <div class="error">La organización legal es requerida</div>
-      }
-    </div>
-    <div>
-      <label for="tribute_id">Tributo:</label>
-      <select id="tribute_id" formControlName="tribute_id" required>
-        <option value="" disabled>Seleccione un tributo</option>
-        @for (tribute of tributes(); track tribute.id) {
-        <option [value]="tribute.id">{{ tribute.name }}</option>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Identificación</mat-label>
+        <input matInput id="identification" formControlName="identification" required pattern="[0-9]+">
+        @if (customerForm.get('identification')?.touched && customerForm.get('identification')?.invalid) {
+        <mat-error>La identificación debe contener solo números</mat-error>
         }
-      </select>
-      @if (customerForm.get('tribute_id')?.touched && customerForm.get('tribute_id')?.invalid) {
-      <div class="error">El tributo es requerido</div>
-      }
-    </div>
-    <div>
-      <label for="municipality_id">Municipio:</label>
-      <select id="municipality_id" formControlName="municipality_id" required>
-        <option value="" disabled>Seleccione un municipio</option>
-        @for (municipality of municipalities(); track municipality.id) {
-        <option [value]="municipality.id">{{ municipality.name }}</option>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo de Documento</mat-label>
+        <input matInput id="identification_document_id" formControlName="identification_document_id" type="number"
+          required>
+        @if (customerForm.get('identification_document_id')?.touched &&
+        customerForm.get('identification_document_id')?.invalid) {
+        <mat-error>El tipo de documento es requerido</mat-error>
         }
-      </select>
-      @if (customerForm.get('municipality_id')?.touched && customerForm.get('municipality_id')?.invalid) {
-      <div class="error">El municipio es requerido</div>
-      }
+      </mat-form-field>
     </div>
-    <button type="submit" [disabled]="customerForm.invalid">Crear</button>
-    <a routerLink="/dashboard/customer/list">Cancelar</a>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>DV</mat-label>
+        <input matInput id="dv" formControlName="dv" type="number">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre de Representación Gráfica</mat-label>
+        <input matInput id="graphic_representation_name" formControlName="graphic_representation_name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Compañía</mat-label>
+        <input matInput id="company" formControlName="company">
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre Comercial</mat-label>
+        <input matInput id="trade_name" formControlName="trade_name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput id="email" formControlName="email" type="email" required>
+        @if (customerForm.get('email')?.touched && customerForm.get('email')?.invalid) {
+        <mat-error>El email no es válido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Teléfono</mat-label>
+        <input matInput id="phone" formControlName="phone" pattern="[0-9]+">
+        @if (customerForm.get('phone')?.touched && customerForm.get('phone')?.invalid) {
+        <mat-error>El teléfono debe contener solo números</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Dirección</mat-label>
+        <input matInput id="address" formControlName="address" required>
+        @if (customerForm.get('address')?.touched && customerForm.get('address')?.invalid) {
+        <mat-error>La dirección es requerida</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Organización Legal</mat-label>
+        <mat-select id="legal_organization_id" formControlName="legal_organization_id" required>
+          <mat-option value="" disabled>Seleccione una organización legal</mat-option>
+          @for (org of legalOrganizations(); track org.id) {
+          <mat-option [value]="org.id">{{ org.name }}</mat-option>
+          }
+        </mat-select>
+        @if (customerForm.get('legal_organization_id')?.touched && customerForm.get('legal_organization_id')?.invalid) {
+        <mat-error>La organización legal es requerida</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Tributo</mat-label>
+        <mat-select id="tribute_id" formControlName="tribute_id" required>
+          <mat-option value="" disabled>Seleccione un tributo</mat-option>
+          @for (tribute of tributes(); track tribute.id) {
+          <mat-option [value]="tribute.id">{{ tribute.name }}</mat-option>
+          }
+        </mat-select>
+        @if (customerForm.get('tribute_id')?.touched && customerForm.get('tribute_id')?.invalid) {
+        <mat-error>El tributo es requerido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Municipio</mat-label>
+        <mat-select id="municipality_id" formControlName="municipality_id" required>
+          <mat-option value="" disabled>Seleccione un municipio</mat-option>
+          @for (municipality of municipalities(); track municipality.id) {
+          <mat-option [value]="municipality.id">{{ municipality.name }}</mat-option>
+          }
+        </mat-select>
+        @if (customerForm.get('municipality_id')?.touched && customerForm.get('municipality_id')?.invalid) {
+        <mat-error>El municipio es requerido</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="customerForm.invalid">Crear</button>
+      <a mat-button routerLink="/dashboard/customer/list">Cancelar</a>
+    </div>
   </form>
 </div>

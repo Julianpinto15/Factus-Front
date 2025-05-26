@@ -33,6 +33,13 @@ export const routes: Routes = [
           { path: 'create', component: CustomerCreateComponent },
         ],
       },
+      {
+        path: 'product',
+        loadComponent: () =>
+          import('./page/product/page/product/product.component').then(
+            (m) => m.ProductComponent
+          ),
+      },
     ],
   },
   { path: '**', redirectTo: 'dashboard' },

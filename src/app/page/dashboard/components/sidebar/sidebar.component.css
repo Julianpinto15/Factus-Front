@@ -12,7 +12,7 @@
   overflow-x: hidden;
   scrollbar-width: none;
 }
-#sidebar::--webkit-scrollbar {
+#sidebar::-webkit-scrollbar {
   display: none;
 }
 #sidebar.hide {
@@ -106,18 +106,108 @@
   display: flex;
   justify-content: center;
 }
-
 #sidebar .side-menu.bottom li:nth-last-of-type(-n + 2) {
-  /* Son iki <li>'yi seç */
-  position: absolute; /* Ebeveynine göre konumlandır */
-  bottom: 0; /* En alt */
+  position: absolute;
+  bottom: 0;
   left: 0;
   right: 0;
   text-align: center;
 }
-
-/* Birbirinin üzerine binmesini engellemek için */
 #sidebar .side-menu.bottom li:nth-last-of-type(2) {
-  bottom: 40px; /* İkinci son öğeyi yukarı kaydır */
+  bottom: 40px;
 }
-/* SIDEBAR */
+
+/* Dropdown-specific styles */
+#sidebar .side-menu .dropdown {
+  position: relative;
+}
+
+#sidebar .side-menu .dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+  height: 100%;
+  background: var(--light);
+  border-radius: 48px;
+  font-size: 16px;
+  color: var(--dark);
+  white-space: nowrap;
+  overflow-x: hidden;
+  cursor: pointer;
+}
+
+#sidebar .side-menu .dropdown-toggle .bx-chevron-down {
+  transition: transform 0.3s ease;
+  min-width: calc(60px - ((4px + 6px) * 2));
+  display: flex;
+  justify-content: center;
+}
+
+#sidebar .side-menu .dropdown-toggle .rotate-180 {
+  transform: rotate(180deg);
+}
+
+#sidebar .side-menu .submenu {
+  display: flex;
+  flex-direction: column;
+  background: var(--light);
+  border-radius: 0 0 36px 36px;
+  margin-left: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  position: absolute; /* Changed to absolute for better positioning */
+  width: 185px; /* Fixed width for consistency */
+  z-index: 2100; /* Ensure submenu is above other elements */
+  top: 100%; /* Position below parent item */
+  left: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add shadow for visibility */
+  overflow-y: auto; /* Still allow scrolling if needed */
+  scrollbar-width: none;
+}
+
+#sidebar .side-menu .submenu::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari */
+}
+
+#sidebar .side-menu .submenu.open {
+  opacity: 1;
+  visibility: visible;
+  margin-top: 0; /* Remove margin-top for smoother transition */
+  overflow-y: hidden; /* Hide overflow to prevent scrollbar */
+}
+
+#sidebar .side-menu .submenu-item a {
+  display: flex;
+  align-items: center;
+  padding: 1px 20px;
+  font-size: 14px;
+  color: var(--dark);
+  white-space: nowrap;
+  transition: background 0.5s ease;
+  cursor: pointer;
+}
+
+#sidebar .side-menu .submenu-item a:hover {
+  background: var(--grey);
+  color: var(--blue);
+}
+
+/* Allow submenu to be visible in collapsed state */
+#sidebar.hide .side-menu .submenu.open {
+  display: flex; /* Show submenu when open, even in collapsed state */
+  left: 60px; /* Position submenu to the right of collapsed sidebar */
+  top: 0; /* Align with parent item */
+}
+
+/* Ensure submenu is clickable in collapsed state */
+#sidebar.hide .side-menu .dropdown:hover .submenu.open {
+  display: flex;
+}
+
+/* Ensure submenu items are clickable */
+#sidebar .side-menu .submenu-item {
+  position: relative;
+  z-index: 2200; /* Higher z-index for submenu items */
+}

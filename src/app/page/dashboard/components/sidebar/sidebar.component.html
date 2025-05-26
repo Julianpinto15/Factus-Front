@@ -1,4 +1,3 @@
-<!-- SIDEBAR -->
 <section id="sidebar" [ngClass]="{ hide: dashboardService.isSidebarHidden() }">
   <a href="#" class="brand">
     <i class="bx bxs-smile bx-lg"></i>
@@ -6,12 +5,32 @@
   </a>
 
   <ul class="side-menu top">
-    <li *ngFor="let menu of menuItems" [ngClass]="{ active: dashboardService.activeMenuItem() === menu.id }">
-      <a (click)="navigate(menu.id)">
-        <i class="bx {{ menu.icon }} bx-sm"></i>
-        <span class="text">{{ menu.text }}</span>
-      </a>
-    </li>
+    <ng-container *ngFor="let menu of menuItems">
+      <!-- Regular menu item (no children) -->
+      <li [ngClass]="{ active: dashboardService.activeMenuItem() === menu.id }" *ngIf="!menu.children">
+        <a (click)="navigate(menu.id)">
+          <i class="bx {{ menu.icon }} bx-sm"></i>
+          <span class="text">{{ menu.text }}</span>
+        </a>
+      </li>
+      <!-- Dropdown menu item (with children) -->
+      <li class="dropdown"
+        [ngClass]="{ active: dashboardService.activeMenuItem() === menu.id, open: openDropdowns.has(menu.id) }"
+        *ngIf="menu.children">
+        <a class="dropdown-toggle" (click)="toggleDropdown(menu.id); $event.stopPropagation()">
+          <i class="bx {{ menu.icon }} bx-sm"></i>
+          <span class="text">{{ menu.text }}</span>
+          <i class="bx bx-chevron-down" [ngClass]="{ 'rotate-180': openDropdowns.has(menu.id) }"></i>
+        </a>
+        <ul class="submenu" [ngClass]="{ open: openDropdowns.has(menu.id) }">
+          <li *ngFor="let submenu of menu.children" class="submenu-item">
+            <a (click)="navigate(submenu.id, submenu.path); $event.stopPropagation()">
+              <span class="text">{{ submenu.text }}</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ng-container>
   </ul>
 
   <ul class="side-menu bottom">
@@ -23,6 +42,4 @@
       </a>
     </li>
   </ul>
-
 </section>
-<!-- SIDEBAR -->
