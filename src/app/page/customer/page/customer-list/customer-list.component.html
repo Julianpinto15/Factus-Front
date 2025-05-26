@@ -1,31 +1,62 @@
-<div class="customer-list">
-  <h2>Customers</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Identification</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (customer of customers(); track customer.identification) {
-      <tr>
-        <td>{{ customer.names }}</td>
-        <td>{{ customer.identification }}</td>
-        <td>{{ customer.email }}</td>
-        <td>{{ customer.phone }}</td>
-        <td>
-          <a [routerLink]="['/dashboard/customer/edit', customer.identification]">Edit</a>
-        </td>
-      </tr>
-      } @empty {
-      <tr>
-        <td colspan="5">No customers found</td>
-      </tr>
-      }
-    </tbody>
+<div class="customer-list-container">
+  <h2 class="mat-h2">Clientes</h2>
+  @if (error()) {
+  <div class="error mat-elevation-z2" role="alert">
+    {{ error() }}
+  </div>
+  }
+  @if (loading()) {
+  <div class="no-data mat-elevation-z2" role="alert">
+    Cargando clientes...
+  </div>
+  } @else if (customers() && customers().length > 0) {
+  <table mat-table [dataSource]="customers()" matSort (matSortChange)="onSortChange($event)" [matSortActive]="'name'"
+    [matSortDirection]="'asc'" class="mat-elevation-z8">
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+      <td mat-cell *matCellDef="let customer">{{ customer.names }}</td>
+    </ng-container>
+
+    <!-- Identification Column -->
+    <ng-container matColumnDef="identification">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Identificación</th>
+      <td mat-cell *matCellDef="let customer">{{ customer.identification }}</td>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+      <td mat-cell *matCellDef="let customer">{{ customer.email }}</td>
+    </ng-container>
+
+    <!-- Phone Column -->
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
+      <td mat-cell *matCellDef="let customer">{{ customer.phone }}</td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let customer">
+        <!-- <button mat-icon-button [routerLink]="['/dashboard/customer/edit', customer.identification]"
+          aria-label="Editar cliente {{ customer.names }}">
+          <mat-icon>edit</mat-icon>
+        </button> -->
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
+  <mat-paginator [pageSize]="pageSize()" [pageIndex]="pageIndex()" [length]="totalCustomers()"
+    [pageSizeOptions]="[5, 10, 25, 50]" (page)="onPageChange($event)" showFirstLastButtons
+    aria-label="Seleccionar página de clientes"></mat-paginator>
+  } @else if (customers() && customers().length === 0) {
+  <div class="no-data mat-elevation-z2" role="alert">
+    No se encontraron clientes
+  </div>
+  }
 </div>

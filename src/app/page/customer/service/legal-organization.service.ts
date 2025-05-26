@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { LegalOrganization } from '../interface/LegalOrganization';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -9,10 +9,10 @@ import { AuthService } from '../../../auth/service/auth.service';
   providedIn: 'root',
 })
 export class LegalOrganizatioService {
-  private apiUrl = `${environment.apiUrl}/api/legal-organizations`; // Ajusta según el endpoint del backend
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+  private apiUrl = `${environment.apiUrl}/api/legal-organizations`;
   private legalOrganizations = signal<LegalOrganization[]>([]);
-
-  constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getAccessToken();

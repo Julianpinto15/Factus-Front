@@ -6,18 +6,25 @@ import {
 } from '@angular/core';
 import { Customer } from '../../interface/Customer';
 import { CustomerService } from '../../service/Customer.service';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MunicipalityService } from '../../service/municipality.service';
 import { TributeService } from '../../service/Tribute.service';
 import { LegalOrganizatioService } from '../../service/legal-organization.service';
 import { CommonModule } from '@angular/common';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-customer-create',
-  imports: [FormsModule, CommonModule],
+  imports: [ReactiveFormsModule, RouterLink, CommonModule],
   templateUrl: './customer-create.component.html',
-  styleUrl: './customer-create.component.css',
+  styleUrl: './customer-create.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomerCreateComponent {
@@ -26,21 +33,22 @@ export class CustomerCreateComponent {
   private readonly legalOrganizationService = inject(LegalOrganizatioService);
   private readonly tributeService = inject(TributeService);
   private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
 
-  readonly customer = signal<Customer>({
-    identification: '',
-    identification_document_id: 0,
-    dv: null,
-    graphic_representation_name: '',
-    company: '',
-    trade_name: '',
-    names: '',
-    address: '',
-    email: '',
-    phone: '',
-    legal_organization_id: '',
-    tribute_id: '',
-    municipality_id: '',
+  readonly customerForm: FormGroup = this.fb.group({
+    names: ['', Validators.required],
+    identification: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+    identification_document_id: ['', [Validators.required, Validators.min(1)]],
+    dv: [null, Validators.min(0)],
+    graphic_representation_name: [''],
+    company: [''],
+    trade_name: [''],
+    email: ['', [Validators.required, Validators.email]],
+    phone: ['', Validators.pattern('^[0-9]+$')],
+    address: ['', Validators.required],
+    legal_organization_id: ['', Validators.required],
+    tribute_id: ['', Validators.required],
+    municipality_id: ['', Validators.required],
   });
 
   readonly municipalities = this.municipalityService.getMunicipalitiesSignal();
@@ -50,28 +58,57 @@ export class CustomerCreateComponent {
   readonly error = signal<string | null>(null);
 
   constructor() {
-    // Cargar datos iniciales para los dropdowns
-    this.municipalityService.getMunicipalities().subscribe({
-      error: (err) =>
-        this.error.set('Error al cargar municipios: ' + err.message),
-    });
-    this.legalOrganizationService.getLegalOrganizations().subscribe({
-      error: (err) =>
-        this.error.set(
-          'Error al cargar organizaciones legales: ' + err.message
-        ),
-    });
-    this.tributeService.getTributes().subscribe({
-      error: (err) =>
-        this.error.set('Error al cargar tributos: ' + err.message),
-    });
+    this.loadInitialData();
   }
 
-  onSubmit() {
-    this.error.set(null);
-    this.customerService.createCustomer(this.customer()).subscribe({
-      next: () => this.router.navigate(['/dashboard/customer/list']),
-      error: (err) => this.error.set('Error al crear cliente: ' + err.message),
-    });
+  private loadInitialData(): void {
+    this.municipalityService
+      .getMunicipalities()
+      .pipe(
+        tap({
+          error: (err) =>
+            this.error.set('Error al cargar municipios: ' + err.message),
+        })
+      )
+      .subscribe();
+
+    this.legalOrganizationService
+      .getLegalOrganizations()
+      .pipe(
+        tap({
+          error: (err) =>
+            this.error.set(
+              'Error al cargar organizaciones legales: ' + err.message
+            ),
+        })
+      )
+      .subscribe();
+
+    this.tributeService
+      .getTributes()
+      .pipe(
+        tap({
+          error: (err) =>
+            this.error.set('Error al cargar tributos: ' + err.message),
+        })
+      )
+      .subscribe();
+  }
+
+  onSubmit(): void {
+    if (this.customerForm.valid) {
+      this.error.set(null);
+      const customerData: Customer = this.customerForm.value;
+      this.customerService
+        .createCustomer(customerData)
+        .pipe(
+          tap({
+            next: () => this.router.navigate(['/dashboard/customer/list']),
+            error: (err) =>
+              this.error.set('Error al crear cliente: ' + err.message),
+          })
+        )
+        .subscribe();
+    }
   }
 }

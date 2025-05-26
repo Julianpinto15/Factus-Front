@@ -1,72 +1,105 @@
 <div class="customer-create">
   <h2>Crear Cliente</h2>
-  <div *ngIf="error()" class="error">{{ error() }}</div>
-  <form (ngSubmit)="onSubmit()">
+  @if (error()) {
+  <div class="error">{{ error() }}</div>
+  }
+  <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
     <div>
-      <label>Nombre:</label>
-      <input [(ngModel)]="customer().names" name="names" required>
+      <label for="names">Nombre:</label>
+      <input id="names" formControlName="names" required>
+      @if (customerForm.get('names')?.touched && customerForm.get('names')?.invalid) {
+      <div class="error">El nombre es requerido</div>
+      }
     </div>
     <div>
-      <label>Identificación:</label>
-      <input [(ngModel)]="customer().identification" name="identification" required pattern="[0-9]+"
-        title="Solo números">
+      <label for="identification">Identificación:</label>
+      <input id="identification" formControlName="identification" required pattern="[0-9]+">
+      @if (customerForm.get('identification')?.touched && customerForm.get('identification')?.invalid) {
+      <div class="error">La identificación debe contener solo números</div>
+      }
     </div>
     <div>
-      <label>Tipo de Documento:</label>
-      <input [(ngModel)]="customer().identification_document_id" name="identification_document_id" type="number"
-        required min="1">
+      <label for="identification_document_id">Tipo de Documento:</label>
+      <input id="identification_document_id" formControlName="identification_document_id" type="number" required>
+      @if (customerForm.get('identification_document_id')?.touched &&
+      customerForm.get('identification_document_id')?.invalid) {
+      <div class="error">El tipo de documento es requerido</div>
+      }
     </div>
     <div>
-      <label>DV:</label>
-      <input [(ngModel)]="customer().dv" name="dv" type="number" min="0">
+      <label for="dv">DV:</label>
+      <input id="dv" formControlName="dv" type="number">
     </div>
     <div>
-      <label>Nombre de Representación Gráfica:</label>
-      <input [(ngModel)]="customer().graphic_representation_name" name="graphic_representation_name">
+      <label for="graphic_representation_name">Nombre de Representación Gráfica:</label>
+      <input id="graphic_representation_name" formControlName="graphic_representation_name">
     </div>
     <div>
-      <label>Compañía:</label>
-      <input [(ngModel)]="customer().company" name="company">
+      <label for="company">Compañía:</label>
+      <input id="company" formControlName="company">
     </div>
     <div>
-      <label>Nombre Comercial:</label>
-      <input [(ngModel)]="customer().trade_name" name="trade_name">
+      <label for="trade_name">Nombre Comercial:</label>
+      <input id="trade_name" formControlName="trade_name">
     </div>
     <div>
-      <label>Email:</label>
-      <input [(ngModel)]="customer().email" name="email" type="email" required>
+      <label for="email">Email:</label>
+      <input id="email" formControlName="email" type="email" required>
+      @if (customerForm.get('email')?.touched && customerForm.get('email')?.invalid) {
+      <div class="error">El email no es válido</div>
+      }
     </div>
     <div>
-      <label>Teléfono:</label>
-      <input [(ngModel)]="customer().phone" name="phone" pattern="[0-9]+" title="Solo números">
+      <label for="phone">Teléfono:</label>
+      <input id="phone" formControlName="phone" pattern="[0-9]+">
+      @if (customerForm.get('phone')?.touched && customerForm.get('phone')?.invalid) {
+      <div class="error">El teléfono debe contener solo números</div>
+      }
     </div>
     <div>
-      <label>Dirección:</label>
-      <input [(ngModel)]="customer().address" name="address" required>
+      <label for="address">Dirección:</label>
+      <input id="address" formControlName="address" required>
+      @if (customerForm.get('address')?.touched && customerForm.get('address')?.invalid) {
+      <div class="error">La dirección es requerida</div>
+      }
     </div>
     <div>
-      <label>Organización Legal:</label>
-      <select [(ngModel)]="customer().legal_organization_id" name="legal_organization_id" required>
+      <label for="legal_organization_id">Organización Legal:</label>
+      <select id="legal_organization_id" formControlName="legal_organization_id" required>
         <option value="" disabled>Seleccione una organización legal</option>
-        <option *ngFor="let org of legalOrganizations()" [value]="org.id">{{ org.name }}</option>
+        @for (org of legalOrganizations(); track org.id) {
+        <option [value]="org.id">{{ org.name }}</option>
+        }
       </select>
+      @if (customerForm.get('legal_organization_id')?.touched && customerForm.get('legal_organization_id')?.invalid) {
+      <div class="error">La organización legal es requerida</div>
+      }
     </div>
     <div>
-      <label>Tributo:</label>
-      <select [(ngModel)]="customer().tribute_id" name="tribute_id" required>
+      <label for="tribute_id">Tributo:</label>
+      <select id="tribute_id" formControlName="tribute_id" required>
         <option value="" disabled>Seleccione un tributo</option>
-        <option *ngFor="let tribute of tributes()" [value]="tribute.id">{{ tribute.name }}</option>
+        @for (tribute of tributes(); track tribute.id) {
+        <option [value]="tribute.id">{{ tribute.name }}</option>
+        }
       </select>
+      @if (customerForm.get('tribute_id')?.touched && customerForm.get('tribute_id')?.invalid) {
+      <div class="error">El tributo es requerido</div>
+      }
     </div>
     <div>
-      <label>Municipio:</label>
-      <select [(ngModel)]="customer().municipality_id" name="municipality_id" required>
+      <label for="municipality_id">Municipio:</label>
+      <select id="municipality_id" formControlName="municipality_id" required>
         <option value="" disabled>Seleccione un municipio</option>
-        <option *ngFor="let municipality of municipalities()" [value]="municipality.id">{{ municipality.name }}</option>
+        @for (municipality of municipalities(); track municipality.id) {
+        <option [value]="municipality.id">{{ municipality.name }}</option>
+        }
       </select>
+      @if (customerForm.get('municipality_id')?.touched && customerForm.get('municipality_id')?.invalid) {
+      <div class="error">El municipio es requerido</div>
+      }
     </div>
-    <button type="submit"
-      [disabled]="!customer().names || !customer().identification || !customer().identification_document_id || !customer().email || !customer().address || !customer().legal_organization_id || !customer().tribute_id || !customer().municipality_id">Crear</button>
+    <button type="submit" [disabled]="customerForm.invalid">Crear</button>
     <a routerLink="/dashboard/customer/list">Cancelar</a>
   </form>
 </div>

@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Customer } from '../interface/Customer';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../../auth/service/auth.service';
@@ -9,10 +9,10 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root',
 })
 export class CustomerService {
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
   private apiUrl = `${environment.apiUrl}/api/customers`;
   private customers = signal<Customer[]>([]);
-
-  constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getAccessToken();
@@ -22,11 +22,21 @@ export class CustomerService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  getCustomers(): Observable<Customer[]> {
+  getCustomers(
+    page: number = 0,
+    size: number = 10
+  ): Observable<{ data: Customer[]; total: number }> {
+    const params = { page: page.toString(), size: size.toString() };
     return this.http
-      .get<Customer[]>(this.apiUrl, { headers: this.getHeaders() })
+      .get<{ data: Customer[]; total: number }>(this.apiUrl, {
+        headers: this.getHeaders(),
+        params,
+      })
       .pipe(
-        tap((customers) => this.customers.set(customers)),
+        tap((response) => {
+          console.log('Backend response:', response); // Debug log
+          this.customers.set(response.data);
+        }),
         catchError((error) => {
           console.error('Error fetching customers:', error);
           return throwError(() => new Error('Failed to fetch customers'));
@@ -39,7 +49,6 @@ export class CustomerService {
       .post<Customer>(this.apiUrl, customer, { headers: this.getHeaders() })
       .pipe(
         tap((newCustomer) => {
-          // Actualizar el signal con el nuevo cliente
           this.customers.update((customers) => [...customers, newCustomer]);
         }),
         catchError((error) => {

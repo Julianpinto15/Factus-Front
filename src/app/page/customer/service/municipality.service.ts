@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Municipality } from '../interface/Municipality';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../../auth/service/auth.service';
@@ -9,10 +9,10 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root',
 })
 export class MunicipalityService {
-  private apiUrl = `${environment.apiUrl}/api/municipalities`; // Endpoint del backend
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+  private apiUrl = `${environment.apiUrl}/api/municipalities`;
   private municipalities = signal<Municipality[]>([]);
-
-  constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getAccessToken();
