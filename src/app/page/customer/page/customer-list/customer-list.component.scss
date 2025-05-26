@@ -13,6 +13,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
 .mat-h2 {
@@ -44,7 +45,9 @@
   color: var(--red);
 }
 
-.error-icon {
+.error-icon,
+.no-data mat-icon,
+.loading mat-spinner {
   margin-right: 8px;
 }
 
@@ -67,10 +70,11 @@
 
 .mat-header-cell {
   font-weight: 600;
-  color: var(--dark);
+  color: var(--blue);
   background-color: var(--grey);
   padding: 12px 16px;
   font-size: 0.9rem;
+  text-align: left;
 }
 
 .mat-cell {
@@ -85,11 +89,11 @@
 }
 
 .mat-row:hover {
-  background-color: var(--light-blue);
+  background-color: var(--blue);
 }
 
 .mat-row.selected {
-  background-color: var(--light-yellow);
+  background-color: var(--red);
 }
 
 .mat-icon-button {
@@ -109,7 +113,7 @@ mat-paginator {
   background: var(--light);
   margin-top: 16px;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   color: var(--dark);
 }
 
@@ -121,11 +125,11 @@ mat-paginator {
   .table-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 8px;
   }
 
   .search-bar {
     max-width: 100%;
-    margin-top: 8px;
   }
 
   .mat-table {
@@ -143,4 +147,9 @@ mat-paginator {
     padding: 8px;
     font-size: 0.8rem;
   }
+}
+
+.mat-mdc-select {
+  width: 75%;
+  padding-left: 25px;
 }
