@@ -1,0 +1,172 @@
+<div class="product-create">
+  <h2>{{ isEdit() ? 'Editar Producto' : 'Crear Producto' }}</h2>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit($event)" class="horizontal-form">
+    <!-- Información básica del producto -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Código</mat-label>
+        <input matInput id="code" formControlName="code" required>
+        @if (productForm.get('code')?.touched && productForm.get('code')?.invalid) {
+        <mat-error>
+          @if (productForm.get('code')?.errors?.['required']) {
+          El código es requerido
+          } @else if (productForm.get('code')?.errors?.['minlength']) {
+          El código debe tener al menos 3 caracteres
+          }
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput id="name" formControlName="name" required>
+        @if (productForm.get('name')?.touched && productForm.get('name')?.invalid) {
+        <mat-error>
+          @if (productForm.get('name')?.errors?.['required']) {
+          El nombre es requerido
+          } @else if (productForm.get('name')?.errors?.['minlength']) {
+          El nombre debe tener al menos 3 caracteres
+          }
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Descripción</mat-label>
+        <input matInput id="description" formControlName="description">
+      </mat-form-field>
+    </div>
+
+    <!-- Información de cantidades y precios -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Cantidad</mat-label>
+        <input matInput id="quantity" formControlName="quantity" type="number" min="0.01" step="0.01" required>
+        @if (productForm.get('quantity')?.touched && productForm.get('quantity')?.invalid) {
+        <mat-error>
+          @if (productForm.get('quantity')?.errors?.['required']) {
+          La cantidad es requerida
+          } @else if (productForm.get('quantity')?.errors?.['min']) {
+          La cantidad debe ser mayor a 0
+          }
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Precio</mat-label>
+        <input matInput id="price" formControlName="price" type="number" step="0.01" required>
+        @if (productForm.get('price')?.touched && productForm.get('price')?.invalid) {
+        <mat-error>
+          @if (productForm.get('price')?.errors?.['required']) {
+          El precio es requerido
+          } @else if (productForm.get('price')?.errors?.['min']) {
+          El precio debe ser mayor a 0
+          }
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tasa de Impuesto (%)</mat-label>
+        <input matInput id="taxRate" formControlName="taxRate" required>
+        @if (productForm.get('taxRate')?.touched && productForm.get('taxRate')?.invalid) {
+        <mat-error>
+          @if (productForm.get('taxRate')?.errors?.['required']) {
+          La tasa de impuesto es requerida
+          } @else if (productForm.get('taxRate')?.errors?.['pattern']) {
+          La tasa debe ser un número válido (ej. 19.00)
+          }
+        </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tasa de Descuento (%)</mat-label>
+        <input matInput id="discountRate" formControlName="discountRate" type="number" min="0" max="100" step="0.01">
+        @if (productForm.get('discountRate')?.touched && productForm.get('discountRate')?.invalid) {
+        <mat-error>
+          @if (productForm.get('discountRate')?.errors?.['min']) {
+          La tasa de descuento no puede ser negativa
+          } @else if (productForm.get('discountRate')?.errors?.['max']) {
+          La tasa de descuento no puede exceder 100
+          }
+        </mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Información de clasificación -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Unidad de Medida</mat-label>
+        <input matInput [matAutocomplete]="unitMeasureAuto" formControlName="unitMeasureId" required
+          (input)="filterUnitMeasures($event)">
+        <mat-autocomplete #unitMeasureAuto="matAutocomplete" [displayWith]="displayUnitMeasure.bind(this)">
+          @for (um of filteredUnitMeasures(); track um.id) {
+          <mat-option [value]="um.id">{{ um.name }}</mat-option>
+          }
+        </mat-autocomplete>
+        @if (productForm.get('unitMeasureId')?.touched && productForm.get('unitMeasureId')?.invalid) {
+        <mat-error>La unidad de medida es requerida</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Código Estándar</mat-label>
+        <input matInput [matAutocomplete]="standardCodeAuto" formControlName="standardCodeId" required
+          (input)="filterStandardCodes($event)">
+        <mat-autocomplete #standardCodeAuto="matAutocomplete" [displayWith]="displayStandardCode.bind(this)">
+          @for (sc of filteredStandardCodes(); track sc.id) {
+          <mat-option [value]="sc.id">{{ sc.name }}</mat-option>
+          }
+        </mat-autocomplete>
+        @if (productForm.get('standardCodeId')?.touched && productForm.get('standardCodeId')?.invalid) {
+        <mat-error>El código estándar es requerido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tributo</mat-label>
+        <input matInput [matAutocomplete]="tributeAuto" formControlName="tributeId" required
+          (input)="filterTributes($event)">
+        <mat-autocomplete #tributeAuto="matAutocomplete" [displayWith]="displayTribute.bind(this)">
+          @for (tribute of filteredTributes(); track tribute.id) {
+          <mat-option [value]="tribute.id">{{ tribute.name }}</mat-option>
+          }
+        </mat-autocomplete>
+        @if (productForm.get('tributeId')?.touched && productForm.get('tributeId')?.invalid) {
+        <mat-error>El tributo es requerido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Excluido</mat-label>
+        <mat-select id="isExcluded" formControlName="isExcluded" required>
+          <mat-option value="0">No</mat-option>
+          <mat-option value="1">Sí</mat-option>
+        </mat-select>
+        @if (productForm.get('isExcluded')?.touched && productForm.get('isExcluded')?.invalid) {
+        <mat-error>Este campo es requerido</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="productForm.invalid">
+        {{ isEdit() ? 'Actualizar' : 'Crear' }}
+      </button>
+      <a mat-button (click)="onCancel()">Cancelar</a>
+      <button mat-raised-button type="button" (click)="showFactusJSON()">Vista Previa JSON</button>
+    </div>
+  </form>
+
+  <!-- Preview del JSON -->
+  @if (showJSON()) {
+  <div class="json-preview">
+    <h3>Vista Previa JSON Factus API:</h3>
+    <pre>{{ factusJSON() | json }}</pre>
+  </div>
+  }
+</div>

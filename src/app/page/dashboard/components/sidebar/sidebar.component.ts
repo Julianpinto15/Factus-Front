@@ -34,7 +34,25 @@ export class SidebarComponent {
         { id: 'trends', text: 'Trends', path: '/dashboard/analytics/trends' },
       ],
     },
-    { id: 'product', icon: 'bxs-doughnut-chart', text: 'Inventario' },
+    {
+      id: 'product',
+      icon: 'bxs-shopping-bag-alt',
+      text: 'Inventario',
+      children: [
+        {
+          id: 'create',
+          text: 'Crear Producto',
+          path: '/dashboard/product/create',
+        },
+        {
+          id: 'list',
+          text: 'Lista de Productos',
+          path: '/dashboard/product/list',
+        },
+        { id: 'trends', text: 'Trends', path: '/dashboard/analytics/trends' },
+      ],
+    },
+    // { id: 'product', icon: 'bxs-doughnut-chart', text: 'Inventario' },
     { id: 'message', icon: 'bxs-message-dots', text: 'Message' },
     { id: 'team', icon: 'bxs-group', text: 'Team' },
   ];

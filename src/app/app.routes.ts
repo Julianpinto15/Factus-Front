@@ -5,6 +5,9 @@ import { DashboardComponent } from './page/dashboard/page/dashboard-main/dashboa
 import { CustomerComponent } from './page/customer/page/customer/customer.component';
 import { CustomerListComponent } from './page/customer/page/customer-list/customer-list.component';
 import { CustomerCreateComponent } from './page/customer/page/customer-create/customer-create.component';
+import { ProductComponent } from './page/product/page/product/product.component';
+import { ProductListComponent } from './page/product/page/product-list/product-list.component';
+import { ProductCreateComponent } from './page/product/page/product-create/product-create.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -35,10 +38,12 @@ export const routes: Routes = [
       },
       {
         path: 'product',
-        loadComponent: () =>
-          import('./page/product/page/product/product.component').then(
-            (m) => m.ProductComponent
-          ),
+        component: ProductComponent,
+        children: [
+          { path: '', redirectTo: 'list', pathMatch: 'full' },
+          { path: 'list', component: ProductListComponent },
+          { path: 'create', component: ProductCreateComponent },
+        ],
       },
     ],
   },

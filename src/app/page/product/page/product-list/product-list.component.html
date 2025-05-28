@@ -1,0 +1,106 @@
+<div class="product-list-container">
+  <div class="table-header">
+    <h2 class="mat-h2">Productos</h2>
+    <a [routerLink]="['/product/create']" class="add-button" mat-raised-button color="primary">Agregar Producto</a>
+  </div>
+
+  <!-- Error message -->
+  @if (error()) {
+  <div class="error mat-elevation-z2" role="alert">
+    <mat-icon class="error-icon">error</mat-icon>
+    {{ error() }}
+  </div>
+  }
+
+  <!-- Table with skeleton loader or data -->
+  <div class="table-container">
+    <table mat-table [dataSource]="products()" matSort [matSortActive]="'name'" [matSortDirection]="'asc'"
+      (matSortChange)="onSortChange($event)" class="mat-elevation-z8" [ngClass]="{ hidden: loading() }">
+      <!-- Code Column -->
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+        <td mat-cell *matCellDef="let product">{{ product.code }}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+        <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+      </ng-container>
+
+      <!-- Price Column -->
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+        <td mat-cell *matCellDef="let product">{{ product.price | currency }}</td>
+      </ng-container>
+
+      <!-- Tax Rate Column -->
+      <ng-container matColumnDef="taxRate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tasa de Impuesto</th>
+        <td mat-cell *matCellDef="let product">{{ product.taxRate }}%</td>
+      </ng-container>
+
+      <!-- Unit Measure Column -->
+      <ng-container matColumnDef="unitMeasureId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Unidad de Medida</th>
+        <td mat-cell *matCellDef="let product">{{ getUnitMeasureName(product.unitMeasureId) }}</td>
+      </ng-container>
+
+      <!-- Standard Code Column -->
+      <ng-container matColumnDef="standardCodeId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Código Estándar</th>
+        <td mat-cell *matCellDef="let product">{{ getStandardCodeName(product.standardCodeId) }}</td>
+      </ng-container>
+
+      <!-- Tribute Column -->
+      <ng-container matColumnDef="tributeId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tributo</th>
+        <td mat-cell *matCellDef="let product">{{ getTributeName(product.tributeId) }}</td>
+      </ng-container>
+
+      <!-- Excluded Column -->
+      <ng-container matColumnDef="isExcluded">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Excluido</th>
+        <td mat-cell *matCellDef="let product">{{ product.isExcluded ? 'Sí' : 'No' }}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let product">
+          <button mat-icon-button [routerLink]="['/product/create', product.id]">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteProduct(product.id!)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!-- Skeleton loader during loading -->
+    @if (loading()) {
+    <div class="loading-skeleton">
+      @for (i of skeletonRows(); track i) {
+      <div class="skeleton-row">
+        @for (col of displayedColumns; track col) {
+        <div class="skeleton-cell"></div>
+        }
+      </div>
+      }
+    </div>
+    } @else if (products().length === 0) {
+    <div class="no-data mat-elevation-z2" role="alert">
+      <mat-icon>info</mat-icon>
+      No se encontraron productos
+    </div>
+    }
+  </div>
+
+  <mat-paginator [pageSize]="pageSize()" [pageIndex]="pageIndex()" [length]="totalProducts()"
+    [pageSizeOptions]="[5, 10, 25, 50]" (page)="onPageChange($event)" showFirstLastButtons
+    aria-label="Seleccionar página de productos"></mat-paginator>
+</div>
