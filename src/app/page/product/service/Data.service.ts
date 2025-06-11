@@ -17,7 +17,7 @@ import { Tribute } from '../interface/Tribute';
 export class DataService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = `${environment.apiUrl}/api`;
+  private apiUrl = `http://localhost:8080/api`;
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getAccessToken();

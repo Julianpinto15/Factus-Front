@@ -6,7 +6,7 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-product',
   imports: [HeaderComponent, RouterOutlet],
   templateUrl: './product.component.html',
-  styleUrl: './product.component.css',
+  styleUrl: './product.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductComponent {}

@@ -11,7 +11,7 @@ import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = environment.apiUrl; // e.g., 'http://localhost:8080'
+  private apiUrl = 'http://localhost:8080'; // e.g., 'http://localhost:8080'
   isAuthenticated = signal(false);
 
   private http = inject(HttpClient);

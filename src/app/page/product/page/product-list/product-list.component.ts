@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ProductService } from '../../service/Product.service';
 import { PaginatedResponse, Product } from '../../interface/Product';
-import { RouterLink, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
   MatPaginator,
@@ -39,7 +39,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatProgressSpinnerModule,
   ],
   templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.css',
+  styleUrl: './product-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductListComponent {

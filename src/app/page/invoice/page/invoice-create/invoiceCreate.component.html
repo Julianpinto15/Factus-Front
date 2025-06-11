@@ -1,0 +1,163 @@
+<form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
+  <h2>Crear Factura</h2>
+
+  <!-- Campos básicos -->
+  <div>
+    <label>Rango de Numeración</label>
+    <input type="number" formControlName="numbering_range_id" />
+  </div>
+  <div>
+    <label>Código de Referencia</label>
+    <input type="text" formControlName="reference_code" />
+  </div>
+  <div>
+    <label>Observación</label>
+    <input type="text" formControlName="observation" />
+  </div>
+  <div>
+    <label>Forma de Pago</label>
+    <input type="text" formControlName="payment_form" />
+  </div>
+  <div>
+    <label>Fecha de Vencimiento</label>
+    <input type="date" formControlName="payment_due_date" />
+  </div>
+  <div>
+    <label>Método de Pago</label>
+    <input type="number" formControlName="payment_method_code" />
+  </div>
+
+  <!-- Período de Facturación -->
+  <div formGroupName="billing_period">
+    <h3>Período de Facturación</h3>
+    <div>
+      <label>Fecha Inicio</label>
+      <input type="date" formControlName="start_date" />
+    </div>
+    <div>
+      <label>Hora Inicio</label>
+      <input type="time" formControlName="start_time" />
+    </div>
+    <div>
+      <label>Fecha Fin</label>
+      <input type="date" formControlName="end_date" />
+    </div>
+    <div>
+      <label>Hora Fin</label>
+      <input type="time" formControlName="end_time" />
+    </div>
+  </div>
+
+  <!-- Selección de Cliente -->
+  <div formGroupName="customer">
+    <h3>Cliente</h3>
+    <div>
+      <label>Cliente</label>
+      <select (change)="onCustomerChange($event)">
+        <option [ngValue]="null" disabled>Selecciona un cliente</option>
+        <option *ngFor="let customer of customers()" [value]="customer.identification">
+          {{ customer.names }} ({{ customer.identification }})
+        </option>
+      </select>
+    </div>
+    <div>
+      <label>Identificación</label>
+      <input type="text" formControlName="identification" />
+    </div>
+    <div>
+      <label>Tipo de Documento</label>
+      <input type="number" formControlName="identification_document_id" />
+    </div>
+    <div>
+      <label>DV</label>
+      <input type="number" formControlName="dv" />
+    </div>
+    <div>
+      <label>Nombres</label>
+      <input type="text" formControlName="names" />
+    </div>
+    <div>
+      <label>Dirección</label>
+      <input type="text" formControlName="address" />
+    </div>
+    <div>
+      <label>Email</label>
+      <input type="email" formControlName="email" />
+    </div>
+    <div>
+      <label>Teléfono</label>
+      <input type="text" formControlName="phone" />
+    </div>
+    <div>
+      <label>Organización Legal</label>
+      <input type="text" formControlName="legal_organization_id" />
+    </div>
+    <div>
+      <label>Tributo</label>
+      <select formControlName="tribute_id">
+        <option [ngValue]="null" disabled>Selecciona un tributo</option>
+        <option *ngFor="let tribute of tributes()" [ngValue]="tribute.code">
+          {{ tribute.name }} ({{ tribute.code }})
+        </option>
+      </select>
+    </div>
+    <div>
+      <label>Municipio</label>
+      <input type="text" formControlName="municipality_id" />
+    </div>
+  </div>
+
+  <!-- Productos -->
+  <div formArrayName="items">
+    <h3>Productos</h3>
+    <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+      <div>
+        <label>Producto</label>
+        <select (change)="onProductChange($event, i)">
+          <option [ngValue]="null" disabled>Selecciona un producto</option>
+          <option *ngFor="let product of products()" [value]="product.id">
+            {{ product.name }}
+          </option>
+        </select>
+      </div>
+      <div>
+        <label>Cantidad</label>
+        <input type="number" formControlName="quantity" />
+      </div>
+      <div>
+        <label>Descuento (%)</label>
+        <input type="number" formControlName="discount_rate" />
+      </div>
+      <div>
+        <label>Impuesto (%)</label>
+        <input type="text" formControlName="tax_rate" />
+      </div>
+      <div>
+        <label>Tributo</label>
+        <select formControlName="tribute_id">
+          <option [ngValue]="null" disabled>Selecciona un tributo</option>
+          <option *ngFor="let tribute of tributes()" [ngValue]="tribute.code">
+            {{ tribute.name }} ({{ tribute.code }})
+          </option>
+        </select>
+      </div>
+      <!-- <div formArrayName="withholding_taxes">
+        <h4>Retenciones</h4>
+        <div *ngFor="let tax of getWithholdingTaxes(i).controls; let j = index" [formGroupName]="j">
+          <div>
+            <label>Código</label>
+            <input type="text" formControlName="code" />
+          </div>
+          <div>
+            <label>Tasa de Retención</label>
+            <input type="text" formControlName="withholding_tax_rate" />
+          </div>
+        </div>
+        <button type="button" (click)="addWithholdingTax(i)">Agregar Retención</button>
+      </div> -->
+    </div>
+    <button type="button" (click)="addItem()">Agregar Producto</button>
+  </div>
+
+  <button type="submit" [disabled]="!invoiceForm.valid">Crear Factura</button>
+</form>

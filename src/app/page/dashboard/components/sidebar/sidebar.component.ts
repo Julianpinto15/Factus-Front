@@ -53,7 +53,7 @@ export class SidebarComponent {
       ],
     },
     // { id: 'product', icon: 'bxs-doughnut-chart', text: 'Inventario' },
-    { id: 'message', icon: 'bxs-message-dots', text: 'Message' },
+    { id: 'invoice', icon: 'bxs-message-dots', text: 'Factura' },
     { id: 'team', icon: 'bxs-group', text: 'Team' },
   ];
 

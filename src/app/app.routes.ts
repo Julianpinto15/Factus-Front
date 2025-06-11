@@ -8,6 +8,7 @@ import { CustomerCreateComponent } from './page/customer/page/customer-create/cu
 import { ProductComponent } from './page/product/page/product/product.component';
 import { ProductListComponent } from './page/product/page/product-list/product-list.component';
 import { ProductCreateComponent } from './page/product/page/product-create/product-create.component';
+import { InvoiceCreateComponent } from './page/invoice/page/invoice-create/invoiceCreate.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -45,7 +46,12 @@ export const routes: Routes = [
           { path: 'create', component: ProductCreateComponent },
         ],
       },
+      {
+        path: 'invoice',
+        component: InvoiceCreateComponent,
+      },
     ],
   },
-  { path: '**', redirectTo: 'dashboard' },
+
+  { path: '**', redirectTo: 'login' },
 ];

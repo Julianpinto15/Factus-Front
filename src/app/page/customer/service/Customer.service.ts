@@ -11,7 +11,7 @@ import { environment } from '../../../../environments/environment';
 export class CustomerService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = `${environment.apiUrl}/api/customers`;
+  private apiUrl = `http://localhost:8080/api/customers`;
   private customers = signal<Customer[]>([]);
 
   private getHeaders(): HttpHeaders {
