@@ -50,6 +50,7 @@ export const routes: Routes = [
         path: 'invoice',
         component: InvoiceCreateComponent,
       },
+      { path: '**', redirectTo: 'dashboard' },
     ],
   },
 

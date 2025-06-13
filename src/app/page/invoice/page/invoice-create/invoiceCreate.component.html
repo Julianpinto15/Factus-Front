@@ -1,163 +1,293 @@
-<form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
+<div class="invoice-create">
   <h2>Crear Factura</h2>
+  <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="horizontal-form">
+    <!-- Basic Fields -->
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Rango de Numeración</mat-label>
+        <input matInput type="number" id="numbering_range_id" formControlName="numbering_range_id" required>
+        @if (invoiceForm.get('numbering_range_id')?.touched && invoiceForm.get('numbering_range_id')?.invalid) {
+        <mat-error>
+          @if (invoiceForm.get('numbering_range_id')?.errors?.['required']) {
+          El rango de numeración es requerido
+          } @else if (invoiceForm.get('numbering_range_id')?.errors?.['min']) {
+          El rango debe ser mayor que 0
+          }
+        </mat-error>
+        }
+      </mat-form-field>
 
-  <!-- Campos básicos -->
-  <div>
-    <label>Rango de Numeración</label>
-    <input type="number" formControlName="numbering_range_id" />
-  </div>
-  <div>
-    <label>Código de Referencia</label>
-    <input type="text" formControlName="reference_code" />
-  </div>
-  <div>
-    <label>Observación</label>
-    <input type="text" formControlName="observation" />
-  </div>
-  <div>
-    <label>Forma de Pago</label>
-    <input type="text" formControlName="payment_form" />
-  </div>
-  <div>
-    <label>Fecha de Vencimiento</label>
-    <input type="date" formControlName="payment_due_date" />
-  </div>
-  <div>
-    <label>Método de Pago</label>
-    <input type="number" formControlName="payment_method_code" />
-  </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Código de Referencia</mat-label>
+        <input matInput id="reference_code" formControlName="reference_code" required>
+        @if (invoiceForm.get('reference_code')?.touched && invoiceForm.get('reference_code')?.invalid) {
+        <mat-error>El código de referencia es requerido</mat-error>
+        }
+      </mat-form-field>
 
-  <!-- Período de Facturación -->
-  <div formGroupName="billing_period">
-    <h3>Período de Facturación</h3>
-    <div>
-      <label>Fecha Inicio</label>
-      <input type="date" formControlName="start_date" />
+      <mat-form-field appearance="outline">
+        <mat-label>Observación</mat-label>
+        <input matInput id="observation" formControlName="observation">
+      </mat-form-field>
     </div>
-    <div>
-      <label>Hora Inicio</label>
-      <input type="time" formControlName="start_time" />
-    </div>
-    <div>
-      <label>Fecha Fin</label>
-      <input type="date" formControlName="end_date" />
-    </div>
-    <div>
-      <label>Hora Fin</label>
-      <input type="time" formControlName="end_time" />
-    </div>
-  </div>
 
-  <!-- Selección de Cliente -->
-  <div formGroupName="customer">
-    <h3>Cliente</h3>
-    <div>
-      <label>Cliente</label>
-      <select (change)="onCustomerChange($event)">
-        <option [ngValue]="null" disabled>Selecciona un cliente</option>
-        <option *ngFor="let customer of customers()" [value]="customer.identification">
-          {{ customer.names }} ({{ customer.identification }})
-        </option>
-      </select>
-    </div>
-    <div>
-      <label>Identificación</label>
-      <input type="text" formControlName="identification" />
-    </div>
-    <div>
-      <label>Tipo de Documento</label>
-      <input type="number" formControlName="identification_document_id" />
-    </div>
-    <div>
-      <label>DV</label>
-      <input type="number" formControlName="dv" />
-    </div>
-    <div>
-      <label>Nombres</label>
-      <input type="text" formControlName="names" />
-    </div>
-    <div>
-      <label>Dirección</label>
-      <input type="text" formControlName="address" />
-    </div>
-    <div>
-      <label>Email</label>
-      <input type="email" formControlName="email" />
-    </div>
-    <div>
-      <label>Teléfono</label>
-      <input type="text" formControlName="phone" />
-    </div>
-    <div>
-      <label>Organización Legal</label>
-      <input type="text" formControlName="legal_organization_id" />
-    </div>
-    <div>
-      <label>Tributo</label>
-      <select formControlName="tribute_id">
-        <option [ngValue]="null" disabled>Selecciona un tributo</option>
-        <option *ngFor="let tribute of tributes()" [ngValue]="tribute.code">
-          {{ tribute.name }} ({{ tribute.code }})
-        </option>
-      </select>
-    </div>
-    <div>
-      <label>Municipio</label>
-      <input type="text" formControlName="municipality_id" />
-    </div>
-  </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Forma de Pago</mat-label>
+        <mat-select id="payment_form" formControlName="payment_form" required>
+          <mat-option value="" disabled>Seleccione forma de pago</mat-option>
+          <mat-option value="1">Contado</mat-option>
+          <mat-option value="2">Crédito</mat-option>
+        </mat-select>
+        @if (invoiceForm.get('payment_form')?.touched && invoiceForm.get('payment_form')?.invalid) {
+        <mat-error>La forma de pago es requerida</mat-error>
+        }
+      </mat-form-field>
 
-  <!-- Productos -->
-  <div formArrayName="items">
-    <h3>Productos</h3>
-    <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
-      <div>
-        <label>Producto</label>
-        <select (change)="onProductChange($event, i)">
-          <option [ngValue]="null" disabled>Selecciona un producto</option>
-          <option *ngFor="let product of products()" [value]="product.id">
-            {{ product.name }}
-          </option>
-        </select>
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha de Vencimiento</mat-label>
+        <input matInput type="date" id="payment_due_date" formControlName="payment_due_date" required>
+        @if (invoiceForm.get('payment_due_date')?.touched && invoiceForm.get('payment_due_date')?.invalid) {
+        <mat-error>La fecha de vencimiento es requerida</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Método de Pago</mat-label>
+        <mat-select id="payment_method_code" formControlName="payment_method_code" required>
+          <mat-option value="" disabled>Seleccione método de pago</mat-option>
+          <mat-option value="10">Efectivo</mat-option>
+          <mat-option value="20">Transferencia</mat-option>
+        </mat-select>
+        @if (invoiceForm.get('payment_method_code')?.touched && invoiceForm.get('payment_method_code')?.invalid) {
+        <mat-error>El método de pago es requerido</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Billing Period -->
+    <div formGroupName="billing_period" class="section">
+      <h3>Período de Facturación</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha Inicio</mat-label>
+          <input matInput type="date" id="start_date" formControlName="start_date" required>
+          @if (invoiceForm.get('billing_period.start_date')?.touched &&
+          invoiceForm.get('billing_period.start_date')?.invalid) {
+          <mat-error>La fecha de inicio es requerida</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Hora Inicio</mat-label>
+          <input matInput type="time" id="start_time" formControlName="start_time" required>
+          @if (invoiceForm.get('billing_period.start_time')?.touched &&
+          invoiceForm.get('billing_period.start_time')?.invalid) {
+          <mat-error>La hora de inicio es requerida</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha Fin</mat-label>
+          <input matInput type="date" id="end_date" formControlName="end_date" required>
+          @if (invoiceForm.get('billing_period.end_date')?.touched &&
+          invoiceForm.get('billing_period.end_date')?.invalid) {
+          <mat-error>La fecha de fin es requerida</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Hora Fin</mat-label>
+          <input matInput type="time" id="end_time" formControlName="end_time" required>
+          @if (invoiceForm.get('billing_period.end_time')?.touched &&
+          invoiceForm.get('billing_period.end_time')?.invalid) {
+          <mat-error>La hora de fin es requerida</mat-error>
+          }
+        </mat-form-field>
       </div>
-      <div>
-        <label>Cantidad</label>
-        <input type="number" formControlName="quantity" />
+    </div>
+
+    <!-- Customer -->
+    <div formGroupName="customer" class="section">
+      <h3>Cliente</h3>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Cliente</mat-label>
+          <mat-select id="customer_select" (selectionChange)="onCustomerChange($event)">
+            <mat-option [value]="null" disabled>Seleccione un cliente</mat-option>
+            @for (customer of customers(); track customer.identification) {
+            <mat-option [value]="customer.identification">{{ customer.names }} ({{ customer.identification
+              }})</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Identificación</mat-label>
+          <input matInput id="identification" formControlName="identification" required>
+          @if (invoiceForm.get('customer.identification')?.touched &&
+          invoiceForm.get('customer.identification')?.invalid) {
+          <mat-error>La identificación es requerida</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo de Documento</mat-label>
+          <mat-select id="identification_document_id" formControlName="identification_document_id" required>
+            <mat-option value="" disabled>Seleccione tipo de documento</mat-option>
+            <mat-option value="1">Cédula de Ciudadanía</mat-option>
+            <mat-option value="2">Cédula de Extranjería</mat-option>
+            <mat-option value="3">NIT</mat-option>
+            <mat-option value="4">Pasaporte</mat-option>
+          </mat-select>
+          @if (invoiceForm.get('customer.identification_document_id')?.touched &&
+          invoiceForm.get('customer.identification_document_id')?.invalid) {
+          <mat-error>El tipo de documento es requerido</mat-error>
+          }
+        </mat-form-field>
       </div>
-      <div>
-        <label>Descuento (%)</label>
-        <input type="number" formControlName="discount_rate" />
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>DV</mat-label>
+          <input matInput id="dv" type="number" formControlName="dv">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nombres</mat-label>
+          <input matInput id="names" formControlName="names" required>
+          @if (invoiceForm.get('customer.names')?.touched && invoiceForm.get('customer.names')?.invalid) {
+          <mat-error>Los nombres son requeridos</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Dirección</mat-label>
+          <input matInput id="address" formControlName="address">
+        </mat-form-field>
       </div>
-      <div>
-        <label>Impuesto (%)</label>
-        <input type="text" formControlName="tax_rate" />
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput id="email" type="email" formControlName="email">
+          @if (invoiceForm.get('customer.email')?.touched && invoiceForm.get('customer.email')?.invalid) {
+          <mat-error>El email no es válido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Teléfono</mat-label>
+          <input matInput id="phone" formControlName="phone">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Organización Legal</mat-label>
+          <input matInput id="legal_organization_id" formControlName="legal_organization_id" required>
+          @if (invoiceForm.get('customer.legal_organization_id')?.touched &&
+          invoiceForm.get('customer.legal_organization_id')?.invalid) {
+          <mat-error>La organización legal es requerida</mat-error>
+          }
+        </mat-form-field>
       </div>
-      <div>
-        <label>Tributo</label>
-        <select formControlName="tribute_id">
-          <option [ngValue]="null" disabled>Selecciona un tributo</option>
-          <option *ngFor="let tribute of tributes()" [ngValue]="tribute.code">
-            {{ tribute.name }} ({{ tribute.code }})
-          </option>
-        </select>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Tributo</mat-label>
+          <mat-select id="tribute_id" formControlName="tribute_id" required>
+            <mat-option [value]="null" disabled>Seleccione un tributo</mat-option>
+            @for (tribute of tributes(); track tribute.code) {
+            <mat-option [value]="tribute.code">{{ tribute.name }} ({{ tribute.code }})</mat-option>
+            }
+          </mat-select>
+          @if (invoiceForm.get('customer.tribute_id')?.touched && invoiceForm.get('customer.tribute_id')?.invalid) {
+          <mat-error>El tributo es requerido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Municipio</mat-label>
+          <input matInput id="municipality_id" formControlName="municipality_id">
+        </mat-form-field>
       </div>
-      <!-- <div formArrayName="withholding_taxes">
-        <h4>Retenciones</h4>
-        <div *ngFor="let tax of getWithholdingTaxes(i).controls; let j = index" [formGroupName]="j">
-          <div>
-            <label>Código</label>
-            <input type="text" formControlName="code" />
-          </div>
-          <div>
-            <label>Tasa de Retención</label>
-            <input type="text" formControlName="withholding_tax_rate" />
-          </div>
+    </div>
+
+    <!-- Items -->
+    <div formArrayName="items" class="section">
+      <h3>Productos</h3>
+      @for (item of items.controls; let index = $index; track index) {
+      <div [formGroupName]="index" class="item-row">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Producto</mat-label>
+            <mat-select [id]="'product_select_' + index" (selectionChange)="onProductChange($event, index)">
+              <mat-option [value]="null" disabled>Seleccione un producto</mat-option>
+              @for (product of products(); track product.id) {
+              <mat-option [value]="product.id">{{ product.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Cantidad</mat-label>
+            <input matInput type="number" [id]="'quantity_' + index" formControlName="quantity" required>
+            @if (item.get('quantity')?.touched && item.get('quantity')?.invalid) {
+            <mat-error>
+              @if (item.get('quantity')?.errors?.['required']) {
+              La cantidad es requerida
+              } @else if (item.get('quantity')?.errors?.['min']) {
+              La cantidad debe ser mayor que 0
+              }
+            </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Descuento (%)</mat-label>
+            <input matInput type="number" [id]="'discount_rate_' + index" formControlName="discount_rate" required>
+            @if (item.get('discount_rate')?.touched && item.get('discount_rate')?.invalid) {
+            <mat-error>
+              @if (item.get('discount_rate')?.errors?.['required']) {
+              El descuento es requerido
+              } @else if (item.get('discount_rate')?.errors?.['min']) {
+              El descuento no puede ser negativo
+              }
+            </mat-error>
+            }
+          </mat-form-field>
         </div>
-        <button type="button" (click)="addWithholdingTax(i)">Agregar Retención</button>
-      </div> -->
-    </div>
-    <button type="button" (click)="addItem()">Agregar Producto</button>
-  </div>
 
-  <button type="submit" [disabled]="!invoiceForm.valid">Crear Factura</button>
-</form>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Impuesto (%)</mat-label>
+            <input matInput [id]="'tax_rate_' + index" formControlName="tax_rate" required>
+            @if (item.get('tax_rate')?.touched && item.get('tax_rate')?.invalid) {
+            <mat-error>El impuesto es requerido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tributo</mat-label>
+            <mat-select [id]="'tribute_id_' + index" formControlName="tribute_id" required>
+              <mat-option [value]="null" disabled>Seleccione un tributo</mat-option>
+              @for (tribute of tributes(); track tribute.code) {
+              <mat-option [value]="tribute.code">{{ tribute.name }} ({{ tribute.code }})</mat-option>
+              }
+            </mat-select>
+            @if (item.get('tribute_id')?.touched && item.get('tribute_id')?.invalid) {
+            <mat-error>El tributo es requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      }
+      <button mat-raised-button color="accent" type="button" (click)="addItem()">Agregar Producto</button>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!invoiceForm.valid">Crear Factura</button>
+      <a mat-button (click)="onCancel()">Cancelar</a>
+    </div>
+  </form>
+</div>

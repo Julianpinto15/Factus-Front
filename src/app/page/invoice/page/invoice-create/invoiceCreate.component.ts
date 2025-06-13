@@ -20,10 +20,23 @@ import { CommonModule } from '@angular/common';
 import { Tribute } from '../../../customer/interface/Tribute';
 import { TributeService } from '../../../customer/service/Tribute.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-invoice-create',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+  ],
   templateUrl: './invoiceCreate.component.html',
   styleUrl: './invoiceCreate.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,19 +47,20 @@ export class InvoiceCreateComponent {
   private customerService = inject(CustomerService);
   private productService = inject(ProductService);
   private tributeService = inject(TributeService);
+  private router = inject(Router);
 
   customers = signal<Customer[]>([]);
   products = signal<Product[]>([]);
   tributes = signal<Tribute[]>([]);
 
   invoiceForm = this.fb.group({
-    document: ['01', Validators.required], // Asegúrate de que este valor sea correcto
+    document: ['01', Validators.required],
     numbering_range_id: [8, [Validators.required, Validators.min(1)]],
     reference_code: ['I85699874456', Validators.required],
     observation: [''],
     payment_form: ['1', Validators.required],
     payment_due_date: ['2024-12-30', Validators.required],
-    payment_method_code: ['10', [Validators.required]], // <-- Cambiado a string
+    payment_method_code: ['10', [Validators.required]],
     billing_period: this.fb.group({
       start_date: ['2024-01-10', Validators.required],
       start_time: ['00:00:00', Validators.required],
@@ -56,7 +70,7 @@ export class InvoiceCreateComponent {
     customer: this.fb.group({
       identification: ['', Validators.required],
       identification_document_id: [0, Validators.required],
-      dv: [''], // <-- Cambiado para no aceptar null, mejor string vacío
+      dv: [''],
       graphic_representation_name: [''],
       company: [''],
       trade_name: [''],
@@ -101,7 +115,7 @@ export class InvoiceCreateComponent {
           tributes.find((t) => t.code === 'DEFAULT_CODE') || tributes[0];
         this.invoiceForm
           .get('customer.tribute_id')
-          ?.setValue(defaultTribute.code); // Usa "21"
+          ?.setValue(defaultTribute.code);
       },
       error: () => console.error('Error loading tributes'),
     });
@@ -121,20 +135,18 @@ export class InvoiceCreateComponent {
       tax_rate: ['19.00', Validators.required],
       unit_measure_id: [70, Validators.required],
       standard_code_id: [1, Validators.required],
-      is_excluded: [0, Validators.required], // Por defecto 0
-      tribute_id: ['', Validators.required], // Almacena code
+      is_excluded: [0, Validators.required],
+      tribute_id: ['', Validators.required],
       withholding_taxes: this.fb.array([]),
     });
     if (this.tributes().length > 0) {
-      itemForm.get('tribute_id')?.setValue('01'); // Usa "01" para IVA
+      itemForm.get('tribute_id')?.setValue('01');
     }
     this.items.push(itemForm);
   }
 
   onProductChange(event: any, itemIndex: number): void {
-    const selectedProduct = this.products().find(
-      (p) => p.id === +event.target.value
-    );
+    const selectedProduct = this.products().find((p) => p.id === +event.value);
     if (selectedProduct) {
       const item = this.items.at(itemIndex);
       const tribute = this.tributes().find(
@@ -148,7 +160,7 @@ export class InvoiceCreateComponent {
         tax_rate: selectedProduct.taxRate,
         unit_measure_id: selectedProduct.unitMeasureId,
         standard_code_id: selectedProduct.standardCodeId,
-        is_excluded: tributeCode === '01' ? selectedProduct.isExcluded : 0, // Solo permite is_excluded con IVA
+        is_excluded: tributeCode === '01' ? selectedProduct.isExcluded : 0,
         tribute_id: tributeCode,
       });
     }
@@ -156,7 +168,7 @@ export class InvoiceCreateComponent {
 
   onCustomerChange(event: any): void {
     const selectedCustomer = this.customers().find(
-      (c) => c.identification === event.target.value
+      (c) => c.identification === event.value
     );
     if (selectedCustomer) {
       this.invoiceForm.get('customer')?.patchValue({
@@ -181,10 +193,8 @@ export class InvoiceCreateComponent {
   onSubmit(): void {
     if (this.invoiceForm.valid && this.isTributeValid()) {
       const raw = this.invoiceForm.getRawValue();
-      console.log('JSON enviado al backend:', JSON.stringify(raw, null, 2));
-
       const invoice: Invoice = {
-        document: '01', // Asegúrate de incluir document
+        document: '01',
         numbering_range_id: Number(raw.numbering_range_id),
         reference_code: String(raw.reference_code),
         observation: raw.observation || '',
@@ -212,7 +222,7 @@ export class InvoiceCreateComponent {
           email: raw.customer.email || '',
           phone: raw.customer.phone || '',
           legal_organization_id: String(raw.customer.legal_organization_id),
-          tribute_id: '21', // Usa "21" como en el JSON que funciona
+          tribute_id: '21',
           municipality_id:
             raw.customer.municipality_id === null
               ? null
@@ -227,7 +237,7 @@ export class InvoiceCreateComponent {
           tax_rate: String(item.tax_rate),
           unit_measure_id: Number(item.unit_measure_id),
           standard_code_id: Number(item.standard_code_id),
-          is_excluded: item.tribute_id === '01' ? Number(item.is_excluded) : 0, // Solo permite is_excluded con IVA
+          is_excluded: item.tribute_id === '01' ? Number(item.is_excluded) : 0,
           tribute_id: String(item.tribute_id),
           withholding_taxes: item.withholding_taxes.map((tax: any) => ({
             code: String(tax.code),
@@ -239,34 +249,71 @@ export class InvoiceCreateComponent {
       this.invoiceService.createInvoice(invoice).subscribe({
         next: (response) => {
           console.log('Respuesta de la API:', response);
-          // Verifica si la respuesta indica éxito real
           if (response && response.status === 'Created') {
-            // Ajusta según la estructura de la respuesta
-            alert('Factura creada con éxito!');
-            this.invoiceForm.reset();
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: 'Factura creada exitosamente',
+              showConfirmButton: false,
+              timer: 3000,
+              toast: true,
+              customClass: {
+                popup: 'custom-swal-popup',
+                title: 'custom-swal-title',
+              },
+            });
+            this.invoiceForm.reset({
+              document: '01',
+              numbering_range_id: 8,
+              reference_code: 'I85699874456',
+              payment_form: '1',
+              payment_due_date: '2024-12-30',
+              payment_method_code: '10',
+              billing_period: {
+                start_date: '2024-01-10',
+                start_time: '00:00:00',
+                end_date: '2024-02-09',
+                end_time: '23:59:59',
+              },
+            });
             this.items.clear();
             this.addItem();
           } else {
-            alert(
-              'La factura no se creó correctamente. Respuesta: ' +
-                JSON.stringify(response, null, 2)
-            );
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'La factura no se creó correctamente.',
+              customClass: {
+                popup: 'custom-swal-popup',
+                title: 'custom-swal-title',
+              },
+            });
           }
         },
         error: (err: HttpErrorResponse) => {
-          console.error('Error completo:', err);
           const errorMessage =
             err.error?.message || err.message || 'Error desconocido';
-          const errorDetails = JSON.stringify(err.error, null, 2);
-          alert(
-            `Error al crear factura: ${errorMessage}\nDetalles: ${errorDetails}`
-          );
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al crear factura',
+            text: errorMessage,
+            customClass: {
+              popup: 'custom-swal-popup',
+              title: 'custom-swal-title',
+            },
+          });
         },
       });
     } else {
-      alert(
-        'Por favor, completa todos los campos requeridos y verifica el ID de tributo.'
-      );
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulario incompleto',
+        text: 'Por favor, completa todos los campos requeridos y verifica el ID de tributo.',
+        customClass: {
+          popup: 'custom-swal-popup',
+          title: 'custom-swal-title',
+        },
+      });
     }
   }
 
@@ -275,5 +322,26 @@ export class InvoiceCreateComponent {
     return (
       tributeId !== null && this.tributes().some((t) => t.code === tributeId)
     );
+  }
+
+  onCancel(): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Los cambios no guardados se perderán.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cancelar',
+      cancelButtonText: 'No, volver',
+      customClass: {
+        popup: 'custom-swal-popup',
+        title: 'custom-swal-title',
+        confirmButton: 'custom-swal-confirm',
+        cancelButton: 'custom-swal-cancel',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/dashboard/invoice/list']);
+      }
+    });
   }
 }

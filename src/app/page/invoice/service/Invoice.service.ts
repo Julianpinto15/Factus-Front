@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import {
   HttpClient,
@@ -13,9 +13,9 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class InvoiceService {
-  private apiUrl = `${environment.apiUrl}/v1/bills/validate`; // Endpoint correcto
-
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  private readonly http = inject(HttpClient);
+  private readonly authService = inject(AuthService);
+  private readonly apiUrl = `${environment.apiUrl}/v1/bills/validate`;
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getAccessToken();
@@ -29,20 +29,16 @@ export class InvoiceService {
     });
   }
 
-  // En Invoice.service.ts
   createInvoice(invoice: Invoice): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('access_token')}`, // Ajusta según tu autenticación
-    });
-    return this.http.post(this.apiUrl, invoice, { headers }).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('Error en la solicitud:', error);
-        console.log('Cuerpo del error:', error.error);
-        console.log('Status:', error.status);
-        console.log('Mensaje:', error.message);
-        throw error; // Propaga el error para que el componente lo maneje
+    return this.http
+      .post(this.apiUrl, invoice, {
+        headers: this.getHeaders(),
       })
-    );
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error en la solicitud:', error);
+          return throwError(() => error);
+        })
+      );
   }
 }
