@@ -42,17 +42,28 @@
   align-items: start;
 }
 
-.item-row {
-  padding: 1rem;
-  border-bottom: 1px solid var(--border-color, #e0e0e0);
-  margin-bottom: 1rem;
-}
-
 .form-actions {
   display: flex;
   justify-content: center;
   gap: 1rem;
   margin-top: 1rem;
+}
+
+.product-table {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+  th,
+  td {
+    text-align: center;
+    font-family: var(--poppins);
+    padding: 12px;
+    border: 1px solid var(--border-color, #e0e0e0);
+  }
+  th {
+    background-color: var(--light-bg, #f5f5f5);
+    font-weight: 500;
+  }
 }
 
 button[mat-raised-button] {
@@ -75,6 +86,14 @@ a[mat-button] {
   .invoice-create {
     margin: 1rem;
     padding: 1rem;
+  }
+
+  .product-table {
+    th,
+    td {
+      font-size: 12px;
+      padding: 8px;
+    }
   }
 }
 
@@ -106,4 +125,21 @@ a[mat-button] {
 .swal2-icon.swal2-success .swal2-success-line-tip,
 .swal2-icon.swal2-success .swal2-success-line-long {
   background-color: var(--success-color, #008000) !important;
+}
+
+/* Agregar estos estilos al archivo invoiceCreate.component.scss */
+/* MatDialog custom styles */
+::ng-deep .custom-modal {
+  .mat-mdc-dialog-surface {
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.15) !important;
+    max-width: 600px !important;
+    width: 90% !important;
+    background: white !important;
+    overflow: hidden !important;
+  }
+}
+
+.product-table tr {
+  display: table-row; /* Ensure rows are displayed correctly */
 }

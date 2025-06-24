@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   inject,
   signal,
@@ -9,6 +10,7 @@ import { CustomerService } from '../../../customer/service/Customer.service';
 import {
   FormArray,
   FormBuilder,
+  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -24,8 +26,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableDataSource } from '@angular/material/table'; // Add MatTableDataSource
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { ModalProductComponent } from '../../components/modal-product/modal-product.component';
 
 @Component({
   selector: 'app-invoice-create',
@@ -36,6 +42,9 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
+    MatTableModule,
+    MatIconModule,
+    ModalProductComponent,
   ],
   templateUrl: './invoiceCreate.component.html',
   styleUrl: './invoiceCreate.component.scss',
@@ -48,10 +57,21 @@ export class InvoiceCreateComponent {
   private productService = inject(ProductService);
   private tributeService = inject(TributeService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef); // Inject ChangeDetectorRef
 
   customers = signal<Customer[]>([]);
   products = signal<Product[]>([]);
   tributes = signal<Tribute[]>([]);
+  showModal = signal(false);
+  displayedColumns: string[] = [
+    'product',
+    'quantity',
+    'discount',
+    'tax',
+    'tribute',
+    'actions',
+  ];
+  dataSource = new MatTableDataSource<FormGroup>([]); // Use MatTableDataSource
 
   invoiceForm = this.fb.group({
     document: ['01', Validators.required],
@@ -89,7 +109,6 @@ export class InvoiceCreateComponent {
     this.loadCustomers();
     this.loadProducts();
     this.loadTributes();
-    this.addItem();
   }
 
   private loadCustomers() {
@@ -125,45 +144,63 @@ export class InvoiceCreateComponent {
     return this.invoiceForm.get('items') as FormArray;
   }
 
-  addItem(): void {
+  addItem(productData: any): void {
     const itemForm = this.fb.group({
-      code_reference: ['', Validators.required],
-      name: ['', Validators.required],
-      quantity: [1, [Validators.required, Validators.min(1)]],
-      discount_rate: [0, [Validators.required, Validators.min(0)]],
-      price: [0, [Validators.required, Validators.min(0)]],
-      tax_rate: ['19.00', Validators.required],
-      unit_measure_id: [70, Validators.required],
-      standard_code_id: [1, Validators.required],
-      is_excluded: [0, Validators.required],
-      tribute_id: ['', Validators.required],
+      code_reference: [productData.code_reference, Validators.required],
+      name: [productData.name, Validators.required],
+      quantity: [
+        productData.quantity,
+        [Validators.required, Validators.min(1)],
+      ],
+      discount_rate: [
+        productData.discount_rate,
+        [Validators.required, Validators.min(0)],
+      ],
+      price: [productData.price, [Validators.required, Validators.min(0)]],
+      tax_rate: [productData.tax_rate, Validators.required],
+      unit_measure_id: [productData.unit_measure_id, Validators.required],
+      standard_code_id: [productData.standard_code_id, Validators.required],
+      is_excluded: [productData.is_excluded, Validators.required],
+      tribute_id: [productData.tribute_id, Validators.required],
       withholding_taxes: this.fb.array([]),
     });
-    if (this.tributes().length > 0) {
-      itemForm.get('tribute_id')?.setValue('01');
-    }
     this.items.push(itemForm);
+    this.dataSource.data = [...this.items.controls] as FormGroup[]; // Update MatTableDataSource
+    console.log(
+      'Items in DataSource:',
+      this.dataSource.data.map((control) => control.value)
+    );
+    this.cdr.markForCheck(); // Trigger change detection
   }
 
-  onProductChange(event: any, itemIndex: number): void {
-    const selectedProduct = this.products().find((p) => p.id === +event.value);
-    if (selectedProduct) {
-      const item = this.items.at(itemIndex);
-      const tribute = this.tributes().find(
-        (t) => t.id === Number(selectedProduct.tributeId)
-      );
-      const tributeCode = tribute ? tribute.code : '01';
-      item.patchValue({
-        code_reference: selectedProduct.code,
-        name: selectedProduct.name,
-        price: selectedProduct.price,
-        tax_rate: selectedProduct.taxRate,
-        unit_measure_id: selectedProduct.unitMeasureId,
-        standard_code_id: selectedProduct.standardCodeId,
-        is_excluded: tributeCode === '01' ? selectedProduct.isExcluded : 0,
-        tribute_id: tributeCode,
-      });
-    }
+  removeItem(index: number): void {
+    this.items.removeAt(index);
+    this.dataSource.data = [...this.items.controls] as FormGroup[]; // Update MatTableDataSource
+    this.cdr.markForCheck();
+  }
+
+  trackByItem(index: number, item: FormGroup): string {
+    return item.get('code_reference')?.value || index.toString();
+  }
+
+  openProductModal(): void {
+    this.showModal.set(true);
+  }
+
+  closeProductModal(): void {
+    this.showModal.set(false);
+  }
+
+  addProductFromModal(productData: any): void {
+    console.log('Adding product:', productData);
+    this.addItem(productData);
+    this.closeProductModal();
+  }
+
+  getTributeName(tributeId: string | null): string {
+    if (!tributeId) return '';
+    const tribute = this.tributes().find((t) => t.code === tributeId);
+    return tribute ? `${tribute.name} (${tribute.code})` : tributeId;
   }
 
   onCustomerChange(event: any): void {
@@ -192,6 +229,10 @@ export class InvoiceCreateComponent {
 
   onSubmit(): void {
     if (this.invoiceForm.valid && this.isTributeValid()) {
+      console.log(
+        'Submitting with items:',
+        this.items.controls.map((control) => control.value)
+      );
       const raw = this.invoiceForm.getRawValue();
       const invoice: Invoice = {
         document: '01',
@@ -250,6 +291,9 @@ export class InvoiceCreateComponent {
         next: (response) => {
           console.log('Respuesta de la API:', response);
           if (response && response.status === 'Created') {
+            console.log('Clearing items after successful submission');
+            this.items.clear();
+            this.dataSource.data = []; // Clear MatTableDataSource
             Swal.fire({
               position: 'top-end',
               icon: 'success',
@@ -276,8 +320,6 @@ export class InvoiceCreateComponent {
                 end_time: '23:59:59',
               },
             });
-            this.items.clear();
-            this.addItem();
           } else {
             Swal.fire({
               icon: 'error',
