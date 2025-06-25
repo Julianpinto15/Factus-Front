@@ -1,0 +1,65 @@
+<div class="invoice-detail-container">
+  <h2 class="mat-h2">Detalles de la Factura</h2>
+
+  <!-- Error message -->
+  @if (error()) {
+  <div class="error mat-elevation-z2" role="alert">
+    <mat-icon class="error-icon">error</mat-icon>
+    {{ error() }}
+  </div>
+  }
+
+  <!-- Loading spinner -->
+  @if (loading()) {
+  <div class="loading-spinner">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+  }
+
+  <!-- Invoice details -->
+  @if (!loading() && invoice()) {
+  <mat-card class="invoice-card mat-elevation-z8">
+    <mat-card-header>
+      <mat-card-title>Factura #{{ invoice().data?.bill?.number }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p><strong>Cliente:</strong> {{ invoice().data?.bill?.customer?.names || 'N/A' }}</p>
+      <p><strong>Estado:</strong> {{ invoice().data?.bill?.status }}</p>
+      <p><strong>Fecha:</strong> {{ invoice().data?.bill?.createdAt | date: 'short' }}</p>
+      <p><strong>UUID:</strong> {{ invoice().data?.bill?.cufe }}</p>
+
+      <h3>Ítems</h3>
+      <div class="table-container">
+        <table mat-table [dataSource]="invoice().data?.bill?.items || []" class="mat-elevation-z8">
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let item">{{ item.name }}</td>
+          </ng-container>
+
+          <!-- Quantity Column -->
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+            <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+          </ng-container>
+
+          <!-- Price Column -->
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Precio</th>
+            <td mat-cell *matCellDef="let item">{{ item.price | currency }}</td>
+          </ng-container>
+
+          <!-- Total Column -->
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef>Total</th>
+            <td mat-cell *matCellDef="let item">{{ item.total | currency }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  }
+</div>

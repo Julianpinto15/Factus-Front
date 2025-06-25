@@ -1,0 +1,36 @@
+.invoice-detail-container {
+  padding: 20px;
+}
+
+.invoice-card {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.table-container {
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #ffebee;
+  color: #c62828;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.error-icon {
+  margin-right: 8px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+}

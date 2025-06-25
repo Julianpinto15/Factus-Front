@@ -92,7 +92,7 @@ a[mat-button] {
     th,
     td {
       font-size: 12px;
-      padding: 8px;
+      padding: 0;
     }
   }
 }
@@ -147,4 +147,9 @@ a[mat-button] {
 
 .product-table tr {
   display: table-row; /* Ensure rows are displayed correctly */
+}
+
+::ng-deep .mat-mdc-cell,
+::ng-deep .mat-mdc-header-cell {
+  padding: 0 !important; // Puedes ajustar a 0 si quieres eliminarlo completamente
 }

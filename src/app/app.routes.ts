@@ -9,6 +9,8 @@ import { ProductComponent } from './page/product/page/product/product.component'
 import { ProductListComponent } from './page/product/page/product-list/product-list.component';
 import { ProductCreateComponent } from './page/product/page/product-create/product-create.component';
 import { InvoiceCreateComponent } from './page/invoice/page/invoice-create/invoiceCreate.component';
+import { InvoiceListComponent } from './page/invoice/page/invoice-list/invoice-list.component';
+import { InvoiceDetailComponent } from './page/invoice/page/invoice-detail/invoice-detail.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -50,6 +52,13 @@ export const routes: Routes = [
         path: 'invoice',
         component: InvoiceCreateComponent,
       },
+      {
+        path: 'invoice/list',
+        component: InvoiceListComponent,
+      },
+
+      { path: 'invoice/:number', component: InvoiceDetailComponent },
+
       { path: '**', redirectTo: 'dashboard' },
     ],
   },

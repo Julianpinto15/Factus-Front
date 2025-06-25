@@ -54,7 +54,8 @@ export class SidebarComponent {
     },
     // { id: 'product', icon: 'bxs-doughnut-chart', text: 'Inventario' },
     { id: 'invoice', icon: 'bxs-message-dots', text: 'Factura' },
-    { id: 'team', icon: 'bxs-group', text: 'Team' },
+    { id: 'invoice/list', icon: 'bxs-group', text: 'Lista' },
+    { id: 'invoice/:number', icon: 'bxs-group', text: 'Listar' },
   ];
 
   bottomMenuItems = [
