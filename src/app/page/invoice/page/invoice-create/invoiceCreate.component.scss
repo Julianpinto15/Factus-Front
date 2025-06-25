@@ -134,10 +134,15 @@ a[mat-button] {
     border-radius: 12px !important;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.15) !important;
     max-width: 600px !important;
-    width: 90% !important;
+    width: 90vw !important;
     background: white !important;
     overflow: hidden !important;
   }
+}
+
+/* Optional: Style the backdrop */
+::ng-deep .cdk-overlay-backdrop {
+  background: rgba(0, 0, 0, 0.6) !important;
 }
 
 .product-table tr {

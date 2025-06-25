@@ -18,7 +18,7 @@ import { ProductService } from '../../../product/service/Product.service';
 import { Customer } from '../../../customer/interface/Customer';
 import { Product } from '../../../product/interface/Product';
 import { Invoice } from '../../interface/Invoice';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Tribute } from '../../../customer/interface/Tribute';
 import { TributeService } from '../../../customer/service/Tribute.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -32,6 +32,7 @@ import { MatTableDataSource } from '@angular/material/table'; // Add MatTableDat
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { ModalProductComponent } from '../../components/modal-product/modal-product.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-invoice-create',
@@ -44,7 +45,6 @@ import { ModalProductComponent } from '../../components/modal-product/modal-prod
     MatButtonModule,
     MatTableModule,
     MatIconModule,
-    ModalProductComponent,
   ],
   templateUrl: './invoiceCreate.component.html',
   styleUrl: './invoiceCreate.component.scss',
@@ -57,12 +57,13 @@ export class InvoiceCreateComponent {
   private productService = inject(ProductService);
   private tributeService = inject(TributeService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef); // Inject ChangeDetectorRef
+  private cdr = inject(ChangeDetectorRef);
+  private dialog = inject(MatDialog);
 
   customers = signal<Customer[]>([]);
   products = signal<Product[]>([]);
   tributes = signal<Tribute[]>([]);
-  showModal = signal(false);
+  private updateInterval: any;
   displayedColumns: string[] = [
     'product',
     'quantity',
@@ -76,16 +77,16 @@ export class InvoiceCreateComponent {
   invoiceForm = this.fb.group({
     document: ['01', Validators.required],
     numbering_range_id: [8, [Validators.required, Validators.min(1)]],
-    reference_code: ['I85699874456', Validators.required],
+    reference_code: [this.generateReferenceCode(), Validators.required],
     observation: [''],
     payment_form: ['1', Validators.required],
     payment_due_date: ['2024-12-30', Validators.required],
     payment_method_code: ['10', [Validators.required]],
     billing_period: this.fb.group({
-      start_date: ['2024-01-10', Validators.required],
-      start_time: ['00:00:00', Validators.required],
-      end_date: ['2024-02-09', Validators.required],
-      end_time: ['23:59:59', Validators.required],
+      start_date: [this.getCurrentDate(), Validators.required],
+      start_time: [this.getCurrentTime(), Validators.required],
+      end_date: [this.getCurrentDate(), Validators.required],
+      end_time: [this.getCurrentTime(), Validators.required],
     }),
     customer: this.fb.group({
       identification: ['', Validators.required],
@@ -109,6 +110,60 @@ export class InvoiceCreateComponent {
     this.loadCustomers();
     this.loadProducts();
     this.loadTributes();
+    this.startEndDateTimeUpdate();
+  }
+
+  ngOnDestroy(): void {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+  }
+
+  private generateReferenceCode(): string {
+    const randomNum = Math.floor(100000000000 + Math.random() * 9000000000);
+    return `I${randomNum}`;
+  }
+
+  private getCurrentDate(): string {
+    return formatDate(new Date(), 'yyyy-MM-dd', 'en-US'); // e.g., "2025-06-24"
+  }
+
+  private getEndDate(): string {
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + 1); // Set to next day, e.g., "2025-06-25"
+    return formatDate(endDate, 'yyyy-MM-dd', 'en-US');
+  }
+
+  private getCurrentTime(): string {
+    return formatDate(new Date(), 'HH:mm:ss', 'en-US'); // e.g., "18:56:00"
+  }
+
+  private getEndTime(): string {
+    const endTime = new Date();
+    endTime.setHours(endTime.getHours() + 1); // Set to one hour later, e.g., "19:56:00"
+    return formatDate(endTime, 'HH:mm:ss', 'en-US');
+  }
+
+  private startEndDateTimeUpdate(): void {
+    this.updateInterval = setInterval(() => {
+      this.invoiceForm
+        .get('billing_period.end_date')
+        ?.setValue(this.getEndDate());
+      this.invoiceForm
+        .get('billing_period.end_time')
+        ?.setValue(this.getEndTime());
+      this.cdr.markForCheck();
+    }, 1000);
+  }
+
+  // Validador para asegurar que end_date no sea anterior a start_date
+  private dateRangeValidator(group: FormGroup): { [key: string]: any } | null {
+    const startDate = group.get('start_date')?.value;
+    const endDate = group.get('end_date')?.value;
+    if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+      return { invalidDateRange: true };
+    }
+    return null;
   }
 
   private loadCustomers() {
@@ -130,11 +185,8 @@ export class InvoiceCreateComponent {
       next: (tributes) => {
         console.log('Tributos disponibles:', tributes);
         this.tributes.set(tributes);
-        const defaultTribute =
-          tributes.find((t) => t.code === 'DEFAULT_CODE') || tributes[0];
-        this.invoiceForm
-          .get('customer.tribute_id')
-          ?.setValue(defaultTribute.code);
+        // Remove default setting to avoid overwriting customer selection
+        // this.invoiceForm.get('customer.tribute_id')?.setValue(...);
       },
       error: () => console.error('Error loading tributes'),
     });
@@ -184,17 +236,28 @@ export class InvoiceCreateComponent {
   }
 
   openProductModal(): void {
-    this.showModal.set(true);
-  }
+    const dialogRef = this.dialog.open(ModalProductComponent, {
+      width: '600px',
+      maxWidth: '90vw',
+      panelClass: 'custom-modal',
+      disableClose: false,
+      autoFocus: true,
+      data: {
+        products: this.products(),
+        tributes: this.tributes(),
+      },
+    });
 
-  closeProductModal(): void {
-    this.showModal.set(false);
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.addProductFromModal(result);
+      }
+    });
   }
 
   addProductFromModal(productData: any): void {
     console.log('Adding product:', productData);
     this.addItem(productData);
-    this.closeProductModal();
   }
 
   getTributeName(tributeId: string | null): string {
@@ -207,7 +270,11 @@ export class InvoiceCreateComponent {
     const selectedCustomer = this.customers().find(
       (c) => c.identification === event.value
     );
+
     if (selectedCustomer) {
+      const tributeId = selectedCustomer.tribute_id ?? '';
+      const isValidTribute = this.tributes().some((t) => t.code === tributeId);
+
       this.invoiceForm.get('customer')?.patchValue({
         identification: selectedCustomer.identification,
         identification_document_id: selectedCustomer.identification_document_id,
@@ -221,7 +288,7 @@ export class InvoiceCreateComponent {
         email: selectedCustomer.email || '',
         phone: selectedCustomer.phone || '',
         legal_organization_id: selectedCustomer.legal_organization_id,
-        tribute_id: selectedCustomer.tribute_id,
+        tribute_id: selectedCustomer.tribute_id ?? '',
         municipality_id: selectedCustomer.municipality_id ?? null,
       });
     }
@@ -289,11 +356,9 @@ export class InvoiceCreateComponent {
 
       this.invoiceService.createInvoice(invoice).subscribe({
         next: (response) => {
-          console.log('Respuesta de la API:', response);
           if (response && response.status === 'Created') {
-            console.log('Clearing items after successful submission');
             this.items.clear();
-            this.dataSource.data = []; // Clear MatTableDataSource
+            this.dataSource.data = [];
             Swal.fire({
               position: 'top-end',
               icon: 'success',
@@ -306,20 +371,8 @@ export class InvoiceCreateComponent {
                 title: 'custom-swal-title',
               },
             });
-            this.invoiceForm.reset({
-              document: '01',
-              numbering_range_id: 8,
-              reference_code: 'I85699874456',
-              payment_form: '1',
-              payment_due_date: '2024-12-30',
-              payment_method_code: '10',
-              billing_period: {
-                start_date: '2024-01-10',
-                start_time: '00:00:00',
-                end_date: '2024-02-09',
-                end_time: '23:59:59',
-              },
-            });
+            // Reiniciar formulario con nuevas fechas y horas
+            this.resetForm();
           } else {
             Swal.fire({
               icon: 'error',
@@ -350,13 +403,31 @@ export class InvoiceCreateComponent {
       Swal.fire({
         icon: 'warning',
         title: 'Formulario incompleto',
-        text: 'Por favor, completa todos los campos requeridos y verifica el ID de tributo.',
+        text: 'Por favor, completa todos los campos requeridos y verifica las fechas.',
         customClass: {
           popup: 'custom-swal-popup',
           title: 'custom-swal-title',
         },
       });
     }
+  }
+
+  private resetForm(): void {
+    this.invoiceForm.reset({
+      document: '01',
+      numbering_range_id: 8,
+      reference_code: 'I85699874456',
+      payment_form: '1',
+      payment_due_date: '2024-12-30',
+      payment_method_code: '10',
+      billing_period: {
+        start_date: this.getCurrentDate(),
+        start_time: this.getCurrentTime(),
+        end_date: this.getCurrentDate(),
+        end_time: this.getCurrentTime(),
+      },
+    });
+    this.cdr.markForCheck();
   }
 
   private isTributeValid(): boolean {
@@ -382,7 +453,7 @@ export class InvoiceCreateComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/dashboard/invoice/list']);
+        this.router.navigate(['/dashboard/invoice']);
       }
     });
   }

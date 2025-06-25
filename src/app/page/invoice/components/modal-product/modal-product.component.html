@@ -1,75 +1,77 @@
-<div class="modal-container">
-  <h2>Seleccionar Producto</h2>
-  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Producto</mat-label>
-        <mat-select formControlName="productId" (selectionChange)="onProductChange($event)">
-          <mat-option [value]="null" disabled>Seleccione un producto</mat-option>
-          <mat-option *ngFor="let product of products" [value]="product.id">
-            {{ product.name }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="productForm.get('productId')?.touched && productForm.get('productId')?.invalid">
-          El producto es requerido
-        </mat-error>
-      </mat-form-field>
+<div class="modal-content">
+  <h2 mat-dialog-title>Seleccionar Producto</h2>
+  <mat-dialog-content>
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="modal-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Producto</mat-label>
+          <mat-select formControlName="productId">
+            <mat-option [value]="null" disabled>Seleccione un producto</mat-option>
+            <mat-option *ngFor="let product of data.products" [value]="product.id">
+              {{ product.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="productForm.get('productId')?.touched && productForm.get('productId')?.invalid">
+            El producto es requerido
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Cantidad</mat-label>
-        <input matInput type="number" formControlName="quantity">
-        <mat-error *ngIf="productForm.get('quantity')?.touched && productForm.get('quantity')?.invalid">
-          <ng-container *ngIf="productForm.get('quantity')?.errors?.['required']">
-            La cantidad es requerida
-          </ng-container>
-          <ng-container *ngIf="productForm.get('quantity')?.errors?.['min']">
-            La cantidad debe ser mayor que 0
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
-    </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Cantidad</mat-label>
+          <input matInput type="number" formControlName="quantity">
+          <mat-error *ngIf="productForm.get('quantity')?.touched && productForm.get('quantity')?.invalid">
+            <ng-container *ngIf="productForm.get('quantity')?.errors?.['required']">
+              La cantidad es requerida
+            </ng-container>
+            <ng-container *ngIf="productForm.get('quantity')?.errors?.['min']">
+              La cantidad debe ser mayor que 0
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+      </div>
 
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Descuento (%)</mat-label>
-        <input matInput type="number" formControlName="discount_rate">
-        <mat-error *ngIf="productForm.get('discount_rate')?.touched && productForm.get('discount_rate')?.invalid">
-          <ng-container *ngIf="productForm.get('discount_rate')?.errors?.['required']">
-            El descuento es requerido
-          </ng-container>
-          <ng-container *ngIf="productForm.get('discount_rate')?.errors?.['min']">
-            El descuento no puede ser negativo
-          </ng-container>
-        </mat-error>
-      </mat-form-field>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Descuento (%)</mat-label>
+          <input matInput type="number" formControlName="discount_rate">
+          <mat-error *ngIf="productForm.get('discount_rate')?.touched && productForm.get('discount_rate')?.invalid">
+            <ng-container *ngIf="productForm.get('discount_rate')?.errors?.['required']">
+              El descuento es requerido
+            </ng-container>
+            <ng-container *ngIf="productForm.get('discount_rate')?.errors?.['min']">
+              El descuento no puede ser negativo
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Impuesto (%)</mat-label>
-        <input matInput formControlName="tax_rate">
-        <mat-error *ngIf="productForm.get('tax_rate')?.touched && productForm.get('tax_rate')?.invalid">
-          El impuesto es requerido
-        </mat-error>
-      </mat-form-field>
-    </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Impuesto (%)</mat-label>
+          <input matInput formControlName="tax_rate">
+          <mat-error *ngIf="productForm.get('tax_rate')?.touched && productForm.get('tax_rate')?.invalid">
+            El impuesto es requerido
+          </mat-error>
+        </mat-form-field>
+      </div>
 
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Tributo</mat-label>
-        <mat-select formControlName="tribute_id">
-          <mat-option [value]="null" disabled>Seleccione un tributo</mat-option>
-          <mat-option *ngFor="let tribute of tributes" [value]="tribute.code">
-            {{ tribute.name }} ({{ tribute.code }})
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="productForm.get('tribute_id')?.touched && productForm.get('tribute_id')?.invalid">
-          El tributo es requerido
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <div class="form-actions">
-      <button mat-raised-button color="primary" type="submit" [disabled]="!productForm.valid">Agregar</button>
-      <button mat-button type="button" (click)="onCancel()">Cancelar</button>
-    </div>
-  </form>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Tributo</mat-label>
+          <mat-select formControlName="tribute_id">
+            <mat-option [value]="null" disabled>Seleccione un tributo</mat-option>
+            <mat-option *ngFor="let tribute of data.tributes" [value]="tribute.code">
+              {{ tribute.name }} ({{ tribute.code }})
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="productForm.get('tribute_id')?.touched && productForm.get('tribute_id')?.invalid">
+            El tributo es requerido
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!productForm.valid"
+      (click)="onSubmit()">Agregar</button>
+  </mat-dialog-actions>
 </div>

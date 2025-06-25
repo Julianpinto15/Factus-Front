@@ -266,7 +266,7 @@ export class ProductCreateComponent {
                 discountRate: 0,
               });
               if (!this.isEdit()) {
-                this.router.navigate(['/product/create']);
+                this.router.navigate(['/dashboard/product/create']);
               }
             },
             error: (err) =>
@@ -293,7 +293,7 @@ export class ProductCreateComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/product/create']);
+        this.router.navigate(['/dashboard/product/create']);
       }
     });
   }

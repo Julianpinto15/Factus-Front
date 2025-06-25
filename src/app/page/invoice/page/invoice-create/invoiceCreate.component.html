@@ -89,16 +89,19 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Fecha Fin</mat-label>
-          <input matInput type="date" id="end_date" formControlName="end_date" required>
+          <input matInput type="date" id="end_date" formControlName="end_date" readonly required>
           @if (invoiceForm.get('billing_period.end_date')?.touched &&
           invoiceForm.get('billing_period.end_date')?.invalid) {
           <mat-error>La fecha de fin es requerida</mat-error>
+          }
+          @if (invoiceForm.get('billing_period')?.errors?.['end_date_before_start_date']) {
+          <mat-error>La fecha de fin no puede ser anterior a la fecha de inicio</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Hora Fin</mat-label>
-          <input matInput type="time" id="end_time" formControlName="end_time" required>
+          <input matInput type="time" id="end_time" formControlName="end_time" readonly required>
           @if (invoiceForm.get('billing_period.end_time')?.touched &&
           invoiceForm.get('billing_period.end_time')?.invalid) {
           <mat-error>La hora de fin es requerida</mat-error>
@@ -116,8 +119,7 @@
           <mat-select id="customer_select" (selectionChange)="onCustomerChange($event)">
             <mat-option [value]="null" disabled>Seleccione un cliente</mat-option>
             @for (customer of customers(); track customer.identification) {
-            <mat-option [value]="customer.identification">{{ customer.names }} ({{ customer.identification
-              }})</mat-option>
+            <mat-option [value]="customer.identification">{{ customer.names }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
@@ -134,14 +136,14 @@
         <mat-form-field appearance="outline">
           <mat-label>Tipo de Documento</mat-label>
           <mat-select id="identification_document_id" formControlName="identification_document_id" required>
-            <mat-option value="" disabled>Seleccione tipo de documento</mat-option>
-            <mat-option value="1">Cédula de Ciudadanía</mat-option>
-            <mat-option value="2">Cédula de Extranjería</mat-option>
-            <mat-option value="3">NIT</mat-option>
-            <mat-option value="4">Pasaporte</mat-option>
+            <mat-option [value]="null" disabled>Seleccione tipo de documento</mat-option>
+            <mat-option [value]="1">Cédula de Ciudadanía</mat-option>
+            <mat-option [value]="2">Cédula de Extranjería</mat-option>
+            <mat-option [value]="3">NIT</mat-option>
+            <mat-option [value]="4">Pasaporte</mat-option>
           </mat-select>
           @if (invoiceForm.get('customer.identification_document_id')?.touched &&
-          invoiceForm.get('customer.identification_document_id')?.invalid) {
+          invoiceForm.get('customer.identification_document_id touch')?.invalid) {
           <mat-error>El tipo de documento es requerido</mat-error>
           }
         </mat-form-field>
@@ -258,7 +260,5 @@
     </div>
   </form>
 
-  <!-- Modal Product Component -->
-  <app-modal-product *ngIf="showModal()" [products]="products()" [tributes]="tributes()"
-    (productSelected)="addProductFromModal($event)" (close)="closeProductModal()"></app-modal-product>
+
 </div>

@@ -86,3 +86,33 @@ mat-form-field {
     grid-template-columns: 1fr;
   }
 }
+
+.modal-content {
+  padding: 1rem;
+  font-family: var(--poppins, "Poppins", sans-serif);
+}
+
+.modal-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-actions {
+  margin-top: 1rem;
+  padding: 0.5rem 0;
+}
+
+@media (max-width: 768px) {
+  .modal-form {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content {
+    padding: 0.5rem;
+  }
+}

@@ -2,8 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Inject,
   inject,
   Input,
+  OnInit,
   Output,
   signal,
 } from '@angular/core';
@@ -19,7 +21,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Product } from '../../../product/interface/Product';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Tribute } from '../../../customer/interface/Tribute';
@@ -39,15 +41,15 @@ import { Tribute } from '../../../customer/interface/Tribute';
   styleUrl: './modal-product.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModalProductComponent {
-  @Input() products: Product[] = [];
-  @Input() tributes: Tribute[] = [];
-  @Output() productSelected = new EventEmitter<any>();
-  @Output() close = new EventEmitter<void>();
-
+export class ModalProductComponent implements OnInit {
   productForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<ModalProductComponent>,
+    @Inject(MAT_DIALOG_DATA)
+    public data: { products: Product[]; tributes: Tribute[] }
+  ) {
     this.productForm = this.fb.group({
       productId: [null, Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
@@ -57,10 +59,17 @@ export class ModalProductComponent {
     });
   }
 
-  onProductChange(event: any): void {
-    const selectedProduct = this.products.find((p) => p.id === +event.value);
+  ngOnInit(): void {
+    // Update form when product is selected
+    this.productForm.get('productId')?.valueChanges.subscribe((productId) => {
+      this.onProductChange(productId);
+    });
+  }
+
+  onProductChange(productId: number): void {
+    const selectedProduct = this.data.products.find((p) => p.id === +productId);
     if (selectedProduct) {
-      const tribute = this.tributes.find(
+      const tribute = this.data.tributes.find(
         (t) => t.id === Number(selectedProduct.tributeId)
       );
       const tributeCode = tribute ? tribute.code : '01';
@@ -73,7 +82,7 @@ export class ModalProductComponent {
 
   onSubmit(): void {
     if (this.productForm.valid) {
-      const selectedProduct = this.products.find(
+      const selectedProduct = this.data.products.find(
         (p) => p.id === this.productForm.get('productId')?.value
       );
       if (selectedProduct) {
@@ -91,19 +100,12 @@ export class ModalProductComponent {
             formValue.tribute_id === '01' ? selectedProduct.isExcluded : 0,
           tribute_id: formValue.tribute_id,
         };
-        this.productSelected.emit(productData);
-        this.productForm.reset({
-          productId: null,
-          quantity: 1,
-          discount_rate: 0,
-          tax_rate: '19.00',
-          tribute_id: '01',
-        });
+        this.dialogRef.close(productData); // Close dialog and pass data
       }
     }
   }
 
   onCancel(): void {
-    this.close.emit();
+    this.dialogRef.close(); // Close dialog without data
   }
 }
