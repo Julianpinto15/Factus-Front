@@ -14,4 +14,6 @@ export interface Invoice {
   billing_period: BillingPeriod;
   customer: Customer;
   items: InvoiceItem[];
+  createdAt: string; // or Date, depending on how you handle it
+  status: string;
 }

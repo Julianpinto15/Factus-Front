@@ -57,7 +57,7 @@ export const routes: Routes = [
         component: InvoiceListComponent,
       },
 
-      { path: 'invoice/:number', component: InvoiceDetailComponent },
+      { path: 'invoice/detail', component: InvoiceDetailComponent },
 
       { path: '**', redirectTo: 'dashboard' },
     ],

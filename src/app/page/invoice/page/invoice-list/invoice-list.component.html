@@ -1,8 +1,7 @@
+<app-header></app-header>
+
 <div class="invoice-list-container">
-  <div class="table-header">
-    <h2 class="mat-h2">Facturas</h2>
-    <a [routerLink]="['/invoice/create']" class="add-button" mat-raised-button color="primary">Crear Factura</a>
-  </div>
+
 
   <!-- Error message -->
   @if (error()) {
@@ -11,6 +10,10 @@
     {{ error() }}
   </div>
   }
+
+  <div *ngIf="error()" class="error-message">
+    {{ error() }}
+  </div>
 
   <!-- Table with skeleton loader or data -->
   <div class="table-container">
@@ -25,7 +28,7 @@
       <!-- Customer Column -->
       <ng-container matColumnDef="customer">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</th>
-        <td mat-cell *matCellDef="let invoice">{{ invoice.customer?.names || 'N/A' }}</td>
+        <td mat-cell *matCellDef="let invoice">{{ invoice.customer?.company || invoice.customer?.names || 'N/A' }}</td>
       </ng-container>
 
       <!-- Created At Column -->
@@ -37,14 +40,14 @@
       <!-- Status Column -->
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
-        <td mat-cell *matCellDef="let invoice">{{ invoice.status }}</td>
+        <td mat-cell *matCellDef="let invoice">{{ invoice.status || 'N/A' }}</td>
       </ng-container>
 
       <!-- Actions Column -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Acciones</th>
         <td mat-cell *matCellDef="let invoice">
-          <button mat-icon-button [routerLink]="['/invoice', invoice.invoiceNumber]">
+          <button mat-icon-button [routerLink]="['invoice/detail', invoice.invoiceNumber]">
             <mat-icon>visibility</mat-icon>
           </button>
           <button mat-icon-button (click)="downloadPdf(invoice.invoiceNumber)">

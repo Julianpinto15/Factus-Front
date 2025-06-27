@@ -33,7 +33,7 @@ export class InvoiceService {
 
   createInvoice(invoice: Invoice): Observable<any> {
     return this.http
-      .post(`${this.apiUrl}/v1/bills/validate`, invoice, {
+      .post(`${this.apiUrlLocal}/v1/bills/validate`, invoice, {
         headers: this.getHeaders(),
       })
       .pipe(

@@ -352,10 +352,14 @@ export class InvoiceCreateComponent {
             withholding_tax_rate: String(tax.withholding_tax_rate),
           })),
         })),
+        createdAt: new Date().toISOString(), // <-- o como manejes la fecha
+        status: 'PENDIENTE',
       };
 
+      console.log('Factura que se enviará:', invoice);
       this.invoiceService.createInvoice(invoice).subscribe({
         next: (response) => {
+          console.log('Respuesta completa del backend:', response);
           if (response && response.status === 'Created') {
             this.items.clear();
             this.dataSource.data = [];
