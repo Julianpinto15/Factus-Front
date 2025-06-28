@@ -28,6 +28,15 @@ li {
   list-style: none;
 }
 
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
 :root {
   --poppins: "Poppins", sans-serif;
   --lato: "Lato", sans-serif;
@@ -73,6 +82,22 @@ li {
   --radius-xl: 16px;
 }
 
+/* Estilos para SweetAlert2 */
+.swal2-container {
+  z-index: 10010 !important;
+}
+
+.swal2-popup {
+  z-index: 10011 !important;
+  border-radius: 12px !important;
+}
+
+.swal2-backdrop {
+  z-index: 10009 !important;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(2px);
+}
+
 .swal2-confirm {
   background-color: #7494ec !important;
   border-radius: 8px !important;
@@ -84,15 +109,26 @@ li {
   border-radius: 8px !important;
 }
 
-.swal2-popup {
-  border-radius: 12px !important;
+/* CSS Global para Angular Material Dialog */
+.cdk-overlay-container {
+  z-index: 2000 !important;
 }
 
-html,
-body {
-  height: 100%;
+/* Backdrop del dialog */
+.cdk-overlay-backdrop {
+  z-index: 999 !important;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(2px);
 }
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+/* Panel del dialog */
+.cdk-overlay-pane {
+  z-index: 10001 !important;
+}
+
+/* Contenedor específico del mat-dialog */
+.mat-mdc-dialog-container,
+.mat-dialog-container {
+  z-index: 10002 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
 }

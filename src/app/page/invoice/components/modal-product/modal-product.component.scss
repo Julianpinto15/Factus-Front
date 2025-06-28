@@ -90,6 +90,7 @@ mat-form-field {
 .modal-content {
   padding: 1rem;
   font-family: var(--poppins, "Poppins", sans-serif);
+  z-index: 9999;
 }
 
 .modal-form {
