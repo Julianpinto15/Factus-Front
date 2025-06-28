@@ -36,7 +36,6 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    HeaderComponent,
   ],
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.scss',

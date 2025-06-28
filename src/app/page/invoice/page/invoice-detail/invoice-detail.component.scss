@@ -1,36 +1,693 @@
+/* Contenedor principal con gradiente sutil */
 .invoice-detail-container {
-  padding: 20px;
-}
-
-.invoice-card {
-  max-width: 800px;
+  padding: 32px;
+  max-width: 1400px;
   margin: 0 auto;
+  background: linear-gradient(
+    135deg,
+    var(--background-secondary) 0%,
+    var(--background-tertiary) 100%
+  );
+  min-height: 100vh;
+  position: relative;
 }
 
+.invoice-detail-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--primary-dark) 100%
+  );
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  z-index: -1;
+}
+
+/* Header moderno con glassmorphism */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 24px 32px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.header-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.header-container:hover::before {
+  left: 100%;
+}
+
+.header-container h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 2rem;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-dark)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.header-actions button {
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-dark)
+  );
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.header-actions button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.3s ease;
+}
+
+.header-actions button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.header-actions button:hover::before {
+  left: 100%;
+}
+
+/* Tarjeta principal con diseño moderno */
+.invoice-card {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--background-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  position: relative;
+}
+
+.invoice-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--success-color),
+    var(--primary-color)
+  );
+  background-size: 200% 100%;
+  animation: gradientMove 3s ease-in-out infinite;
+}
+
+@keyframes gradientMove {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.invoice-card mat-card-header {
+  padding: 32px 32px 0;
+  background: linear-gradient(
+    135deg,
+    var(--primary-light) 0%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
+}
+
+.invoice-card mat-card-content {
+  padding: 32px;
+}
+
+.invoice-card mat-card-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+}
+
+.invoice-card mat-card-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Panel de información de empresa mejorado */
+.company-info-panel {
+  margin-bottom: 24px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.company-info {
+  padding: 24px;
+  background: linear-gradient(
+    135deg,
+    var(--success-light) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  border-radius: var(--radius-lg);
+  position: relative;
+}
+
+.company-info::before {
+  content: "🏢";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 2rem;
+  opacity: 0.3;
+}
+
+.company-info p {
+  margin: 12px 0;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.company-info p:first-child {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--success-color);
+}
+
+/* Información de factura con tarjetas modernas */
+.invoice-info {
+  padding: 24px;
+  background: var(--background-primary);
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.invoice-info::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    var(--primary-color),
+    var(--success-color)
+  );
+}
+
+.invoice-info p {
+  margin: 16px 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.6;
+  padding-left: 16px;
+}
+
+.invoice-info strong {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Sección de errores mejorada */
+.errors-section {
+  padding: 24px;
+  background: linear-gradient(
+    135deg,
+    var(--error-light) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--error-color);
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.errors-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--error-color);
+}
+
+.errors-section h4 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px 0;
+  color: var(--error-color);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* Totales financieros con diseño premium */
+.invoice-totals {
+  padding: 32px;
+  background: linear-gradient(
+    135deg,
+    var(--success-light) 0%,
+    rgba(255, 255, 255, 0.95) 100%
+  );
+  border-radius: var(--radius-xl);
+  margin-bottom: 32px;
+  box-shadow: var(--shadow-lg);
+  border: 2px solid var(--success-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.invoice-totals::before {
+  content: "💰";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 2.5rem;
+  opacity: 0.2;
+}
+
+.invoice-totals h4 {
+  margin: 0 0 24px 0;
+  color: var(--success-color);
+  font-weight: 800;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.totals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.totals-grid p {
+  margin: 0;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease;
+}
+
+.totals-grid p:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.totals-grid strong {
+  color: var(--success-color);
+  font-weight: 700;
+}
+
+/* Tabla moderna con hover effects */
 .table-container {
-  margin-top: 20px;
+  margin: 32px 0;
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  background: var(--background-primary);
 }
 
 table {
   width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
+table thead {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--primary-dark) 100%
+  );
+}
+
+table th {
+  padding: 20px 16px;
+  color: rgb(0, 0, 0);
+  font-weight: 700;
+  text-align: left;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+table th:first-child {
+  border-top-left-radius: var(--radius-lg);
+}
+
+table th:last-child {
+  border-top-right-radius: var(--radius-lg);
+}
+
+table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease;
+}
+
+table tr:hover td {
+  background-color: var(--primary-light);
+}
+
+table tr:last-child td {
+  border-bottom: none;
+}
+
+table tr:last-child td:first-child {
+  border-bottom-left-radius: var(--radius-lg);
+}
+
+table tr:last-child td:last-child {
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+/* Mensajes de error y sin datos */
 .error {
   display: flex;
   align-items: center;
-  padding: 10px;
-  background-color: #ffebee;
-  color: #c62828;
-  margin-bottom: 20px;
-  border-radius: 4px;
+  padding: 20px;
+  background: linear-gradient(
+    135deg,
+    var(--error-light) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  color: var(--error-color);
+  margin-bottom: 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--error-color);
+  box-shadow: var(--shadow-md);
 }
 
 .error-icon {
-  margin-right: 8px;
+  margin-right: 12px;
+  font-size: 1.5rem;
 }
 
-.loading-spinner {
+.no-data {
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 50px;
+  padding: 40px;
+  background: linear-gradient(
+    135deg,
+    var(--background-tertiary) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  color: var(--text-muted);
+  border-radius: var(--radius-lg);
+  margin-top: 24px;
+  border: 2px dashed var(--border-color);
+  font-size: 1.1rem;
+}
+
+.no-data mat-icon {
+  margin-right: 12px;
+  font-size: 2rem;
+}
+
+/* Sección QR mejorada */
+.qr-section {
+  margin-top: 32px;
+  padding: 32px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-light) 0%,
+    rgba(255, 255, 255, 0.95) 100%
+  );
+  border-radius: var(--radius-xl);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  border: 2px solid var(--primary-color);
+  position: relative;
+}
+
+.qr-section::before {
+  content: "📱";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 2rem;
+  opacity: 0.3;
+}
+
+.qr-section h4 {
+  margin: 0 0 20px 0;
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.qr-section a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 24px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-dark)
+  );
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.qr-section a:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Debug data mejorado */
+.debug-data {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: #e2e8f0;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  font-family: "Fira Code", "Consolas", monospace;
+  font-size: 13px;
+  overflow-x: auto;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #475569;
+}
+
+/* Skeleton loading mejorado */
+.loading-skeleton {
+  position: relative;
+  width: 100%;
+  margin: 32px 0;
+}
+
+.skeleton-card {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--background-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 32px;
+  border: 1px solid var(--border-color);
+}
+
+.skeleton-header {
+  height: 80px;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 400% 100%;
+  animation: shimmer 2s infinite ease-in-out;
+  margin-bottom: 32px;
+  border-radius: var(--radius-lg);
+}
+
+.skeleton-row {
+  height: 60px;
+  margin: 20px 0;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 400% 100%;
+  animation: shimmer 2s infinite ease-in-out;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-row:nth-child(odd) {
+  animation-delay: 0.2s;
+}
+
+.skeleton-row:nth-child(even) {
+  animation-delay: 0.4s;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: -400% 0;
+  }
+}
+
+/* Botones de acción */
+.invoice-card mat-card-actions {
+  padding: 24px 32px;
+  background: var(--background-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+.invoice-card mat-card-actions button {
+  padding: 12px 24px;
+  border: 2px solid var(--primary-color);
+  background: transparent;
+  color: var(--primary-color);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.invoice-card mat-card-actions button:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .invoice-detail-container {
+    padding: 16px;
+  }
+
+  .header-container {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .invoice-card mat-card-content {
+    padding: 20px;
+  }
+
+  .totals-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .table-container {
+    font-size: 0.9rem;
+  }
+
+  table th,
+  table td {
+    padding: 12px 8px;
+  }
+}
+
+/* Animaciones adicionales */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.invoice-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.invoice-info,
+.company-info-panel,
+.invoice-totals,
+.errors-section {
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.invoice-info {
+  animation-delay: 0.1s;
+}
+
+.company-info-panel {
+  animation-delay: 0.2s;
+}
+
+.invoice-totals {
+  animation-delay: 0.3s;
+}
+
+.errors-section {
+  animation-delay: 0.4s;
 }

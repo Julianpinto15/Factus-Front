@@ -11,6 +11,7 @@ import { ProductCreateComponent } from './page/product/page/product-create/produ
 import { InvoiceCreateComponent } from './page/invoice/page/invoice-create/invoiceCreate.component';
 import { InvoiceListComponent } from './page/invoice/page/invoice-list/invoice-list.component';
 import { InvoiceDetailComponent } from './page/invoice/page/invoice-detail/invoice-detail.component';
+import { InvoiceComponent } from './page/invoice/page/invoice/invoice.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -50,18 +51,20 @@ export const routes: Routes = [
       },
       {
         path: 'invoice',
-        component: InvoiceCreateComponent,
+        component: InvoiceComponent,
+        children: [
+          { path: '', redirectTo: 'list', pathMatch: 'full' },
+          { path: 'list', component: InvoiceListComponent },
+          { path: 'create', component: InvoiceCreateComponent },
+          {
+            path: 'detail/:invoiceNumber',
+            component: InvoiceDetailComponent,
+          },
+        ],
       },
-      {
-        path: 'invoice/list',
-        component: InvoiceListComponent,
-      },
-
-      { path: 'invoice/detail', component: InvoiceDetailComponent },
-
       { path: '**', redirectTo: 'dashboard' },
     ],
   },
 
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'dashboard' },
 ];

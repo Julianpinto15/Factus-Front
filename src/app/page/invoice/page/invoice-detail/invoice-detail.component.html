@@ -1,5 +1,16 @@
 <div class="invoice-detail-container">
-  <h2 class="mat-h2">Detalles de la Factura</h2>
+  <!-- Header -->
+  <div class="header-container">
+    <h2 class="mat-h2">Detalles de la Factura</h2>
+    <div class="header-actions">
+      <button mat-icon-button (click)="downloadPdf(getInvoiceNumber())" aria-label="Descargar PDF">
+        <mat-icon>picture_as_pdf</mat-icon>
+      </button>
+      <button mat-icon-button (click)="downloadXml(getInvoiceNumber())" aria-label="Descargar XML">
+        <mat-icon>code</mat-icon>
+      </button>
+    </div>
+  </div>
 
   <!-- Error message -->
   @if (error()) {
@@ -9,10 +20,17 @@
   </div>
   }
 
-  <!-- Loading spinner -->
+  <!-- Loading skeleton -->
   @if (loading()) {
-  <div class="loading-spinner">
-    <mat-spinner diameter="50"></mat-spinner>
+  <div class="loading-skeleton">
+    <div class="skeleton-card">
+      <div class="skeleton-header"></div>
+      <div class="skeleton-content">
+        @for (i of [1, 2, 3]; track i) {
+        <div class="skeleton-row"></div>
+        }
+      </div>
+    </div>
   </div>
   }
 
@@ -20,46 +38,136 @@
   @if (!loading() && invoice()) {
   <mat-card class="invoice-card mat-elevation-z8">
     <mat-card-header>
-      <mat-card-title>Factura #{{ invoice().data?.bill?.number }}</mat-card-title>
+      <mat-card-title>Factura #{{ getInvoiceNumber() }}</mat-card-title>
+      <mat-card-subtitle>Estado: {{ getInvoiceStatus() }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <p><strong>Cliente:</strong> {{ invoice().data?.bill?.customer?.names || 'N/A' }}</p>
-      <p><strong>Estado:</strong> {{ invoice().data?.bill?.status }}</p>
-      <p><strong>Fecha:</strong> {{ invoice().data?.bill?.createdAt | date: 'short' }}</p>
-      <p><strong>UUID:</strong> {{ invoice().data?.bill?.cufe }}</p>
+      <!-- Company Information -->
+      @if (getCompanyInfo().company) {
+      <mat-expansion-panel class="company-info-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Información de la Empresa</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="company-info">
+          <p><strong>{{ getCompanyInfo().company }}</strong></p>
+          <p>NIT: {{ getCompanyInfo().nit }}-{{ getCompanyInfo().dv }}</p>
+          <p>Dirección: {{ getCompanyInfo().direction }}</p>
+          <p>Teléfono: {{ getCompanyInfo().phone }}</p>
+          <p>Email: {{ getCompanyInfo().email }}</p>
+        </div>
+      </mat-expansion-panel>
+      }
 
-      <h3>Ítems</h3>
-      <div class="table-container">
-        <table mat-table [dataSource]="invoice().data?.bill?.items || []" class="mat-elevation-z8">
+      <!-- Invoice Information -->
+      <div class="invoice-info">
+        <p><strong>Cliente:</strong> {{ getCustomerName() }}</p>
+        @if (parseCreatedAt()) {
+        <p><strong>Fecha de Creación:</strong> {{ parseCreatedAt() | date: 'dd/MM/yyyy HH:mm:ss' }}</p>
+        } @else {
+        <p><strong>Fecha de Creación:</strong> {{ getCreatedAt() }}</p>
+        }
+        <p><strong>UUID CUFE:</strong> {{ getCufe() }}</p>
+      </div>
+
+      <!-- Errors Section -->
+      @if (getErrors().length > 0) {
+      <div class="errors-section mat-elevation-z2">
+        <h4><mat-icon class="error-icon">warning</mat-icon> Errores/Advertencias</h4>
+        <mat-list>
+          @for (error of getErrors(); track $index) {
+          <mat-list-item>{{ error }}</mat-list-item>
+          }
+        </mat-list>
+      </div>
+      }
+
+      <!-- Financial Summary -->
+      <div class="invoice-totals mat-elevation-z2">
+        <h4>Resumen Financiero</h4>
+        <div class="totals-grid">
+          <p><strong>Valor Bruto:</strong> {{ getGrossValue() | currency:'COP':'symbol':'1.0-0' }}</p>
+          <p><strong>Impuestos:</strong> {{ getTaxAmount() | currency:'COP':'symbol':'1.0-0' }}</p>
+          <p><strong>Total:</strong> {{ getTotal() | currency:'COP':'symbol':'1.0-0' }}</p>
+        </div>
+      </div>
+
+      <!-- Debug Data -->
+      <!-- <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>🔍 Ver datos completos (DEBUG)</mat-panel-title>
+        </mat-expansion-panel-header>
+        <pre class="debug-data">{{ invoice() | json }}</pre>
+      </mat-expansion-panel> -->
+
+      <!-- Invoice Items -->
+      <h3>Ítems de la Factura</h3>
+      @if (getItems().length > 0) {
+      <div class="table-container mat-elevation-z8">
+        <table mat-table [dataSource]="getItems()" matSort>
+          <!-- Code Reference Column -->
+          <ng-container matColumnDef="code">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+            <td mat-cell *matCellDef="let item">{{ item.code_reference || 'N/A' }}</td>
+          </ng-container>
+
           <!-- Name Column -->
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Nombre</th>
-            <td mat-cell *matCellDef="let item">{{ item.name }}</td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+            <td mat-cell *matCellDef="let item">{{ item.name || item.description || item.productName || 'N/A' }}</td>
           </ng-container>
 
           <!-- Quantity Column -->
           <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef>Cantidad</th>
-            <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</th>
+            <td mat-cell *matCellDef="let item">{{ item.quantity || item.qty || 0 }}</td>
           </ng-container>
 
           <!-- Price Column -->
           <ng-container matColumnDef="price">
-            <th mat-header-cell *matHeaderCellDef>Precio</th>
-            <td mat-cell *matCellDef="let item">{{ item.price | currency }}</td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+            <td mat-cell *matCellDef="let item">{{ (item.price || item.unitPrice || 0) | currency:'COP':'symbol':'1.0-0'
+              }}</td>
+          </ng-container>
+
+          <!-- Tax Rate Column -->
+          <ng-container matColumnDef="tax_rate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>IVA %</th>
+            <td mat-cell *matCellDef="let item">{{ item.tax_rate || 0 }}%</td>
           </ng-container>
 
           <!-- Total Column -->
           <ng-container matColumnDef="total">
-            <th mat-header-cell *matHeaderCellDef>Total</th>
-            <td mat-cell *matCellDef="let item">{{ item.total | currency }}</td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
+            <td mat-cell *matCellDef="let item">{{ (item.total || item.totalAmount || (item.quantity * item.price) || 0)
+              | currency:'COP':'symbol':'1.0-0' }}</td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
       </div>
+      } @else {
+      <div class="no-data mat-elevation-z2" role="alert">
+        <mat-icon>info</mat-icon>
+        No hay ítems para mostrar.
+      </div>
+      }
+
+      <!-- QR Code -->
+      @if (invoice().data?.bill?.qr) {
+      <div class="qr-section mat-elevation-z2">
+        <h4>Código QR para Verificación</h4>
+        <p>
+          <a [href]="invoice().data.bill.qr" target="_blank" rel="noopener noreferrer" mat-stroked-button>
+            <mat-icon>qr_code</mat-icon> Verificar en DIAN
+          </a>
+        </p>
+      </div>
+      }
     </mat-card-content>
+    <mat-card-actions align="end">
+      <button mat-stroked-button [routerLink]="['/dashboard/invoice/list']">Volver a Facturas</button>
+    </mat-card-actions>
   </mat-card>
   }
 </div>

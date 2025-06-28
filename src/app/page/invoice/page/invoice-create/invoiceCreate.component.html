@@ -119,7 +119,8 @@
           <mat-select id="customer_select" (selectionChange)="onCustomerChange($event)">
             <mat-option [value]="null" disabled>Seleccione un cliente</mat-option>
             @for (customer of customers(); track customer.identification) {
-            <mat-option [value]="customer.identification">{{ customer.names }}</mat-option>
+            <mat-option [value]="customer.identification">
+              {{ getCustomerDisplayName(customer) }} </mat-option>
             }
           </mat-select>
         </mat-form-field>

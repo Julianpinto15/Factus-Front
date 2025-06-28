@@ -266,6 +266,21 @@ export class InvoiceCreateComponent {
     return tribute ? `${tribute.name} (${tribute.code})` : tributeId;
   }
 
+  getCustomerDisplayName(customer: Customer): string {
+    // Para persona jurídica (NIT), mostrar company o trade_name
+    if (customer.identification_document_id === 3) {
+      return (
+        customer.company ||
+        customer.trade_name ||
+        customer.graphic_representation_name ||
+        customer.names ||
+        'Sin nombre'
+      );
+    }
+    // Para persona natural, mostrar names
+    return customer.names || 'Sin nombre';
+  }
+
   onCustomerChange(event: any): void {
     const selectedCustomer = this.customers().find(
       (c) => c.identification === event.value
@@ -273,17 +288,32 @@ export class InvoiceCreateComponent {
 
     if (selectedCustomer) {
       const tributeId = selectedCustomer.tribute_id ?? '';
-      const isValidTribute = this.tributes().some((t) => t.code === tributeId);
+
+      // Determinar el nombre a mostrar según el tipo de persona
+      let displayName = '';
+      if (selectedCustomer.identification_document_id === 3) {
+        // NIT = Persona Jurídica
+        // Para persona jurídica, priorizar company, luego trade_name, luego graphic_representation_name
+        displayName =
+          selectedCustomer.company ||
+          selectedCustomer.trade_name ||
+          selectedCustomer.graphic_representation_name ||
+          selectedCustomer.names ||
+          '';
+      } else {
+        // Para persona natural, usar names
+        displayName = selectedCustomer.names || '';
+      }
 
       this.invoiceForm.get('customer')?.patchValue({
         identification: selectedCustomer.identification,
         identification_document_id: selectedCustomer.identification_document_id,
-        dv: selectedCustomer.dv ?? null,
+        dv: selectedCustomer.dv ?? '',
         graphic_representation_name:
           selectedCustomer.graphic_representation_name || '',
         company: selectedCustomer.company || '',
         trade_name: selectedCustomer.trade_name || '',
-        names: selectedCustomer.names || '',
+        names: displayName, // Usar el nombre determinado arriba
         address: selectedCustomer.address || '',
         email: selectedCustomer.email || '',
         phone: selectedCustomer.phone || '',
@@ -291,11 +321,30 @@ export class InvoiceCreateComponent {
         tribute_id: selectedCustomer.tribute_id ?? '',
         municipality_id: selectedCustomer.municipality_id ?? null,
       });
+
+      this.cdr.markForCheck();
     }
   }
 
   onSubmit(): void {
     if (this.invoiceForm.valid && this.isTributeValid()) {
+      // Mostrar alerta de carga
+      Swal.fire({
+        title: 'Creando factura...',
+        text: 'Por favor espere mientras procesamos su factura',
+        icon: 'info',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+        customClass: {
+          popup: 'custom-swal-popup',
+          title: 'custom-swal-title',
+        },
+      });
+
       console.log(
         'Submitting with items:',
         this.items.controls.map((control) => control.value)
@@ -352,7 +401,7 @@ export class InvoiceCreateComponent {
             withholding_tax_rate: String(tax.withholding_tax_rate),
           })),
         })),
-        createdAt: new Date().toISOString(), // <-- o como manejes la fecha
+        createdAt: new Date().toISOString(),
         status: 'PENDIENTE',
       };
 
@@ -363,6 +412,8 @@ export class InvoiceCreateComponent {
           if (response && response.status === 'Created') {
             this.items.clear();
             this.dataSource.data = [];
+
+            // Cerrar la alerta de carga y mostrar éxito
             Swal.fire({
               position: 'top-end',
               icon: 'success',
@@ -375,9 +426,11 @@ export class InvoiceCreateComponent {
                 title: 'custom-swal-title',
               },
             });
+
             // Reiniciar formulario con nuevas fechas y horas
             this.resetForm();
           } else {
+            // Cerrar la alerta de carga y mostrar error
             Swal.fire({
               icon: 'error',
               title: 'Error',
@@ -392,6 +445,8 @@ export class InvoiceCreateComponent {
         error: (err: HttpErrorResponse) => {
           const errorMessage =
             err.error?.message || err.message || 'Error desconocido';
+
+          // Cerrar la alerta de carga y mostrar error
           Swal.fire({
             icon: 'error',
             title: 'Error al crear factura',

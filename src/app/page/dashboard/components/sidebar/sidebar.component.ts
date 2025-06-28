@@ -49,12 +49,26 @@ export class SidebarComponent {
           text: 'Lista de Productos',
           path: '/dashboard/product/list',
         },
-        { id: 'trends', text: 'Trends', path: '/dashboard/analytics/trends' },
       ],
     },
-    // { id: 'product', icon: 'bxs-doughnut-chart', text: 'Inventario' },
-    { id: 'invoice', icon: 'bxs-message-dots', text: 'Factura' },
-    { id: 'invoice/list', icon: 'bxs-group', text: 'Lista' },
+    {
+      id: 'invoice',
+      icon: 'bxs-message-dots',
+      text: 'Factura',
+      children: [
+        {
+          id: 'create',
+          text: 'Crear factura',
+          path: '/dashboard/invoice/create',
+        },
+        {
+          id: 'list',
+          text: 'Lista de factura',
+          path: '/dashboard/invoice/list',
+        },
+      ],
+    },
+
     { id: 'invoice/:number', icon: 'bxs-group', text: 'Listar' },
   ];
 
