@@ -2,11 +2,8 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   HostListener,
   inject,
-  Input,
-  Output,
 } from '@angular/core';
 import { DashboardService } from '../../service/dashboard.service';
 
@@ -14,7 +11,7 @@ import { DashboardService } from '../../service/dashboard.service';
   selector: 'app-navbar',
   imports: [CommonModule],
   templateUrl: './Navbar.component.html',
-  styleUrl: './Navbar.component.css',
+  styleUrl: './Navbar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent {

@@ -10,7 +10,7 @@ import { DashboardService } from '../../service/dashboard.service';
   selector: 'app-header',
   imports: [],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css',
+  styleUrl: './header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
@@ -20,8 +20,8 @@ export class HeaderComponent {
   menuTitles: Record<string, string> = {
     home: 'Dashboard',
     customer: 'Customers',
-    analytics: 'Analytics',
-    message: 'Mensajes',
+    product: 'Productos',
+    invoice: 'Facturas',
     team: 'Equipo',
     settings: 'Configuración',
     logout: 'Salir',

@@ -1,11 +1,18 @@
-<ul class="box-info">
-  @for (stat of stats; track stat.icon) {
-  <li>
-    <i class="bx {{ stat.icon }}"></i>
-    <span class="text">
-      <h3>{{ stat.value }}</h3>
-      <p>{{ stat.label }}</p>
-    </span>
-  </li>
-  }
-</ul>
+<div class="dashboard">
+  <ul class="box-info">
+    @if (statsService.isLoading()) {
+    <li>Loading...</li>
+    } @else if (statsService.error()) {
+    <li>{{ statsService.error() }}</li>
+    } @else {
+    @for (stat of statsService.stats(); track stat.icon) {
+    <li>
+      <i class="bx {{ stat.icon }}"></i>
+      <span class="text">
+        <h3>{{ stat.value }}</h3>
+        <p>{{ stat.label }}</p>
+      </span>
+    </li>
+    }
+    }
+  </ul>

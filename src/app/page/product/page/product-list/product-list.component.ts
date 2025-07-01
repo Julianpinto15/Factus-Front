@@ -55,7 +55,6 @@ export class ProductListComponent {
   readonly displayedColumns: string[] = [
     'code',
     'name',
-    // 'description',
     'price',
     'taxRate',
     'unitMeasureId',

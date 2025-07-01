@@ -1,23 +1,15 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  Input,
-} from '@angular/core';
-import { DashboardService } from '../../service/dashboard.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+import { StatsService } from '../../service/stats.service';
 
 @Component({
   selector: 'app-stats-card',
   imports: [CommonModule],
   templateUrl: './StatsCard.component.html',
-  styleUrl: './StatsCard.component.css',
+  styleUrl: './StatsCard.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatsCardComponent {
-  private dashboardService = inject(DashboardService);
-
-  get stats() {
-    return this.dashboardService.stats();
-  }
+  constructor(public statsService: StatsService) {}
 }

@@ -1,23 +1,12 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  Input,
-} from '@angular/core';
-import { DashboardService } from '../../service/dashboard.service';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChartComponent } from '../../shared/chart/chart.component';
 
 @Component({
   selector: 'app-todo-list',
-  imports: [CommonModule],
+  imports: [CommonModule, ChartComponent],
   templateUrl: './todo-list.component.html',
-  styleUrl: './todo-list.component.css',
+  styleUrl: './todo-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodoListComponent {
-  private dashboardService = inject(DashboardService);
-
-  get todos() {
-    return this.dashboardService.todos();
-  }
-}
+export class TodoListComponent {}

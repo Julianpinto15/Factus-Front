@@ -1,9 +1,8 @@
 .table-data {
-  display: flex;
-  grid-gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px; /* 'grid-gap' está obsoleto, ahora solo se usa 'gap' */
   margin-top: 24px;
   width: 100%;
   color: var(--dark);
 }
-
-/* Si hay estilos específicos de header, stats o cards, también aquí */

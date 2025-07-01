@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   selector: 'app-sidebar',
   imports: [CommonModule],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css',
+  styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
   dashboardService = inject(DashboardService);

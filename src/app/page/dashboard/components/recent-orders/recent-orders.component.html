@@ -1,6 +1,6 @@
 <div class="order">
   <div class="head">
-    <h3>Recent Orders</h3>
+    <h3>Pedidos Recientes</h3>
     <i class="bx bx-search"></i>
     <i class="bx bx-filter"></i>
   </div>
@@ -8,13 +8,13 @@
   <table>
     <thead>
       <tr>
-        <th>User</th>
-        <th>Date Order</th>
-        <th>Status</th>
+        <th>Usuario</th>
+        <th>Fecha de pedido</th>
+        <th>Estado</th>
       </tr>
     </thead>
     <tbody>
-      @for (order of orders; track order.user) {
+      @for (order of getOrders(); track order.user) {
       <tr>
         <td>
           <img [src]="order.image" alt="User image" />
@@ -22,9 +22,10 @@
         </td>
         <td>{{ order.date }}</td>
         <td>
-          <span class="status {{ order.status }}">
+          <span class="status" [ngClass]="order.status.toLowerCase()">
             {{ order.status | titlecase }}
           </span>
+
         </td>
       </tr>
       }
