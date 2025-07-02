@@ -186,7 +186,12 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Organización Legal</mat-label>
-          <input matInput id="legal_organization_id" formControlName="legal_organization_id" required>
+          <mat-select id="legal_organization_id" formControlName="legal_organization_id" required>
+            <mat-option [value]="null" disabled>Seleccione una organización legal</mat-option>
+            @for (organization of legalOrganizations(); track organization.id) {
+            <mat-option [value]="organization.id.toString()">{{ organization.name }}</mat-option>
+            }
+          </mat-select>
           @if (invoiceForm.get('customer.legal_organization_id')?.touched &&
           invoiceForm.get('customer.legal_organization_id')?.invalid) {
           <mat-error>La organización legal es requerida</mat-error>
@@ -210,7 +215,12 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Municipio</mat-label>
-          <input matInput id="municipality_id" formControlName="municipality_id">
+          <mat-select id="municipality_id" formControlName="municipality_id">
+            <mat-option [value]="null">Ninguno</mat-option>
+            @for (municipality of municipalities(); track municipality.id) {
+            <mat-option [value]="municipality.id.toString()">{{ municipality.name }}</mat-option>
+            }
+          </mat-select>
         </mat-form-field>
       </div>
     </div>

@@ -33,6 +33,10 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { ModalProductComponent } from '../../components/modal-product/modal-product.component';
 import { MatDialog } from '@angular/material/dialog';
+import { LegalOrganizatioService } from '../../../customer/service/legal-organization.service';
+import { MunicipalityService } from '../../../customer/service/municipality.service';
+import { LegalOrganization } from '../../../customer/interface/LegalOrganization';
+import { Municipality } from '../../../customer/interface/Municipality';
 
 @Component({
   selector: 'app-invoice-create',
@@ -56,6 +60,8 @@ export class InvoiceCreateComponent {
   private customerService = inject(CustomerService);
   private productService = inject(ProductService);
   private tributeService = inject(TributeService);
+  private legalOrganizationService = inject(LegalOrganizatioService);
+  private municipalityService = inject(MunicipalityService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   private dialog = inject(MatDialog);
@@ -63,6 +69,8 @@ export class InvoiceCreateComponent {
   customers = signal<Customer[]>([]);
   products = signal<Product[]>([]);
   tributes = signal<Tribute[]>([]);
+  legalOrganizations = signal<LegalOrganization[]>([]);
+  municipalities = signal<Municipality[]>([]);
   private updateInterval: any;
   displayedColumns: string[] = [
     'product',
@@ -110,6 +118,8 @@ export class InvoiceCreateComponent {
     this.loadCustomers();
     this.loadProducts();
     this.loadTributes();
+    this.loadLegalOrganizations(); // Agregar esta línea
+    this.loadMunicipalities();
     this.startEndDateTimeUpdate();
   }
 
@@ -190,6 +200,39 @@ export class InvoiceCreateComponent {
       },
       error: () => console.error('Error loading tributes'),
     });
+  }
+
+  private loadLegalOrganizations() {
+    this.legalOrganizationService.getLegalOrganizations().subscribe({
+      next: (organizations: LegalOrganization[]) =>
+        this.legalOrganizations.set(organizations),
+      error: () => console.error('Error loading legal organizations'),
+    });
+  }
+
+  private loadMunicipalities() {
+    this.municipalityService.getMunicipalities().subscribe({
+      next: (municipalities: Municipality[]) =>
+        this.municipalities.set(municipalities),
+      error: () => console.error('Error loading municipalities'),
+    });
+  }
+
+  // Agregar estos métodos auxiliares para obtener los nombres
+  getLegalOrganizationName(organizationId: string | null): string {
+    if (!organizationId) return '';
+    const organization = this.legalOrganizations().find(
+      (org) => org.id.toString() === organizationId.toString()
+    );
+    return organization ? organization.name : organizationId;
+  }
+
+  getMunicipalityName(municipalityId: string | null): string {
+    if (!municipalityId) return '';
+    const municipality = this.municipalities().find(
+      (mun) => mun.id.toString() === municipalityId.toString()
+    );
+    return municipality ? municipality.name : municipalityId;
   }
 
   get items(): FormArray {
@@ -283,46 +326,31 @@ export class InvoiceCreateComponent {
 
   onCustomerChange(event: any): void {
     const selectedCustomer = this.customers().find(
-      (c) => c.identification === event.value
+      (customer) => customer.identification === event.value
     );
 
     if (selectedCustomer) {
-      const tributeId = selectedCustomer.tribute_id ?? '';
+      // Buscar el código del tributo basado en el tribute_id
+      const tribute = this.tributes().find(
+        (tribute) =>
+          tribute.id.toString() === selectedCustomer.tribute_id.toString()
+      );
 
-      // Determinar el nombre a mostrar según el tipo de persona
-      let displayName = '';
-      if (selectedCustomer.identification_document_id === 3) {
-        // NIT = Persona Jurídica
-        // Para persona jurídica, priorizar company, luego trade_name, luego graphic_representation_name
-        displayName =
-          selectedCustomer.company ||
-          selectedCustomer.trade_name ||
-          selectedCustomer.graphic_representation_name ||
-          selectedCustomer.names ||
-          '';
-      } else {
-        // Para persona natural, usar names
-        displayName = selectedCustomer.names || '';
-      }
-
-      this.invoiceForm.get('customer')?.patchValue({
-        identification: selectedCustomer.identification,
-        identification_document_id: selectedCustomer.identification_document_id,
-        dv: selectedCustomer.dv ?? '',
-        graphic_representation_name:
-          selectedCustomer.graphic_representation_name || '',
-        company: selectedCustomer.company || '',
-        trade_name: selectedCustomer.trade_name || '',
-        names: displayName, // Usar el nombre determinado arriba
-        address: selectedCustomer.address || '',
-        email: selectedCustomer.email || '',
-        phone: selectedCustomer.phone || '',
-        legal_organization_id: selectedCustomer.legal_organization_id,
-        tribute_id: selectedCustomer.tribute_id ?? '',
-        municipality_id: selectedCustomer.municipality_id ?? null,
+      this.invoiceForm.patchValue({
+        customer: {
+          identification: selectedCustomer.identification,
+          identification_document_id:
+            selectedCustomer.identification_document_id,
+          dv: selectedCustomer.dv,
+          names: selectedCustomer.names || selectedCustomer.company,
+          address: selectedCustomer.address,
+          email: selectedCustomer.email,
+          phone: selectedCustomer.phone,
+          legal_organization_id: selectedCustomer.legal_organization_id,
+          tribute_id: tribute ? tribute.code : null,
+          municipality_id: selectedCustomer.municipality_id,
+        },
       });
-
-      this.cdr.markForCheck();
     }
   }
 

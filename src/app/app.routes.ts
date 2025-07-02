@@ -12,6 +12,7 @@ import { InvoiceCreateComponent } from './page/invoice/page/invoice-create/invoi
 import { InvoiceListComponent } from './page/invoice/page/invoice-list/invoice-list.component';
 import { InvoiceDetailComponent } from './page/invoice/page/invoice-detail/invoice-detail.component';
 import { InvoiceComponent } from './page/invoice/page/invoice/invoice.component';
+import { ProductEditComponent } from './page/product/components/product-edit/product-edit.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -47,6 +48,7 @@ export const routes: Routes = [
           { path: '', redirectTo: 'list', pathMatch: 'full' },
           { path: 'list', component: ProductListComponent },
           { path: 'create', component: ProductCreateComponent },
+          { path: 'edit', component: ProductEditComponent },
         ],
       },
       {

@@ -25,6 +25,9 @@ import { StandardCode } from '../../interface/StandardCode';
 import { Tribute } from '../../interface/Tribute';
 import { DataService } from '../../service/Data.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ProductEditComponent } from '../../components/product-edit/product-edit.component';
+import { MatDialog } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product-list',
@@ -45,6 +48,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class ProductListComponent {
   private readonly productService = inject(ProductService);
   private readonly dataService = inject(DataService);
+  private readonly dialog = inject(MatDialog);
 
   readonly products = signal<Product[]>([]);
   readonly error = signal<string | null>(null);
@@ -123,18 +127,48 @@ export class ProductListComponent {
       .subscribe();
   }
 
+  openEditDialog(product: Product): void {
+    const dialogRef = this.dialog.open(ProductEditComponent, {
+      width: '600px',
+      data: { product },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadProducts();
+      }
+    });
+  }
+
   deleteProduct(id: number): void {
-    if (confirm('Are you sure you want to delete this product?')) {
-      this.productService.deleteProduct(id).subscribe({
-        next: () => {
-          this.loadProducts(); // Reload to ensure pagination consistency
-        },
-        error: (err) => {
-          this.error.set('Error al eliminar producto: ' + err.message);
-          console.error('Error deleting product:', err);
-        },
-      });
-    }
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás deshacer esta acción',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productService.deleteProduct(id).subscribe({
+          next: () => {
+            Swal.fire(
+              '¡Eliminado!',
+              'El producto ha sido eliminado.',
+              'success'
+            );
+            this.loadProducts(); // Reload to ensure pagination consistency
+          },
+          error: (err) => {
+            this.error.set('Error al eliminar producto: ' + err.message);
+            Swal.fire('¡Error!', 'No se pudo eliminar el producto.', 'error');
+            console.error('Error deleting product:', err);
+          },
+        });
+      }
+    });
   }
 
   onPageChange(event: PageEvent): void {

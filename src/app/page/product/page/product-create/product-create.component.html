@@ -143,8 +143,8 @@
       <mat-form-field appearance="outline">
         <mat-label>Excluido</mat-label>
         <mat-select id="isExcluded" formControlName="isExcluded" required>
-          <mat-option value="0">No</mat-option>
-          <mat-option value="1">Sí</mat-option>
+          <mat-option [value]="0">No</mat-option>
+          <mat-option [value]="1">Sí</mat-option>
         </mat-select>
         @if (productForm.get('isExcluded')?.touched && productForm.get('isExcluded')?.invalid) {
         <mat-error>Este campo es requerido</mat-error>

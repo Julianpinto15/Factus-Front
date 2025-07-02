@@ -1,0 +1,109 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h3>Editar Producto</h3>
+    <button class="modal-close-btn" (click)="onCancel()">×</button>
+  </div>
+
+  <mat-dialog-content class="modal-body">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="modal-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Código</mat-label>
+          <input matInput formControlName="code">
+          <mat-error *ngIf="productForm.get('code')?.touched && productForm.get('code')?.invalid">
+            El código es requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="name">
+          <mat-error *ngIf="productForm.get('name')?.touched && productForm.get('name')?.invalid">
+            El nombre es requerido
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Precio</mat-label>
+          <input matInput type="number" formControlName="price">
+          <mat-error *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid">
+            <ng-container *ngIf="productForm.get('price')?.errors?.['required']">
+              El precio es requerido
+            </ng-container>
+            <ng-container *ngIf="productForm.get('price')?.errors?.['min']">
+              El precio no puede ser negativo
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tasa de Impuesto (%)</mat-label>
+          <input matInput type="number" formControlName="taxRate">
+          <mat-error *ngIf="productForm.get('taxRate')?.touched && productForm.get('taxRate')?.invalid">
+            La tasa de impuesto es requerida
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Unidad de Medida</mat-label>
+          <mat-select formControlName="unitMeasureId">
+            <mat-option [value]="null" disabled>Seleccione una unidad</mat-option>
+            <mat-option *ngFor="let unit of unitMeasures()" [value]="unit.id">
+              {{ unit.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="productForm.get('unitMeasureId')?.touched && productForm.get('unitMeasureId')?.invalid">
+            La unidad de medida es requerida
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Código Estándar</mat-label>
+          <mat-select formControlName="standardCodeId">
+            <mat-option [value]="null" disabled>Seleccione un código</mat-option>
+            <mat-option *ngFor="let code of standardCodes()" [value]="code.id">
+              {{ code.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="productForm.get('standardCodeId')?.touched && productForm.get('standardCodeId')?.invalid">
+            El código estándar es requerido
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Tributo</mat-label>
+          <mat-select formControlName="tributeId">
+            <mat-option [value]="null" disabled>Seleccione un tributo</mat-option>
+            <mat-option *ngFor="let tribute of tributes()" [value]="tribute.id">
+              {{ tribute.name }} ({{ tribute.code }})
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="productForm.get('tributeId')?.touched && productForm.get('tributeId')?.invalid">
+            El tributo es requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Excluido</mat-label>
+          <mat-select formControlName="isExcluded">
+            <mat-option [value]="true">Sí</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="form-actions">
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!productForm.valid" (click)="onSubmit()">
+      Guardar
+    </button>
+  </mat-dialog-actions>
+</div>
