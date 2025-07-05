@@ -1,11 +1,11 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api-sandbox.factus.com.co',
-  apiUrlProduction: 'https://factus-api-production.up.railway.app/',
-  clientId: '9df3c166-5aef-4742-a4aa-4faffa4e12b7',
-  clientSecret: 'jM8MXZEVbDbbNc2qbju8HewqgipsShQmHrMirAxo',
-  email: 'sandbox@factus.com.co',
-  password: 'sandbox2024%',
+  apiUrlProduction: import.meta.env['NG_APP_API_URL_PRODUCTION'],
+  apiUrl: import.meta.env['NG_APP_API_URL'],
+  clientId: import.meta.env['NG_APP_CLIENT_ID'],
+  clientSecret: import.meta.env['NG_APP_CLIENT_SECRET'],
+  email: import.meta.env['NG_APP_EMAIL'],
+  password: import.meta.env['NG_APP_PASSWORD'],
   firebase: {
     apiKey: 'AIzaSyDQ1w5S8ZopUKID-TSF5hH6Xccita11oeU',
     authDomain: 'factus-8be09.firebaseapp.com',
