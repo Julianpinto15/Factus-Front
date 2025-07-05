@@ -16,8 +16,7 @@ import { PaginatedResponse } from '../interface/PaginatedResponse';
 export class InvoiceService {
   private readonly http = inject(HttpClient);
   private readonly authService = inject(AuthService);
-  private readonly apiUrl = environment.apiUrl; // Base URL: e.g., 'https://api-sandbox.factus.com.co'
-  private readonly apiUrlLocal = `http://localhost:8080`;
+  private readonly apiUrlLocal = environment.apiUrlProduction;
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getAccessToken();

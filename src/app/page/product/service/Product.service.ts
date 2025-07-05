@@ -12,7 +12,7 @@ import { PaginatedResponse, Product } from '../interface/Product';
 export class ProductService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = `http://localhost:8080/api/products`;
+  private apiUrl = `${environment.apiUrlProduction}/api/products`;
   private products = signal<Product[]>([]);
 
   private getHeaders(): HttpHeaders {

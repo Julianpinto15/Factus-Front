@@ -27,6 +27,7 @@ import { DataService } from '../../service/Data.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProductEditComponent } from '../../components/product-edit/product-edit.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -40,6 +41,7 @@ import Swal from 'sweetalert2';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatMenuModule,
   ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.scss',

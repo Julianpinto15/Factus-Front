@@ -11,7 +11,7 @@ import { environment } from '../../../../environments/environment';
 export class CustomerService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = `http://localhost:8080/api/customers`;
+  private apiUrl = `${environment.apiUrlProduction}/api/customers`;
   private customers = signal<Customer[]>([]);
 
   private getHeaders(): HttpHeaders {
@@ -67,6 +67,47 @@ export class CustomerService {
         catchError((error) => {
           console.error('Error fetching customer:', error);
           return throwError(() => new Error('Failed to fetch customer'));
+        })
+      );
+  }
+
+  updateCustomer(
+    identification: string,
+    customer: Customer
+  ): Observable<Customer> {
+    return this.http
+      .put<Customer>(`${this.apiUrl}/${identification}`, customer, {
+        headers: this.getHeaders(),
+      })
+      .pipe(
+        tap((updatedCustomer) => {
+          this.customers.update((customers) =>
+            customers.map((c) =>
+              c.identification === identification ? updatedCustomer : c
+            )
+          );
+        }),
+        catchError((error) => {
+          console.error('Error updating customer:', error);
+          return throwError(() => new Error('Failed to update customer'));
+        })
+      );
+  }
+
+  deleteCustomer(identification: string): Observable<void> {
+    return this.http
+      .delete<void>(`${this.apiUrl}/${identification}`, {
+        headers: this.getHeaders(),
+      })
+      .pipe(
+        tap(() => {
+          this.customers.update((customers) =>
+            customers.filter((c) => c.identification !== identification)
+          );
+        }),
+        catchError((error) => {
+          console.error('Error deleting customer:', error);
+          return throwError(() => new Error('Failed to delete customer'));
         })
       );
   }

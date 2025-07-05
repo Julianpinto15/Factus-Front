@@ -13,6 +13,7 @@ import { InvoiceListComponent } from './page/invoice/page/invoice-list/invoice-l
 import { InvoiceDetailComponent } from './page/invoice/page/invoice-detail/invoice-detail.component';
 import { InvoiceComponent } from './page/invoice/page/invoice/invoice.component';
 import { ProductEditComponent } from './page/product/components/product-edit/product-edit.component';
+import { CustomerEditComponent } from './page/customer/components/customer-edit/customer-edit.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -39,6 +40,7 @@ export const routes: Routes = [
           { path: '', redirectTo: 'list', pathMatch: 'full' },
           { path: 'list', component: CustomerListComponent },
           { path: 'create', component: CustomerCreateComponent },
+          { path: 'edit', component: CustomerEditComponent },
         ],
       },
       {

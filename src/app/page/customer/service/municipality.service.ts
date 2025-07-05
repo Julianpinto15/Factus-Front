@@ -11,7 +11,7 @@ import { environment } from '../../../../environments/environment';
 export class MunicipalityService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = `http://localhost:8080/api/municipalities`;
+  private apiUrl = `${environment.apiUrlProduction}/municipalities`;
   private municipalities = signal<Municipality[]>([]);
 
   private getHeaders(): HttpHeaders {

@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
   apiUrl: 'https://api-sandbox.factus.com.co',
+  apiUrlProduction: 'https://factus-api-production.up.railway.app/',
   clientId: '9df3c166-5aef-4742-a4aa-4faffa4e12b7',
   clientSecret: 'jM8MXZEVbDbbNc2qbju8HewqgipsShQmHrMirAxo',
   email: 'sandbox@factus.com.co',

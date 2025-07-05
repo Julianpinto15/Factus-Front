@@ -11,7 +11,7 @@ import { AuthService } from '../../../auth/service/auth.service';
 export class LegalOrganizatioService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = `http://localhost:8080/api/legal-organizations`;
+  private apiUrl = `${environment.apiUrlProduction}/api/legal-organizations`;
   private legalOrganizations = signal<LegalOrganization[]>([]);
 
   private getHeaders(): HttpHeaders {
