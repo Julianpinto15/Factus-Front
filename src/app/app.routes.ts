@@ -46,7 +46,7 @@ export const routes: Routes = [
           { path: '', redirectTo: 'list', pathMatch: 'full' },
           { path: 'list', component: CustomerListComponent },
           { path: 'create', component: CustomerCreateComponent },
-          { path: 'edit/:id', component: CustomerEditComponent }, // Agregado parámetro id
+          { path: 'edit/:id', component: CustomerEditComponent },
         ],
       },
       {
@@ -56,7 +56,7 @@ export const routes: Routes = [
           { path: '', redirectTo: 'list', pathMatch: 'full' },
           { path: 'list', component: ProductListComponent },
           { path: 'create', component: ProductCreateComponent },
-          { path: 'edit/:id', component: ProductEditComponent }, // Agregado parámetro id
+          { path: 'edit/:id', component: ProductEditComponent },
         ],
       },
       {
@@ -72,7 +72,6 @@ export const routes: Routes = [
           },
         ],
       },
-      // Removido esta línea problemática: { path: '**', redirectTo: 'dashboard' },
     ],
   },
 
