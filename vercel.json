@@ -11,14 +11,23 @@
   ],
   "routes": [
     {
-      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|svg|gif|woff|woff2|ttf|eot|map|json))",
+      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|svg|gif|woff|woff2|ttf|eot|map|json|txt))",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
       }
     },
     {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "src/main.ts": {
+      "includeFiles": "dist/factus-front/**"
+    }
+  }
 }
