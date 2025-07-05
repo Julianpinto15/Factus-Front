@@ -16,7 +16,13 @@ import { ProductEditComponent } from './page/product/components/product-edit/pro
 import { CustomerEditComponent } from './page/customer/components/customer-edit/customer-edit.component';
 
 export const routes: Routes = [
+  // Ruta raíz redirige a dashboard
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+
+  // Ruta de login
   { path: 'login', component: LoginComponent },
+
+  // Rutas del dashboard
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -40,7 +46,7 @@ export const routes: Routes = [
           { path: '', redirectTo: 'list', pathMatch: 'full' },
           { path: 'list', component: CustomerListComponent },
           { path: 'create', component: CustomerCreateComponent },
-          { path: 'edit', component: CustomerEditComponent },
+          { path: 'edit/:id', component: CustomerEditComponent }, // Agregado parámetro id
         ],
       },
       {
@@ -50,7 +56,7 @@ export const routes: Routes = [
           { path: '', redirectTo: 'list', pathMatch: 'full' },
           { path: 'list', component: ProductListComponent },
           { path: 'create', component: ProductCreateComponent },
-          { path: 'edit', component: ProductEditComponent },
+          { path: 'edit/:id', component: ProductEditComponent }, // Agregado parámetro id
         ],
       },
       {
@@ -66,9 +72,10 @@ export const routes: Routes = [
           },
         ],
       },
-      { path: '**', redirectTo: 'dashboard' },
+      // Removido esta línea problemática: { path: '**', redirectTo: 'dashboard' },
     ],
   },
 
-  { path: '**', redirectTo: 'login' },
+  // Ruta wildcard al final
+  { path: '**', redirectTo: '/login' },
 ];
