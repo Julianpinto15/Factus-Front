@@ -17,17 +17,8 @@
       }
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "functions": {
-    "src/main.ts": {
-      "includeFiles": "dist/factus-front/**"
-    }
-  }
+  ]
 }
