@@ -16,7 +16,7 @@ import { ProductEditComponent } from './page/product/components/product-edit/pro
 import { CustomerEditComponent } from './page/customer/components/customer-edit/customer-edit.component';
 
 export const routes: Routes = [
-  // Ruta raíz redirige a dashboard
+  // Ruta raíz redirige
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
 
   // Ruta de login
