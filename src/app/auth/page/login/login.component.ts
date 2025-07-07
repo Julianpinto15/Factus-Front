@@ -23,7 +23,7 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [CommonModule, LoginInicioComponent, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {

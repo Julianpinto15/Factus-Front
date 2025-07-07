@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
   selector: 'login-registration',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login-registration.component.html',
-  styleUrl: './login-registration.component.css',
+  styleUrl: './login-registration.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginRegistrationComponent {

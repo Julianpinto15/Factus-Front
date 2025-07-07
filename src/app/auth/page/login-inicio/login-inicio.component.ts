@@ -17,7 +17,7 @@ import {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, SweetAlert2Module],
   templateUrl: './login-inicio.component.html',
-  styleUrls: ['./login-inicio.component.css'],
+  styleUrls: ['./login-inicio.component.scss'],
 })
 export class LoginInicioComponent {
   loginForm: FormGroup;
