@@ -74,7 +74,5 @@ export const routes: Routes = [
       },
     ],
   },
-
-  // Ruta wildcard al final
   { path: '**', redirectTo: '/login' },
 ];
