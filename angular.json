@@ -16,6 +16,8 @@
             "outputPath": "dist/factus-front",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "baseHref": "/",
+            "deployUrl": "/",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
