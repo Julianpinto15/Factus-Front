@@ -15,15 +15,12 @@
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
       }
-    },
+    }
+  ],
+  "rewrites": [
     {
-      "cleanUrls": true,
-      "rewrites": [
-        {
-          "source": "/(.*)",
-          "destination": "/index.html"
-        }
-      ]
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
