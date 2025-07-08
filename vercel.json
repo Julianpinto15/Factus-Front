@@ -9,9 +9,11 @@
       }
     }
   ],
+  "cleanUrls": true,
+  "trailingSlash": false,
   "headers": [
     {
-      "source": "/(.*\\.(js|css|ico|png|jpg|jpeg|svg|gif|woff|woff2|ttf|eot|map|json|txt))",
+      "source": "/:file.:ext",
       "headers": [
         {
           "key": "Cache-Control",
