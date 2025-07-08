@@ -14,24 +14,19 @@ import { InvoiceDetailComponent } from './page/invoice/page/invoice-detail/invoi
 import { InvoiceComponent } from './page/invoice/page/invoice/invoice.component';
 import { ProductEditComponent } from './page/product/components/product-edit/product-edit.component';
 import { CustomerEditComponent } from './page/customer/components/customer-edit/customer-edit.component';
+import { authGuard } from './auth/security/auth.guard';
+import { guestGuard } from './auth/security/guest.guard';
 
 export const routes: Routes = [
-  // Ruta raíz redirige
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
 
-  // Ruta de login
-  { path: 'login', component: LoginComponent },
-
-  // Rutas del dashboard
+  { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   {
     path: 'dashboard',
     component: DashboardComponent,
+    canActivate: [authGuard],
     children: [
-      {
-        path: '',
-        redirectTo: 'home',
-        pathMatch: 'full',
-      },
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
       {
         path: 'home',
         loadComponent: () =>
@@ -74,5 +69,6 @@ export const routes: Routes = [
       },
     ],
   },
+
   { path: '**', redirectTo: '/login' },
 ];
