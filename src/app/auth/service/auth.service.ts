@@ -17,6 +17,15 @@ export class AuthService {
   private http = inject(HttpClient);
   private auth = inject(Auth); // Inyectar Auth de Firebase
 
+  // Configuración común de headers
+  private getCommonHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: `Bearer ${this.getAccessToken()}`,
+    });
+  }
+
   login(credentials: {
     username: string;
     password: string;
@@ -34,6 +43,7 @@ export class AuthService {
     return this.http
       .post<AuthResponse>(`${this.apiUrl}/oauth/token`, body.toString(), {
         headers,
+        withCredentials: true, // Importante para CORS con credenciales
       })
       .pipe(
         tap((response) => {
@@ -53,18 +63,16 @@ export class AuthService {
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
 
-      const headers = new HttpHeaders({
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      });
-
       const body = {
         email: user.email,
         idToken: await user.getIdToken(),
       };
 
       return this.http
-        .post<AuthResponse>(`${this.apiUrl}/auth/google`, body, { headers })
+        .post<AuthResponse>(`${this.apiUrl}/auth/google`, body, {
+          headers: this.getCommonHeaders(),
+          withCredentials: true,
+        })
         .pipe(
           tap((response) => {
             this.setTokens(response);
@@ -73,7 +81,7 @@ export class AuthService {
           catchError((error) => {
             console.error('Error en login con Google:', error);
             return throwError(
-              () => new Error('Error al iniciar sesión con Google')
+              () => new Error(error.error?.message || 'Error con Google')
             );
           })
         )
@@ -86,25 +94,21 @@ export class AuthService {
 
   register(data: RegisterRequest): Observable<any> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
       Accept: 'application/json',
     });
 
-    const body = new URLSearchParams();
-    body.set('username', data.username);
-    body.set('email', data.email);
-    body.set('password', data.password);
-
-    // El backend registrará el email localmente y usará las credenciales por defecto de Factus
     return this.http
-      .post(`${this.apiUrl}/register`, body.toString(), { headers })
+      .post(`${this.apiUrl}/register`, data, {
+        headers,
+        withCredentials: true,
+      })
       .pipe(
-        tap(() => {
-          // No autenticamos inmediatamente; el backend manejará el token
-        }),
         catchError((error) => {
           console.error('Error en registro:', error);
-          return throwError(() => new Error('Error en el registro'));
+          return throwError(
+            () => new Error(error.error?.message || 'Error en registro')
+          );
         })
       );
   }
