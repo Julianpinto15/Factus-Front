@@ -11,28 +11,11 @@ import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = environment.apiUrlProduction;
+  private apiUrl = environment.apiUrlProduction; // e.g., 'http://localhost:8080'
   isAuthenticated = signal(false);
 
   private http = inject(HttpClient);
-  private auth = inject(Auth);
-
-  // Configuración común de headers CON token
-  private getCommonHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${this.getAccessToken()}`,
-    });
-  }
-
-  // Configuración común de headers SIN token
-  private getBaseHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    });
-  }
+  private auth = inject(Auth); // Inyectar Auth de Firebase
 
   login(credentials: {
     username: string;
@@ -43,7 +26,9 @@ export class AuthService {
       Accept: 'application/json',
     });
 
+    // Usar las credenciales por defecto de environment para Factus
     const body = new URLSearchParams();
+    body.set('grant_type', 'password');
     body.set('username', credentials.username);
     body.set('password', credentials.password);
 
@@ -69,16 +54,18 @@ export class AuthService {
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
 
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      });
+
       const body = {
         email: user.email,
         idToken: await user.getIdToken(),
       };
 
-      // No enviar Authorization header cuando pedimos el token por primera vez
       return this.http
-        .post<AuthResponse>(`${this.apiUrl}/auth/google`, body, {
-          headers: this.getBaseHeaders(),
-        })
+        .post<AuthResponse>(`${this.apiUrl}/auth/google`, body, { headers })
         .pipe(
           tap((response) => {
             this.setTokens(response);
@@ -87,7 +74,7 @@ export class AuthService {
           catchError((error) => {
             console.error('Error en login con Google:', error);
             return throwError(
-              () => new Error(error.error?.message || 'Error con Google')
+              () => new Error('Error al iniciar sesión con Google')
             );
           })
         )
@@ -99,17 +86,26 @@ export class AuthService {
   }
 
   register(data: RegisterRequest): Observable<any> {
-    // También usar getBaseHeaders() aquí porque no necesita token
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+    });
+
+    const body = new URLSearchParams();
+    body.set('username', data.username);
+    body.set('email', data.email);
+    body.set('password', data.password);
+
+    // El backend registrará el email localmente y usará las credenciales por defecto de Factus
     return this.http
-      .post(`${this.apiUrl}/register`, data, {
-        headers: this.getCommonHeaders(),
-      })
+      .post(`${this.apiUrl}/register`, body.toString(), { headers })
       .pipe(
+        tap(() => {
+          // No autenticamos inmediatamente; el backend manejará el token
+        }),
         catchError((error) => {
           console.error('Error en registro:', error);
-          return throwError(
-            () => new Error(error.error?.message || 'Error en registro')
-          );
+          return throwError(() => new Error('Error en el registro'));
         })
       );
   }
