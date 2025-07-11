@@ -17,12 +17,20 @@ export class AuthService {
   private http = inject(HttpClient);
   private auth = inject(Auth); // Inyectar Auth de Firebase
 
-  // Configuración común de headers
+  // Configuración común de headers CON token
   private getCommonHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${this.getAccessToken()}`,
+    });
+  }
+
+  // Configuración común de headers SIN token
+  private getBaseHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     });
   }
 
@@ -35,7 +43,6 @@ export class AuthService {
       Accept: 'application/json',
     });
 
-    // Usar las credenciales por defecto de environment para Factus
     const body = new URLSearchParams();
     body.set('username', credentials.username);
     body.set('password', credentials.password);
@@ -67,9 +74,10 @@ export class AuthService {
         idToken: await user.getIdToken(),
       };
 
+      // No enviar Authorization header cuando pedimos el token por primera vez
       return this.http
         .post<AuthResponse>(`${this.apiUrl}/auth/google`, body, {
-          headers: this.getCommonHeaders(),
+          headers: this.getBaseHeaders(),
         })
         .pipe(
           tap((response) => {
@@ -91,14 +99,10 @@ export class AuthService {
   }
 
   register(data: RegisterRequest): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    });
-
+    // También usar getBaseHeaders() aquí porque no necesita token
     return this.http
       .post(`${this.apiUrl}/register`, data, {
-        headers,
+        headers: this.getCommonHeaders(),
       })
       .pipe(
         catchError((error) => {
