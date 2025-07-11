@@ -3,6 +3,8 @@ export const environment = {
   apiUrlProduction: 'https://factus-api-production.up.railway.app',
   email: 'sandbox@factus.com.co',
   password: 'sandbox2024%',
+  clientId: '9df3c166-5aef-4742-a4aa-4faffa4e12b7',
+  clientSecret: 'jM8MXZEVbDbbNc2qbju8HewqgipsShQmHrMirAxo',
   firebase: {
     apiKey: 'AIzaSyDQ1w5S8ZopUKID-TSF5hH6Xccita11oeU',
     authDomain: 'factus-8be09.firebaseapp.com',

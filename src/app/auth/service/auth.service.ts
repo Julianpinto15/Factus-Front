@@ -29,8 +29,10 @@ export class AuthService {
     // Usar las credenciales por defecto de environment para Factus
     const body = new URLSearchParams();
     body.set('grant_type', 'password');
-    body.set('username', credentials.username);
-    body.set('password', credentials.password);
+    body.set('client_id', environment.clientId);
+    body.set('client_secret', environment.clientSecret);
+    body.set('username', environment.email || ''); // Usar email por defecto de Factus
+    body.set('password', environment.password || ''); // Usar password por defecto de Factus
 
     return this.http
       .post<AuthResponse>(`${this.apiUrl}/oauth/token`, body.toString(), {
