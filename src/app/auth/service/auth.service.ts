@@ -43,7 +43,6 @@ export class AuthService {
     return this.http
       .post<AuthResponse>(`${this.apiUrl}/oauth/token`, body.toString(), {
         headers,
-        withCredentials: true, // Importante para CORS con credenciales
       })
       .pipe(
         tap((response) => {
@@ -71,7 +70,6 @@ export class AuthService {
       return this.http
         .post<AuthResponse>(`${this.apiUrl}/auth/google`, body, {
           headers: this.getCommonHeaders(),
-          withCredentials: true,
         })
         .pipe(
           tap((response) => {
@@ -101,7 +99,6 @@ export class AuthService {
     return this.http
       .post(`${this.apiUrl}/register`, data, {
         headers,
-        withCredentials: true,
       })
       .pipe(
         catchError((error) => {
