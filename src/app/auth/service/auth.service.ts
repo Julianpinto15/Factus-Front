@@ -11,11 +11,11 @@ import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = environment.apiUrlProduction; // e.g., 'http://localhost:8080'
+  private apiUrl = environment.apiUrlProduction;
   isAuthenticated = signal(false);
 
   private http = inject(HttpClient);
-  private auth = inject(Auth); // Inyectar Auth de Firebase
+  private auth = inject(Auth);
 
   // Configuración común de headers CON token
   private getCommonHeaders(): HttpHeaders {
