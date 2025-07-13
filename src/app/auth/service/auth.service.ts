@@ -148,9 +148,11 @@ export class AuthService {
       console.error('Error al cerrar sesión en Firebase:', error);
     } finally {
       // Limpiar tokens locales y actualizar estado
-      this.clearTokens();
-      this.isAuthenticated.set(false);
-      this.profilePhotoUrl.set(null);
+      this.clearAuthState();
+
+      // Redirigir al login
+      window.location.href = '/login';
+
       console.log('Sesión cerrada exitosamente');
     }
   }
@@ -192,10 +194,32 @@ export class AuthService {
   }
 
   isTokenExpired(): boolean {
-    const expiresIn = localStorage.getItem('expires_in');
-    if (!expiresIn) return true;
-    const expirationTime = parseInt(expiresIn, 10) * 1000 + Date.now();
-    return Date.now() >= expirationTime;
+    try {
+      const expiresIn = localStorage.getItem('expires_in');
+      const tokenObtainedAt = localStorage.getItem('token_obtained_at');
+
+      if (!expiresIn || !tokenObtainedAt) {
+        return true;
+      }
+
+      const expirationTime =
+        parseInt(tokenObtainedAt, 10) + parseInt(expiresIn, 10) * 1000;
+      const now = Date.now();
+
+      // Agregar un margen de 5 minutos para evitar problemas de sincronización
+      const bufferTime = 5 * 60 * 1000; // 5 minutos en milisegundos
+
+      return now >= expirationTime - bufferTime;
+    } catch (error) {
+      console.error('Error al verificar expiración del token:', error);
+      return true;
+    }
+  }
+
+  private clearAuthState(): void {
+    this.clearTokens();
+    this.isAuthenticated.set(false);
+    this.profilePhotoUrl.set(null);
   }
 
   getProfilePhotoUrl(): string | null {
