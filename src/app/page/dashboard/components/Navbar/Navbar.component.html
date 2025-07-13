@@ -30,13 +30,13 @@
     </ul>
   </div>
   <a class="profile" (click)="dashboardService.toggleProfileMenu()">
-    <img src="https://placehold.co/600x400/png" alt="Profile" />
+    <img [src]="profilePhotoUrl() || 'https://placehold.co/600x400/png'" alt="Profile" />
   </a>
   <div class="profile-menu" [ngClass]="{ show: dashboardService.isProfileMenuShown() }">
     <ul>
       <li><a href="#">My Profile</a></li>
       <li><a href="#">Settings</a></li>
-      <li><a href="#">Log Out</a></li>
+      <li><a href="#" (click)="onLogout()">Log Out</a></li>
     </ul>
   </div>
 </nav>

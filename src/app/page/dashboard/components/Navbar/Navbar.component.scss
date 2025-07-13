@@ -13,22 +13,6 @@ nav {
   z-index: 1000;
 }
 
-/* nav::before {
-  content: "";
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  bottom: -40px;
-  left: 0;
-  border-radius: 50%;
-  box-shadow: -20px -20px 0 var(--light);
-}
-
-.sidebar-hidden {
-  width: calc(100% - 60px);
-  left: 60px;
-} */
-
 nav a {
   color: var(--dark);
 }
@@ -256,5 +240,3 @@ nav .checkbox:checked + .swith-lm .ball {
   color: var(--orange);
   animation: shakeOn 0.7s;
 }
-
-/* NAVBAR */
