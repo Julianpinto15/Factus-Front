@@ -38,7 +38,7 @@
       <a (click)="navigate(menu.id)">
         <i class="bx {{ menu.icon }} bx-sm" [ngClass]="menu.class === 'logout' ? 'bx-burst-hover' : 'bx-spin-hover'"
           (click)="onLogout()"></i>
-        <span class="text">{{ menu.text }}</span>
+        <span class="text" (click)="onLogout()">{{ menu.text }}</span>
       </a>
     </li>
   </ul>

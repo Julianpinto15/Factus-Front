@@ -24,15 +24,30 @@ export class AuthService {
   }
 
   private checkAuthState(): void {
-    const token = this.getAccessToken();
-    const photoUrl = localStorage.getItem('profile_photo_url');
-    if (token && !this.isTokenExpired()) {
-      this.isAuthenticated.set(true);
-      this.profilePhotoUrl.set(photoUrl);
-    } else {
-      this.clearTokens();
-      this.isAuthenticated.set(false);
-      this.profilePhotoUrl.set(null);
+    try {
+      const token = this.getAccessToken();
+      const photoUrl = localStorage.getItem('profile_photo_url');
+
+      if (token && !this.isTokenExpired()) {
+        this.isAuthenticated.set(true);
+        this.profilePhotoUrl.set(photoUrl);
+      } else {
+        // Token expirado o no existe
+        this.clearAuthState();
+
+        // Solo redirigir si no estamos ya en la página de login
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
+      }
+    } catch (error) {
+      console.error('Error al verificar estado de autenticación:', error);
+      this.clearAuthState();
+
+      // Redirigir a login en caso de error
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
   }
 
