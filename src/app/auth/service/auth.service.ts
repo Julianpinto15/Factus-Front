@@ -166,7 +166,7 @@ export class AuthService {
       this.clearAuthState();
 
       // Redirigir al login
-      window.location.href = '/';
+      window.location.href = '/login';
 
       console.log('Sesión cerrada exitosamente');
     }
