@@ -20,7 +20,6 @@ export class AuthService {
   private auth = inject(Auth);
 
   constructor() {
-    // Verificar si hay un token válido al inicializar el servicio
     this.checkAuthState();
   }
 
@@ -51,8 +50,8 @@ export class AuthService {
     body.set('grant_type', 'password');
     body.set('client_id', environment.clientId);
     body.set('client_secret', environment.clientSecret);
-    body.set('username', environment.email || ''); // Usar email por defecto de Factus
-    body.set('password', environment.password || ''); // Usar password por defecto de Factus
+    body.set('username', environment.email || '');
+    body.set('password', environment.password || '');
 
     return this.http
       .post<AuthResponse>(`${this.apiUrl}/oauth/token`, body.toString(), {
