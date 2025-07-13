@@ -14,8 +14,8 @@ import { InvoiceDetailComponent } from './page/invoice/page/invoice-detail/invoi
 import { InvoiceComponent } from './page/invoice/page/invoice/invoice.component';
 import { ProductEditComponent } from './page/product/components/product-edit/product-edit.component';
 import { CustomerEditComponent } from './page/customer/components/customer-edit/customer-edit.component';
-import { authGuard } from './auth/security/auth.guard';
-import { guestGuard } from './auth/security/guest.guard';
+import { authGuard } from './security/auth.guard';
+import { guestGuard } from './security/guest.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
