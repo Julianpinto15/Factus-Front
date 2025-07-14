@@ -66,6 +66,9 @@ export class InvoiceCreateComponent {
   private cdr = inject(ChangeDetectorRef);
   private dialog = inject(MatDialog);
 
+  readonly showJSON = signal(false); // Signal to toggle JSON preview visibility
+  readonly factusJSON = signal<any>({}); // Signal to hold JSON data
+
   customers = signal<Customer[]>([]);
   products = signal<Product[]>([]);
   tributes = signal<Tribute[]>([]);
@@ -81,6 +84,67 @@ export class InvoiceCreateComponent {
     'actions',
   ];
   dataSource = new MatTableDataSource<FormGroup>([]); // Use MatTableDataSource
+
+  showFactusJSON(): void {
+    const raw = this.invoiceForm.getRawValue();
+    const invoice: Invoice = {
+      document: '01',
+      numbering_range_id: Number(raw.numbering_range_id),
+      reference_code: String(raw.reference_code),
+      observation: raw.observation || '',
+      payment_form: String(raw.payment_form),
+      payment_due_date: String(raw.payment_due_date),
+      payment_method_code: String(raw.payment_method_code),
+      billing_period: {
+        start_date: String(raw.billing_period.start_date),
+        start_time: String(raw.billing_period.start_time),
+        end_date: String(raw.billing_period.end_date),
+        end_time: String(raw.billing_period.end_time),
+      },
+      customer: {
+        identification: String(raw.customer.identification),
+        identification_document_id: Number(
+          raw.customer.identification_document_id
+        ),
+        dv: String(raw.customer.dv),
+        graphic_representation_name:
+          raw.customer.graphic_representation_name || '',
+        company: raw.customer.company || '',
+        trade_name: raw.customer.trade_name || '',
+        names: raw.customer.names || '',
+        address: raw.customer.address || '',
+        email: raw.customer.email || '',
+        phone: raw.customer.phone || '',
+        legal_organization_id: String(raw.customer.legal_organization_id),
+        tribute_id: String(raw.customer.tribute_id),
+        municipality_id:
+          raw.customer.municipality_id === null
+            ? null
+            : String(raw.customer.municipality_id),
+      },
+      items: raw.items.map((item: any) => ({
+        code_reference: String(item.code_reference),
+        name: String(item.name),
+        quantity: Number(item.quantity),
+        discount_rate: Number(item.discount_rate),
+        price: Number(item.price),
+        tax_rate: String(item.tax_rate),
+        unit_measure_id: Number(item.unit_measure_id),
+        standard_code_id: Number(item.standard_code_id),
+        is_excluded: item.tribute_id === '01' ? Number(item.is_excluded) : 0,
+        tribute_id: String(item.tribute_id),
+        withholding_taxes: item.withholding_taxes.map((tax: any) => ({
+          code: String(tax.code),
+          withholding_tax_rate: String(tax.withholding_tax_rate),
+        })),
+      })),
+      createdAt: new Date().toISOString(),
+      status: 'PENDIENTE',
+    };
+    this.factusJSON.set(invoice);
+    this.showJSON.set(!this.showJSON());
+    this.cdr.markForCheck();
+  }
 
   invoiceForm = this.fb.group({
     document: ['01', Validators.required],
