@@ -280,4 +280,19 @@
   </div>
   }
 
+  <div class="debug">
+    <p>Form Valid: {{ invoiceForm.valid }}</p>
+    <p>Form Errors: {{ invoiceForm.errors | json }}</p>
+    <p>Customer Valid: {{ invoiceForm.get('customer')?.valid }}</p>
+    <p>Customer Errors: {{ invoiceForm.get('customer')?.errors | json }}</p>
+    <p>Items Valid: {{ invoiceForm.get('items')?.valid }}</p>
+    <p>Items Errors: {{ invoiceForm.get('items')?.errors | json }}</p>
+    <p>Items Length: {{ items.length }}</p>
+    @for (item of items.controls; track item; let i = $index) {
+    <p>Item {{ i }} Valid: {{ item.valid }}</p>
+    <p>Item {{ i }} Errors: {{ item.errors | json }}</p>
+    <p>Item {{ i }} is_excluded: {{ item.get('is_excluded')?.value }}</p>
+    }
+  </div>
+
 </div>

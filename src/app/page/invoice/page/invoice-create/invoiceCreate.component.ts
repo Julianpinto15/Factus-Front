@@ -405,7 +405,7 @@ export class InvoiceCreateComponent {
           identification: selectedCustomer.identification,
           identification_document_id:
             selectedCustomer.identification_document_id,
-          dv: selectedCustomer.dv,
+          dv: selectedCustomer.dv || '',
           names: selectedCustomer.names || selectedCustomer.company,
           address: selectedCustomer.address,
           email: selectedCustomer.email,
@@ -607,5 +607,45 @@ export class InvoiceCreateComponent {
         this.router.navigate(['/dashboard/invoice']);
       }
     });
+  }
+
+  ngAfterViewInit() {
+    console.log('Form valid:', this.invoiceForm.valid);
+    console.log('Form errors:', this.invoiceForm.errors);
+    console.log('Form value:', this.invoiceForm.getRawValue());
+    Object.keys(this.invoiceForm.controls).forEach((key) => {
+      const control = this.invoiceForm.get(key);
+      if (control?.invalid) {
+        console.log(`Control ${key} is invalid:`, control.errors);
+        if (key === 'items') {
+          (control as FormArray).controls.forEach((item, index) => {
+            if (item.invalid) {
+              console.log(`Item ${index} errors:`, item.errors);
+              Object.keys((item as FormGroup).controls).forEach((field) => {
+                const fieldControl = (item as FormGroup).get(field);
+                if (fieldControl?.invalid) {
+                  console.log(
+                    `Item ${index} field ${field} errors:`,
+                    fieldControl.errors
+                  );
+                }
+              });
+            }
+          });
+        } else if (key === 'customer' || key === 'billing_period') {
+          Object.keys((control as FormGroup).controls).forEach((field) => {
+            const fieldControl = (control as FormGroup).get(field);
+            if (fieldControl?.invalid) {
+              console.log(
+                `Control ${key}.${field} is invalid:`,
+                fieldControl.errors
+              );
+            }
+          });
+        }
+      }
+    });
+    console.log('Tribute valid:', this.isTributeValid());
+    this.cdr.markForCheck();
   }
 }
