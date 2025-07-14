@@ -319,7 +319,7 @@ export class InvoiceCreateComponent {
       tax_rate: [productData.tax_rate, Validators.required],
       unit_measure_id: [productData.unit_measure_id, Validators.required],
       standard_code_id: [productData.standard_code_id, Validators.required],
-      is_excluded: [productData.is_excluded, Validators.required],
+      is_excluded: [productData.is_excluded ?? 0, Validators.required],
       tribute_id: [productData.tribute_id, Validators.required],
       withholding_taxes: this.fb.array([]),
     });

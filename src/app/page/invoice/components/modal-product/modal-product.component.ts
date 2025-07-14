@@ -97,9 +97,10 @@ export class ModalProductComponent implements OnInit {
           unit_measure_id: selectedProduct.unitMeasureId,
           standard_code_id: selectedProduct.standardCodeId,
           is_excluded:
-            formValue.tribute_id === '01' ? selectedProduct.isExcluded : 0,
+            formValue.tribute_id === '01' ? selectedProduct.isExcluded ?? 0 : 0, // Valor por defecto 0
           tribute_id: formValue.tribute_id,
         };
+        console.log('Product data returned from modal:', productData);
         this.dialogRef.close(productData); // Close dialog and pass data
       }
     }
