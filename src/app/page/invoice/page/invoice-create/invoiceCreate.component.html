@@ -159,7 +159,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Nombres</mat-label>
           <input matInput id="names" formControlName="names" required>
-          @if (invoiceForm.get('customer.names')?.touched && invoiceForm.get('customer.names')?.invalid) {
+          @if (invoiceForm.get('customer.names')?.touched && invoiceForm.get('customer.company')?.invalid) {
           <mat-error>Los nombres son requeridos</mat-error>
           }
         </mat-form-field>

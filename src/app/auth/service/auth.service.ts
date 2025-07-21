@@ -1,11 +1,12 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { environment } from '../../../environments/environment';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, lastValueFrom, Observable, tap, throwError } from 'rxjs';
 import { AuthResponse } from '../interface/AuthResponse';
 import { RegisterRequest } from '../interface/RegisterRequest';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { signOut } from 'firebase/auth';
+import { environment } from '../../../environments/environment';
 // Importaciones faltantes
 
 @Injectable({

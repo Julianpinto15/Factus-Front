@@ -234,7 +234,7 @@ export class ProductCreateComponent {
         unitMeasureId: Number(formValue.unitMeasureId),
         standardCodeId: Number(formValue.standardCodeId),
         tributeId: Number(formValue.tributeId),
-        isExcluded: formValue.isExcluded ? 1 : 0,
+        isExcluded: Number(formValue.isExcluded),
         active: true,
       };
 

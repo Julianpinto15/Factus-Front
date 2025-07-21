@@ -1,13 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Inject,
-  inject,
-  Input,
   OnInit,
-  Output,
-  signal,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -87,6 +82,13 @@ export class ModalProductComponent implements OnInit {
       );
       if (selectedProduct) {
         const formValue = this.productForm.value;
+
+        const isExcluded = Number(
+          formValue.tribute_id === '01' && selectedProduct.isExcluded != null
+            ? selectedProduct.isExcluded
+            : 0
+        );
+
         const productData = {
           code_reference: selectedProduct.code,
           name: selectedProduct.name,
@@ -96,8 +98,7 @@ export class ModalProductComponent implements OnInit {
           tax_rate: formValue.tax_rate,
           unit_measure_id: selectedProduct.unitMeasureId,
           standard_code_id: selectedProduct.standardCodeId,
-          is_excluded:
-            formValue.tribute_id === '01' ? selectedProduct.isExcluded ?? 0 : 0, // Valor por defecto 0
+          is_excluded: isExcluded,
           tribute_id: formValue.tribute_id,
         };
         console.log('Product data returned from modal:', productData);
