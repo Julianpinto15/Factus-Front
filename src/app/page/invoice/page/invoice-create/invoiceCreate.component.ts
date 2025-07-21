@@ -240,6 +240,8 @@ export class InvoiceCreateComponent {
   }
 
   addItem(productData: any): void {
+    console.log('Datos del producto seleccionado:', productData);
+
     const itemForm = this.fb.group({
       code_reference: [productData.code_reference, Validators.required],
       name: [productData.name, Validators.required],
@@ -255,7 +257,7 @@ export class InvoiceCreateComponent {
       tax_rate: [productData.tax_rate, Validators.required],
       unit_measure_id: [productData.unit_measure_id, Validators.required],
       standard_code_id: [productData.standard_code_id, Validators.required],
-      is_excluded: [productData.is_excluded, Validators.required],
+      is_excluded: [productData.is_excluded ?? 0, Validators.required],
       tribute_id: [productData.tribute_id, Validators.required],
       withholding_taxes: this.fb.array([]),
     });
@@ -342,6 +344,10 @@ export class InvoiceCreateComponent {
           identification_document_id:
             selectedCustomer.identification_document_id,
           dv: selectedCustomer.dv,
+          graphic_representation_name:
+            selectedCustomer.graphic_representation_name || '',
+          company: selectedCustomer.company || '',
+          trade_name: selectedCustomer.trade_name || '',
           names: selectedCustomer.names || selectedCustomer.company,
           address: selectedCustomer.address,
           email: selectedCustomer.email,
@@ -540,7 +546,7 @@ export class InvoiceCreateComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/dashboard/invoice']);
+        this.router.navigate(['dashboard/invoice/list']);
       }
     });
   }
