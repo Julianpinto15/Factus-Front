@@ -36,26 +36,6 @@
   margin-top: 1rem;
 }
 
-.json-preview {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: var(--light);
-  border: 1px solid var(--gray);
-  border-radius: 4px;
-}
-
-.json-preview h3 {
-  color: var(--dark);
-  font-family: var(--poppins);
-  margin-bottom: 1rem;
-}
-
-.json-preview pre {
-  font-size: 0.9rem;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
 button[mat-raised-button] {
   padding: 0.5rem 2rem;
   font-family: var(--poppins);

@@ -140,16 +140,25 @@ export class AuthService {
     body.set('email', data.email);
     body.set('password', data.password);
 
-    // El backend registrará el email localmente y usará las credenciales por defecto de Factus
     return this.http
       .post(`${this.apiUrl}/register`, body.toString(), { headers })
       .pipe(
         tap(() => {
-          // No autenticamos inmediatamente; el backend manejará el token
+          // Registro exitoso
         }),
         catchError((error) => {
           console.error('Error en registro:', error);
-          return throwError(() => new Error('Error en el registro'));
+          let errorMessage = 'Error en el registro';
+
+          if (
+            error?.error &&
+            typeof error.error === 'string' &&
+            error.error.includes('ya existe')
+          ) {
+            errorMessage = 'El usuario ya está registrado';
+          }
+
+          return throwError(() => new Error(errorMessage));
         })
       );
   }
