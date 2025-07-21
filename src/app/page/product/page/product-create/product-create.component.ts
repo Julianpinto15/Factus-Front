@@ -297,23 +297,4 @@ export class ProductCreateComponent {
       }
     });
   }
-
-  showFactusJSON(): void {
-    const formValue = this.productForm.value;
-    const json = {
-      code_reference: formValue.code,
-      name: formValue.name,
-      quantity: formValue.quantity || 1,
-      discount_rate: formValue.discountRate || 0,
-      price: formValue.price,
-      tax_rate: formValue.taxRate,
-      unit_measure_id: Number(formValue.unitMeasureId),
-      standard_code_id: Number(formValue.standardCodeId),
-      is_excluded: Number(formValue.isExcluded),
-      tribute_id: Number(formValue.tributeId),
-      withholding_taxes: [],
-    };
-    this.factusJSON.set(json);
-    this.showJSON.set(!this.showJSON());
-  }
 }

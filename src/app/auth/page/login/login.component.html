@@ -43,19 +43,97 @@
 
     <div class="toggle-box">
 
-      <!-- Boton de registrar -->
+      <!-- Panel de Registro Mejorado -->
       <div class="toggle-panel toggle-left">
-        <h1>Hello, Welcome!</h1>
-        <p>Don't have an account?</p>
-        <button class="btn register-btn" (click)="onRegisterClick()">Register</button>
+        <!-- Logo de Factus -->
+        <div class="panel-logo">
+          <img src="assets/factus-logo-dark.png" alt="Factus Logo" class="logo-white">
+        </div>
+
+        <!-- Título principal -->
+        <h1>¡Únete a Factus!</h1>
+
+        <!-- Subtítulo descriptivo -->
+        <div class="panel-subtitle">
+          <p>Accede a consultar y crear facturas</p>
+        </div>
+
+        <!-- Características principales -->
+        <div class="features-list">
+          <div class="feature-item">
+            <i class="bx bx-rocket"></i>
+            <span>APIs potentes y documentación completa</span>
+          </div>
+          <div class="feature-item">
+            <i class="bx bxs-dashboard"></i>
+            <span>Panel de control intuitivo</span>
+          </div>
+          <div class="feature-item">
+            <i class="bx bxs-help-circle"></i>
+            <span>Soporte técnico 24/7</span>
+          </div>
+        </div>
+
+        <!-- Texto de llamada a la acción -->
+        <p class="cta-text">¿No tienes una cuenta?<br>Regístrate ahora y comienza a desarrollar</p>
+
+        <!-- Botón de registro -->
+        <button class="btn register-btn" (click)="onRegisterClick()">
+          <i class="bx bxs-user-plus"></i>
+          Crear Cuenta
+        </button>
+
+        <!-- Información adicional -->
+        <div class="panel-footer">
+          <p class="footer-text">Registro gratuito • Sin tarjeta de crédito</p>
+        </div>
       </div>
 
 
-      <!-- Boton de login -->
+      <!--------- Panel de Login Mejorado ---------->
       <div class="toggle-panel toggle-right">
-        <h1>Welcome Back!</h1>
-        <p>Already have an account?</p>
-        <button class="btn login-btn" (click)="onLoginClick()">Login</button>
+        <!-- Logo de Factus -->
+        <div class="panel-logo">
+          <img src="assets/factus-logo-dark.png" alt="Factus Logo" class="logo-white">
+        </div>
+
+        <!-- Título principal -->
+        <h1>¡Bienvenido de Vuelta!</h1>
+
+        <!-- Subtítulo descriptivo -->
+        <div class="panel-subtitle">
+          <p>Continúa desarrollando con nosotros</p>
+        </div>
+
+        <!-- Estadísticas o beneficios -->
+        <div class="stats-list">
+          <div class="stat-item">
+            <div class="stat-number">01</div>
+            <div class="stat-label">Desarrollador activo</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">Tiempo de actividad</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Soporte disponible</div>
+          </div>
+        </div>
+
+        <!-- Texto de llamada a la acción -->
+        <p class="cta-text">¿Ya tienes una cuenta?<br>Inicia sesión para acceder a tu dashboard</p>
+
+        <!-- Botón de login -->
+        <button class="btn login-btn" (click)="onLoginClick()">
+          <i class="bx bxs-log-in"></i>
+          Iniciar Sesión
+        </button>
+
+        <!-- Información adicional -->
+        <div class="panel-footer">
+          <p class="footer-text">Acceso seguro • Datos protegidos</p>
+        </div>
       </div>
 
     </div>

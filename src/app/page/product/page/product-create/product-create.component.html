@@ -158,15 +158,6 @@
         {{ isEdit() ? 'Actualizar' : 'Crear' }}
       </button>
       <a mat-button (click)="onCancel()">Cancelar</a>
-      <button mat-raised-button type="button" (click)="showFactusJSON()">Vista Previa JSON</button>
     </div>
   </form>
-
-  <!-- Preview del JSON -->
-  @if (showJSON()) {
-  <div class="json-preview">
-    <h3>Vista Previa JSON Factus API:</h3>
-    <pre>{{ factusJSON() | json }}</pre>
-  </div>
-  }
 </div>

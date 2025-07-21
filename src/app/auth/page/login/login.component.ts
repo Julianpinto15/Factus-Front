@@ -64,16 +64,26 @@ export class LoginComponent {
           });
         },
         error: (err) => {
-          const errorMessage =
-            err.status === 400
-              ? 'Error en el registro: usuario ya existe'
-              : err.message ||
-                'Error en el registro. Por favor, intenta de nuevo.';
+          console.error('Error en registro:', err);
+
+          let errorMessage = 'Usuario registrado. Por favor, inicia sesión.';
+
+          if (
+            err?.error &&
+            typeof err.error === 'string' &&
+            err.error.includes('ya existe')
+          ) {
+            errorMessage = 'El usuario ya está registrado.';
+          } else if (err?.message) {
+            errorMessage = err.message;
+          }
+
           this.error.set(errorMessage);
+
           Swal.fire({
             icon: 'error',
-            title: 'Error',
-            text: this.error() ?? 'Error en el registro.',
+            title: 'Registro fallido',
+            text: errorMessage,
             confirmButtonColor: '#7494ec',
           });
         },
