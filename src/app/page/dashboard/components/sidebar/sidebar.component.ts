@@ -34,7 +34,6 @@ export class SidebarComponent {
           text: 'Lista de Clientes',
           path: '/dashboard/customer/list',
         },
-        { id: 'trends', text: 'Trends', path: '/dashboard/analytics/trends' },
       ],
     },
     {
