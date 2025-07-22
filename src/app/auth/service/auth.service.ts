@@ -7,6 +7,7 @@ import { RegisterRequest } from '../interface/RegisterRequest';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { signOut } from 'firebase/auth';
 import { environment } from '../../../environments/environment';
+
 // Importaciones faltantes
 
 @Injectable({
