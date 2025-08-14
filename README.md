@@ -1,4 +1,4 @@
-# 🧾 Factus Front - Sistema de Facturación Electrónica Angular
+<img width="1360" height="636" alt="Captura de pantalla 2025-08-14 152155" src="https://github.com/user-attachments/assets/32cc8f26-d352-4748-9da6-0addb1d59003" /># 🧾 Factus Front - Sistema de Facturación Electrónica Angular
 
 > Sistema moderno de facturación electrónica desarrollado en Angular con integración completa a la API de Factus para cumplimiento normativo DIAN en Colombia.
 
@@ -122,55 +122,7 @@
 
 ## 📋 Flujo de Integración Factus
 
-### 🔐 1. Autenticación OAuth2
-
-```typescript
-// Servicio de autenticación
-export class FactusAuthService {
-  async authenticate(): Promise<TokenResponse> {
-    const credentials = {
-      grant_type: 'password',
-      client_id: environment.factusApi.clientId,
-      client_secret: environment.factusApi.clientSecret,
-      username: environment.factusApi.email,
-      password: environment.factusApi.password
-    };
-    
-    return this.http.post<TokenResponse>('/auth/token', credentials);
-  }
-}
-```
-
-### 📄 2. Creación de Facturas
-
-```typescript
-// Modelo de factura
-interface FacturaRequest {
-  numeroRango: string;
-  cliente: ClienteData;
-  productos: ProductoItem[];
-  impuestos: ImpuestoData[];
-}
-
-// Servicio de facturación
-export class FacturacionService {
-  async crearFactura(factura: FacturaRequest): Promise<FacturaResponse> {
-    return this.http.post<FacturaResponse>('/facturas', factura, {
-      headers: this.getAuthHeaders()
-    });
-  }
-  
-  async validarFactura(facturaId: string): Promise<ValidacionResponse> {
-    return this.http.post<ValidacionResponse>(
-      `/facturas/${facturaId}/validar`, 
-      {}, 
-      { headers: this.getAuthHeaders() }
-    );
-  }
-}
-```
-
-### 📊 3. Endpoints Principales
+### 📊 1. Endpoints Principales
 
 | Endpoint | Método | Descripción | Persistente |
 |----------|--------|-------------|------------|
