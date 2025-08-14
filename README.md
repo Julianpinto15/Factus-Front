@@ -60,13 +60,17 @@
 ## 2.DASHBOARD
 <img width="1351" height="641" alt="Image" src="https://github.com/user-attachments/assets/9157bad7-fa17-4cbf-af45-437d0461718d" />
 
-## 3. CREAR PRODUCTO
+## 3. CREAR CLIENTE
 <img width="1352" height="640" alt="Image" src="https://github.com/user-attachments/assets/e1d2067e-7475-4c88-b512-f109c400900d" />
 
-## 4. CREAR PRODUCTO 
-<img width="1350" height="641" alt="Image" src="https://github.com/user-attachments/assets/75342deb-9052-4d57-833c-d59d64b92637" />
+## 4. CREAR PRODUCTO
+<img width="1349" height="641" alt="Image" src="https://github.com/user-attachments/assets/cd2697cf-060f-48a1-a480-4f9b91c990e7" />
 
 ## 5. CREAR FACTURA 
+<img width="1350" height="641" alt="Image" src="https://github.com/user-attachments/assets/75342deb-9052-4d57-833c-d59d64b92637" />
+
+## 6. LISTA DE FACTURAS
+<img width="1351" height="642" alt="Image" src="https://github.com/user-attachments/assets/dd0836dc-87d3-49bc-ad8d-3bb07e9601fb" />
 
 ## 🛠 Instalación y Configuración
 
