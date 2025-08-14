@@ -327,19 +327,6 @@ npm run ng                  # Angular CLI
 - [ ] 📧 Envío automático por email
 - [ ] 💳 Integración con medios de pago
 
-## 📞 Soporte Factus
-
-Para obtener tus credenciales de API Factus:
-
-🆘 **Centro de Soporte**: [Solicitar Credenciales](https://factus.co/soporte)
-📧 **Email**: soporte@factus.co
-📱 **WhatsApp**: +57 300 123 4567
-
-### 📚 Documentación Adicional
-- 📖 [Documentación API Factus](https://docs.factus.co)
-- 🚀 [Postman Collection](https://documenter.getpostman.com/factus)
-- 🎯 [Guía de Integración DIAN](https://factus.co/guias)
-
 ## 📄 Licencia
 
 Este proyecto está bajo la Licencia MIT - ver [LICENSE](LICENSE) para más detalles.
@@ -347,9 +334,9 @@ Este proyecto está bajo la Licencia MIT - ver [LICENSE](LICENSE) para más deta
 ## 👨‍💻 Desarrolladores
 
 **Equipo de Desarrollo**
-- 🌐 GitHub: [@tu-usuario](https://github.com/tu-usuario)
-- 💼 LinkedIn: [Tu Perfil](https://www.linkedin.com/in/tu-perfil/)
-- 📧 Email: contacto@tuempresa.com
+- 🌐 GitHub: [JulianPinto15]([https://github.com/tu-usuario](https://github.com/Julianpinto15))
+- 💼 LinkedIn: [julianpinto-dev]([https://www.linkedin.com/in/tu-perfil/](https://www.linkedin.com/in/julianpinto-dev/))
+- 📧 Email: julianpinto700@gmail.com
 
 ---
 
@@ -367,7 +354,7 @@ Si este sistema te ha sido útil para tu facturación electrónica, ¡considera 
 
 <div align="center">
   <strong>Desarrollado con ❤️ para el cumplimiento tributario colombiano</strong><br>
-  <em>Factus Front - Facturación Electrónica Angular con Certificación DIAN</em>
+  <em>Factus Front - Facturación Electrónica Angular con Certificación FACTUS HALLTEC</em>
 </div>
 
 ---
