@@ -1,4 +1,4 @@
-<img width="1360" height="636" alt="Captura de pantalla 2025-08-14 152155" src="https://github.com/user-attachments/assets/32cc8f26-d352-4748-9da6-0addb1d59003" /># 🧾 Factus Front - Sistema de Facturación Electrónica Angular
+# 🧾 Factus Front - Sistema de Facturación Electrónica Angular
 
 > Sistema moderno de facturación electrónica desarrollado en Angular con integración completa a la API de Factus para cumplimiento normativo DIAN en Colombia.
 
@@ -53,6 +53,9 @@
 - **Factus API** - Facturación electrónica DIAN
 - **OAuth2** - Autenticación segura
 - **RESTful Services** - Comunicación con backend
+
+## LOGIN
+<img width="1360" height="636" alt="Captura de pantalla 2025-08-14 152155" src="https://github.com/user-attachments/assets/32cc8f26-d352-4748-9da6-0addb1d59003" />
 
 ## 🛠 Instalación y Configuración
 
