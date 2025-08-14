@@ -183,25 +183,73 @@
 ## 🔧 Arquitectura del Proyecto
 
 ```
-src/
-├── 🏗️ app/
-│   ├── 🔐 auth/               # Módulo de autenticación
-│   │   ├── services/          # Servicios OAuth2
-│   │   └── guards/            # Protección de rutas
-│   ├── 📊 dashboard/          # Panel principal
-│   │   ├── components/        # Componentes del dashboard
-│   │   └── charts/            # Gráficos Chart.js
-│   ├── 🧾 facturas/           # Módulo de facturación
-│   │   ├── crear/             # Creación de facturas
-│   │   ├── validar/           # Validación DIAN
-│   │   └── historial/         # Historial de documentos
-│   ├── 👥 clientes/           # Gestión de clientes
-│   ├── 📦 productos/          # Catálogo de productos
-│   ├── ⚙️ configuracion/      # Configuraciones del sistema
-│   └── 🛠️ shared/            # Componentes compartidos
-├── 🌍 environments/           # Variables de entorno
-├── 🎨 assets/                 # Recursos estáticos
-└── 📱 styles/                 # Estilos globales SCSS
+julianpinto15-factus-front/
+├── 📄 README.md
+├── ⚙️ angular.json
+├── 📦 package.json
+├── 📝 tsconfig.app.json
+├── 📝 tsconfig.json
+├── 📝 tsconfig.spec.json
+├── ⚙️ vercel.json
+├── 🖊️ .editorconfig
+│
+├── 📂 src/
+│ ├── 🖥️ index.html
+│ ├── 🖥️ main.ts
+│ ├── 🎨 styles.scss
+│ │
+│ ├── 📂 app/
+│ │ ├── 🖥️ app.component.html
+│ │ ├── 🎨 app.component.css
+│ │ ├── 🖥️ app.component.ts
+│ │ ├── ⚙️ app.config.ts
+│ │ ├── 📌 app.routes.ts
+│ │ │
+│ │ ├── 🔐 auth/
+│ │ │ ├── 📂 interface/
+│ │ │ │ ├── 📝 AuthRequest.ts
+│ │ │ │ ├── 📝 AuthResponse.ts
+│ │ │ │ └── 📝 RegisterRequest.ts
+│ │ │ ├── 📂 page/
+│ │ │ │ ├── 🔑 login/
+│ │ │ │ ├── 🏠 login-inicio/
+│ │ │ │ └── 📝 login-registration/
+│ │ │ └── 🔧 service/auth.service.ts
+│ │ │
+│ │ ├── 📂 page/
+│ │ │ ├── 👥 customer/
+│ │ │ ├── 📊 dashboard/
+│ │ │ ├── 🧾 invoice/
+│ │ │ └── 📦 product/
+│ │ │
+│ │ └── 🛡️ security/
+│ │ ├── auth.guard.ts
+│ │ └── guest.guard.ts
+│ │
+│ └── 🌎 environments/
+│ ├── environment.development.ts
+│ └── environment.ts
+│
+└── 📂 .vercel/
+├── README.txt
+└── project.json
+```
+
+## 📌 Leyenda de iconos
+```
+- 📂 Carpeta  
+- 📄 Documento  
+- ⚙️ Configuración  
+- 🖥️ Archivo HTML/TS principal  
+- 🎨 Estilos CSS/SCSS  
+- 📝 Archivo TypeScript de modelos/interfaces  
+- 🔐 Autenticación  
+- 📊 Dashboard  
+- 👥 Gestión de clientes  
+- 🧾 Facturación  
+- 📦 Gestión de productos  
+- 🛡️ Seguridad  
+
 ```
 
 ## ⚡ Funcionalidades AJAX y Reactivas
