@@ -54,8 +54,19 @@
 - **OAuth2** - Autenticación segura
 - **RESTful Services** - Comunicación con backend
 
-## LOGIN
+## 1.LOGIN
 <img width="1360" height="636" alt="Captura de pantalla 2025-08-14 152155" src="https://github.com/user-attachments/assets/32cc8f26-d352-4748-9da6-0addb1d59003" />
+
+## 2.DASHBOARD
+<img width="1351" height="641" alt="Image" src="https://github.com/user-attachments/assets/9157bad7-fa17-4cbf-af45-437d0461718d" />
+
+## 3. CREAR PRODUCTO
+<img width="1352" height="640" alt="Image" src="https://github.com/user-attachments/assets/e1d2067e-7475-4c88-b512-f109c400900d" />
+
+## 4. CREAR PRODUCTO 
+<img width="1350" height="641" alt="Image" src="https://github.com/user-attachments/assets/75342deb-9052-4d57-833c-d59d64b92637" />
+
+## 5. CREAR FACTURA 
 
 ## 🛠 Instalación y Configuración
 
